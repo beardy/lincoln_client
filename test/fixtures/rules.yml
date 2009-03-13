@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  group_id: 1
+  raw_ip_incoming_start: 1
+  raw_ip_incoming_end: 1
+  raw_ip_outgoing_start: 1
+  raw_ip_outgoing_end: 1
+  port_incoming_start: 1
+  port_incoming_end: 1
+  port_outgoing_start: 1
+  port_outgoing_end: 1
+  protocol: 1
+  not_flag: false
+
+two:
+  group_id: 1
+  raw_ip_incoming_start: 1
+  raw_ip_incoming_end: 1
+  raw_ip_outgoing_start: 1
+  raw_ip_outgoing_end: 1
+  port_incoming_start: 1
+  port_incoming_end: 1
+  port_outgoing_start: 1
+  port_outgoing_end: 1
+  protocol: 1
+  not_flag: false

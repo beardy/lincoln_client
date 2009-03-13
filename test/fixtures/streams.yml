@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  raw_ip_incoming: 
+  raw_ip_outgoing: 
+  port_in: 1
+  port_out: 1
+  protocol: 1
+
+two:
+  raw_ip_incoming: 
+  raw_ip_outgoing: 
+  port_in: 1
+  port_out: 1
+  protocol: 1

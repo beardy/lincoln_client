@@ -1,0 +1,22 @@
+<div class="rounded" id="controls">
+  <div id="start-control">
+    <p>Start</p>
+    <%= calendar_date_select_tag "p_date_and_time", nil, :time => true  %>
+  </div>
+  <div id="end-control">
+    <p>End</p>
+    <%= calendar_date_select_tag "p_date_and_time", nil, :time => true  %>        
+  </div>
+  <div id="groups-control">
+    <p>Groups</p>
+    <div id="groups-chooser">
+      <ul>
+      <li><%= check_box_tag 'Group 1', 1 %> Group 1</li>
+      <li><%= check_box_tag 'Group 1', 1 %> Group 2</li>
+      <li><%= check_box_tag 'Group 1', 1 %> Group 3</li>          
+      <li><%= check_box_tag 'Group 1', 1 %> Group 4</li>          
+      </ul>
+    </div>
+  </div>
+</div>
+
