@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_filter :get_time_range, :find_groups
+  before_filter :get_time_range
   # GET /gene_groups
   # GET /gene_groups.xml
   def index
