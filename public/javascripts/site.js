@@ -19,11 +19,9 @@ function jsddm_canceltimer()
       closetimer = null;}}
 
 jQuery(document).ready(function()
-{  jQuery('#dropdown > li').bind('mouseover', jsddm_open)
-   jQuery('#dropdown > li').bind('mouseout',  jsddm_timer)
-   
-   // for table sorting
-   jQuery('#streams-table').tablesorter(); 
+{
+  jQuery('#dropdown > li').bind('mouseover', jsddm_open)
+  jQuery('#dropdown > li').bind('mouseout',  jsddm_timer)
 });
 
 document.onclick = jsddm_close;

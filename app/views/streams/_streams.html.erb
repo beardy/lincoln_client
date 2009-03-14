@@ -2,6 +2,16 @@
 <% content_for :head do  %>
   <%= javascript_include_tag 'jquery.tablesorter' %>
   <%= stylesheet_link_tag 'tablesorter/blue/style' %>
+  <%= javascript_include_tag 'jquery.tablesorter.pager' %>
+  <%= stylesheet_link_tag 'tablesorter/pager/style' %>
+  <script type="text/javascript">
+    jQuery(document).ready(function()
+    {
+      jQuery('#streams-table')
+       .tablesorter()
+       .tablesorterPager({container: jQuery("#pager")});
+    });
+  </script>
 <% end %>
 
 <table id="streams-table" class="tablesorter">
@@ -40,3 +50,19 @@
   <%- end -%>
   </tbody>
 </table>
+
+<div id="pager" class="pager">
+  <form>
+    <img src="/images/icons/first.png" class="first"/>
+    <img src="/images/icons/prev.png" class="prev"/>
+    <input type="text" class="pagedisplay"/>
+    <img src="/images/icons/next.png" class="next"/>
+    <img src="/images/icons/last.png" class="last"/>
+    <select class="pagesize">
+      <option selected="selected"  value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option  value="200">200</option>
+    </select>
+  </form>
+</div>
