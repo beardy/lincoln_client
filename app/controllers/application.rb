@@ -3,6 +3,14 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
+  
+  before_filter :find_groups
+  
+  # This will be used to show all groups 
+  # In the nav bar
+  def find_groups
+    @groups = Group.find(:all)
+  end
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
