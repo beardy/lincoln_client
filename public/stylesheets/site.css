@@ -118,6 +118,9 @@ a {
   text-align: left;
 }
 
+
+
+
 /*********************
 ** Navigation Bar
 **********************/
@@ -128,26 +131,33 @@ a {
 }
 
 #navbar ul {
-  overflow-x: hidden;
-  overflow-y: hidden;
+/*  overflow-x: hidden;*/
+/*  overflow-y: hidden;*/
+  margin: 0;
+  padding: 0;
 }
 
 #navbar ul li {
   float:left;
   list-style-type: none;
   height: 3.4em;
-  padding-top: 0.4em;
+/*  padding-top: 0.4em;*/
   position: relative;
 }
 
 #navbar ul li a {
   text-decoration: none;
+  display: block;
   padding-top: 0.4em;
+  padding-bottom: 0.5em;
   padding-right: 1.25em;
-  padding-bottom: 0.7em;
+/*  height:100%;*/
+/*  padding-bottom: 0.7em;*/
   padding-left: 1.25em;
   color: #979797;
   font-size: 140%;
+  text-align: center;
+  white-space: nowrap;
 }
 
 #navbar ul li a:hover {
@@ -157,6 +167,29 @@ a {
 #navbar ul li a.active {
   border-bottom: 5px solid #00A0C6;
 }
+
+#dropdown li ul {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  visibility: hidden;
+/*  border-top: 1px solid white*/
+}
+
+#dropdown li ul li {
+  float: none;
+  display: inline
+}
+
+#dropdown li ul li a {
+  width: auto;
+  background: #A60000;
+}
+
+#dropdown li ul li a:hover {
+  background: #800000;
+}
+
 
 
 /*********************
