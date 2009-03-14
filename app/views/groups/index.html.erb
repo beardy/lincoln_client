@@ -25,7 +25,4 @@
 
 <div class="clearbox"></div>
 
-<% @streams.each do |stream| %>
-<%= stream.ip_incoming %> || 
-<% end %>
-
+<%= render :partial => 'streams/streams', :locals => {:streams => @streams} %>

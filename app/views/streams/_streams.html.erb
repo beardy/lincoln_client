@@ -1,0 +1,32 @@
+<table id="stream-table">
+  <tr>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th>Protocol</th>
+    <th>IP Incoming</th>
+    <th>Port Incoming</th>
+    <th>Packet # Incoming</th>
+    <th>Packet Size Incoming</th>
+    <th>IP Outgoing</th>
+    <th>Port Outgoing</th>
+    <th>Packet # Outgoing</th>
+    <th>Packet Size Outgoing</th>
+  </tr>
+  <%- streams.each do |stream| -%>
+    <%- stream.windows.each do |window| -%>
+      <tr>
+        <td><%= window.start_time %></td>
+        <td><%= window.end_time %></td>
+        <td><%= stream.protocol %></td>
+        <td><%= stream.ip_incoming %></td>
+        <td><%= stream.port_incoming %></td>
+        <td><%= window.num_packets_incoming %></td>
+        <td><%= window.size_packets_incoming %></td>
+        <td><%= stream.ip_outgoing %></td>
+        <td><%= stream.port_outgoing %></td>
+        <td><%= window.num_packets_outgoing %></td>
+        <td><%= window.size_packets_outgoing %></td>
+      </tr>
+    <%- end -%>
+  <%- end -%>
+</table>
