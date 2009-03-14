@@ -30,7 +30,7 @@ class GroupsController < ApplicationController
   # This method will eventually be tied to the date picker to 
   #  allow for changing the current start and stop times
   def get_time_range
-    @start_time = 1.day.ago.to_formatted_s(:db)
+    @start_time = 1.hours.ago.to_formatted_s(:db)
     @end_time = 1.hour.from_now.to_formatted_s(:db)
   end
   

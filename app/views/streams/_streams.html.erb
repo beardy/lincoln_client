@@ -24,8 +24,8 @@
   <%- streams.each do |stream| -%>
     <%- stream.windows.each do |window| -%>
       <tr>
-        <td><%= window.start_time %></td>
-        <td><%= window.end_time %></td>
+        <td><%= window.start_time.to_s(:short) %></td>
+        <td><%= window.end_time.to_s(:short) %></td>
         <td><%= stream.protocol %></td>
         <td><%= stream.ip_incoming %></td>
         <td><%= stream.port_incoming %></td>
