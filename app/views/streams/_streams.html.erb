@@ -1,4 +1,11 @@
-<table id="stream-table">
+<!-- This will get inserted into the head portion of the html -->
+<% content_for :head do  %>
+  <%= javascript_include_tag 'jquery.tablesorter' %>
+  <%= stylesheet_link_tag 'tablesorter/blue/style' %>
+<% end %>
+
+<table id="streams-table" class="tablesorter">
+  <thead>
   <tr>
     <th>Start Time</th>
     <th>End Time</th>
@@ -12,6 +19,8 @@
     <th>Packet # Outgoing</th>
     <th>Packet Size Outgoing</th>
   </tr>
+  </thead>
+  <tbody>
   <%- streams.each do |stream| -%>
     <%- stream.windows.each do |window| -%>
       <tr>
@@ -29,4 +38,5 @@
       </tr>
     <%- end -%>
   <%- end -%>
+  </tbody>
 </table>

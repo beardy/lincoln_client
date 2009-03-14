@@ -21,6 +21,9 @@ function jsddm_canceltimer()
 jQuery(document).ready(function()
 {  jQuery('#dropdown > li').bind('mouseover', jsddm_open)
    jQuery('#dropdown > li').bind('mouseout',  jsddm_timer)
+   
+   // for table sorting
+   jQuery('#streams-table').tablesorter(); 
 });
 
 document.onclick = jsddm_close;
