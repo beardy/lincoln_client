@@ -9,7 +9,7 @@ class Stream < ActiveRecord::Base
   # which are brought in when we call it (which is why we need the lambda)
   # See the groups controller index method for an example of use
   named_scope :starting_between, lambda {|start,stop| {:conditions => ["windows.start_time between ? and ?", start, stop],
-                                                       :joins => :windows, :order => "windows.start_time"} }
+                                                       :include => :windows, :order => "windows.start_time"} }
   
   def ip_incoming
     ip(raw_ip_incoming)
