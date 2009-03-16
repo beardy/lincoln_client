@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_filter :get_time_range
+  before_filter :get_time_range, :except => [:update_time_range]
   # GET /gene_groups
   # GET /gene_groups.xml
   def index
@@ -30,8 +30,14 @@ class GroupsController < ApplicationController
   # This method will eventually be tied to the date picker to 
   #  allow for changing the current start and stop times
   def get_time_range
-    @start_time = 1.hours.ago.to_formatted_s(:db)
-    @end_time = 1.hour.from_now.to_formatted_s(:db)
+    @start_time = session[:start_date_time] ||= 1.minute.ago
+    @end_time = session[:end_date_time] ||=  2.days.ago
+  end
+  
+  def update_time_range
+    session[:start_date_time]
+    session[params[:name].to_sym] = Time.zone.parse(params["date"])
+    render :layout => false
   end
   
 end
