@@ -22,36 +22,34 @@
     <th>Protocol</th>
     <th>IP Incoming</th>
     <th>Port Incoming</th>
-    <th>Packet # Incoming</th>
+    <th># Packets Incoming</th>
     <th>Packet Size Incoming</th>
     <th>IP Outgoing</th>
     <th>Port Outgoing</th>
-    <th>Packet # Outgoing</th>
+    <th># Packets Outgoing</th>
     <th>Packet Size Outgoing</th>
     <th>Windows</th>
   </tr>
   </thead>
   <tbody>
   <%- streams.each do |stream| -%>
-    <%- #TODO: compact all window information into a single line
-        stream.windows.each do |window| -%>
 
       <tr>
-        <td><%= window.start_time.to_s(:short) %></td>
-        <td><%= window.end_time.to_s(:short) %></td>
+        <td><%= stream.start_time.to_s(:short) %></td>
+        <td><%= stream.end_time.to_s(:short) %></td>
         <td><%= stream.protocol %></td>
         <td><%= stream.ip_incoming %></td>
         <td><%= stream.port_incoming %></td>
-        <td><%= window.num_packets_incoming %></td>
-        <td><%= window.size_packets_incoming %></td>
+        <td><%= stream.num_packets_incoming %></td>
+        <td><%= stream.size_packets_incoming %></td>
         <td><%= stream.ip_outgoing %></td>
         <td><%= stream.port_outgoing %></td>
-        <td><%= window.num_packets_outgoing %></td>
-        <td><%= window.size_packets_outgoing %></td>
+        <td><%= stream.num_packets_outgoing %></td>
+        <td><%= stream.size_packets_outgoing %></td>
         <td><%= link_to 'windows', :controller=> 'windows', :action=> 'show',
                                     :id => stream %>
       </tr>
-    <%- end -%>
+      
   <%- end -%>
   </tbody>
 </table>

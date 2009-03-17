@@ -18,4 +18,29 @@ class Stream < ActiveRecord::Base
   def ip_outgoing
     ip(raw_ip_outgoing)
   end
+
+  def start_time
+    windows.minimum :start_time
+  end
+
+  def end_time
+    windows.maximum :end_time
+  end
+
+  def num_packets_incoming
+    windows.sum :num_packets_incoming
+  end
+
+  def num_packets_outgoing
+    windows.sum :num_packets_outgoing
+  end
+
+  def size_packets_incoming
+    windows.sum :size_packets_incoming
+  end
+
+  def size_packets_outgoing
+    windows.sum :size_packets_outgoing
+  end
+
 end
