@@ -1,3 +1,4 @@
+
 <!-- This will get inserted into the head portion of the html -->
 <% content_for :head do  %>
   <%= javascript_include_tag 'jquery.tablesorter' %>
@@ -17,6 +18,7 @@
 <table id="streams-table" class="tablesorter">
   <thead>
   <tr>
+    <th>Window Number</th>
     <th>Start Time</th>
     <th>End Time</th>
     <th>Protocol</th>
@@ -28,15 +30,12 @@
     <th>Port Outgoing</th>
     <th>Packet # Outgoing</th>
     <th>Packet Size Outgoing</th>
-    <th>Windows</th>
   </tr>
   </thead>
   <tbody>
-  <%- streams.each do |stream| -%>
-    <%- #TODO: compact all window information into a single line
-        stream.windows.each do |window| -%>
-
+    <%- stream.windows.each do |window| -%>
       <tr>
+        <td><%= window.id %>
         <td><%= window.start_time.to_s(:short) %></td>
         <td><%= window.end_time.to_s(:short) %></td>
         <td><%= stream.protocol %></td>
@@ -48,11 +47,8 @@
         <td><%= stream.port_outgoing %></td>
         <td><%= window.num_packets_outgoing %></td>
         <td><%= window.size_packets_outgoing %></td>
-        <td><%= link_to 'windows', :controller=> 'windows', :action=> 'show',
-                                    :id => stream %>
       </tr>
     <%- end -%>
-  <%- end -%>
   </tbody>
 </table>
 
