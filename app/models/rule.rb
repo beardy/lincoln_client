@@ -4,6 +4,15 @@ class Rule < ActiveRecord::Base
   include IPConvert
   belongs_to :group
   
+  # TODO: make rules convert to sql easily
+  #  current idea -- have a to_sql method here
+  #  to be used in the groups model to combine all the 
+  #  rules sql.
+  # def to_sql
+  # ... convert to a series of anded sql statements
+  # end
+  
+  
   # creates a new Range
   #  representing the 
   #  range of the incoming ports

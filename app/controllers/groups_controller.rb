@@ -10,6 +10,10 @@ class GroupsController < ApplicationController
     #  so w're using the starting_between to scope the results, then the find
     #  to get a specific subset of that. Its beautiful!
     @streams = Stream.starting_between(@start_time, @end_time).find_all_by_port_incoming(80)
+    
+    # TODO : so far we're not separating by groups. See notes in group and rule models 
+    #  for my current ideas. Let me know what you think.
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @groups }
