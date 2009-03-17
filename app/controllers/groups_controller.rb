@@ -14,6 +14,7 @@ class GroupsController < ApplicationController
     # TODO : so far we're not separating by groups. See notes in group and rule models 
     #  for my current ideas. Let me know what you think.
     
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @groups }
