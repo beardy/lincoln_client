@@ -68,7 +68,6 @@ namespace :import do
     group1 = Group.new(:name => "Perceptive")
     group1.save!
     group2 = Group.new(:name => "Other Traffic")
-    group2.save!
-    
+    group2.save!  
   end
 end

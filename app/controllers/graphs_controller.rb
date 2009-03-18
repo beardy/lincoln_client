@@ -11,7 +11,6 @@ class GraphsController < ApplicationController
     # for each stream & window
     @streams.each do |stream|
       stream.windows.each do |window|
-      
         # for each tick
         @time_range.each_tick_with_time do |tick, tick_time|
           # if within tick range, add data
@@ -20,7 +19,6 @@ class GraphsController < ApplicationController
             out_data[tick] += window.data(:outgoing, :kilobyte) * @time_range.ratio
           end
         end
-
       end
     end
 	
@@ -146,7 +144,7 @@ class GraphsController < ApplicationController
     #x.set_labels(x_labels)
 
     y = YAxis.new
-	max = [inc_data.max, out_data.max].max
+    max = [inc_data.max, out_data.max].max
     y.set_range(0, max, max / 10)
 
     #x_legend = XLegend.new("My X Legend")
@@ -168,6 +166,4 @@ class GraphsController < ApplicationController
 
     render :text => chart.to_s
   end
-  
-
 end

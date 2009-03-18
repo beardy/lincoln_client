@@ -9,7 +9,12 @@ class Rule < ActiveRecord::Base
   #  to be used in the groups model to combine all the 
   #  rules sql.
   # def to_sql
-  # ... convert to a series of anded sql statements
+  #   sql_statement = ""
+  #   if(self.port_incoming_start)
+  #     sql_statement << "streams.port_incoming is between #{self.port_incoming_start} and #{self.port_incoming_end}"
+  #   end
+  #   if(self.protocol)
+  #   end
   # end
   
   

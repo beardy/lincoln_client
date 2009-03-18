@@ -12,7 +12,7 @@ class TimeRange
   
   def update(time_point, new_time)
     # call the start_time = / end_time = method passin in new time
-    self.send((time_point+"=").to_sym, new_time)
+    self.send((time_point+"=").to_sym, Time.zone.parse(new_time))
   end
   
   def duration
