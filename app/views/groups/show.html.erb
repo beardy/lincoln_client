@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/javascripts/swfobject.js"></script>
+
 <%= render :partial => 'layouts/controls' %>
 <h1>Title</h1>
 <!-- First large graph goes in its own column -->
@@ -14,13 +16,14 @@
 <div class="clearbox"></div>
 
 <!-- Here is where a series of graphs can go  -->
-<div class="column span-6 first">
+<!-- <div class="column span-6 first"> -->
+<div>
+<%= @graph1 %>
 </div>
-<div class="column span-6">
-</div>
-<div class="column span-6">
-</div>
-<div class="column span-6 last">
+<br/>
+<!-- <div class="column span-6 last"> -->
+<div>
+<%= @graph2 %>
 </div>
 
 <div class="clearbox"></div>
