@@ -14,9 +14,8 @@ class GraphsController < ApplicationController
       
         # for each tick
         @time_range.each_tick_with_time do |tick, tick_time|
-    
           # if within tick range, add data
-          if window.start_time <= tick_time and window.end_time >= tick_time
+          if window.between?(tick_time)
             inc_data[tick] += window.size_packets_incoming * @time_range.ratio
             out_data[tick] += window.size_packets_outgoing * @time_range.ratio
           end
