@@ -16,16 +16,16 @@ class GraphsController < ApplicationController
         @time_range.each_tick_with_time do |tick, tick_time|
           # if within tick range, add data
           if window.between?(tick_time)
-            inc_data[tick] += window.size_packets_incoming * @time_range.ratio
-            out_data[tick] += window.size_packets_outgoing * @time_range.ratio
+            inc_data[tick] += window.data(:incoming, :kilobyte) * @time_range.ratio
+            out_data[tick] += window.data(:outgoing, :kilobyte) * @time_range.ratio
           end
         end
 
       end
     end
 	
-	inc_data.collect! {|x| x / 1024} # convert to KB
-	out_data.collect! {|x| x / 1024} # convert to KB
+  # inc_data.collect! {|x| x / 1024} # convert to KB
+  # out_data.collect! {|x| x / 1024} # convert to KB
 	#out_data = out_data.zip(inc_data).map{|x, y| x + y} # convert to stacked line graph
 	
     #
