@@ -11,7 +11,6 @@ class GroupsController < ApplicationController
     # Here's how we can use it with the built in finds for more granularity
     #  so w're using the starting_between to scope the results, then the find
     #  to get a specific subset of that. Its beautiful!
-    rule_string = "streams.port_incoming = 80"
     @streams = Stream.starting_between(@start_time, @end_time).find(:all, :conditions => rule_string)
     
     # TODO : so far we're not separating by groups. See notes in group and rule models 
@@ -27,7 +26,9 @@ class GroupsController < ApplicationController
   # GET /gene_groups/1.xml
   def show
     @group = Group.find(params[:id])
-    # rule_string = @group.to_sql
+    puts "rules: "+@group.to_sql
+    rule_string = @group.to_sql
+    puts "RULE : "+rule_string
     # @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => rule_string)
     
     # @graph1 = GraphBuilder.build(:line, data_set, {options})
@@ -42,7 +43,7 @@ class GroupsController < ApplicationController
   
   def packet_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
     #
     # initialize data
     #

@@ -17,6 +17,21 @@ class Rule < ActiveRecord::Base
   #   end
   # end
   
+  def to_sql
+    sql_statement = ""
+    queries = []
+    if(self.not_flag)
+      sql_statement << "NOT("
+    else
+      sql_statement << "("
+    end
+    if(self.port_incoming_start && self.port_incoming_end)
+      queries << "streams.port_incoming between #{self.port_incoming_start} and #{self.port_incoming_end}"
+    end
+    sql_statement << queries.join(" AND ")
+    sql_statement << ")"
+    sql_statement
+  end
   
   # creates a new Range
   #  representing the 

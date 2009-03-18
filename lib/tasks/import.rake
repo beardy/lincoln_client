@@ -70,4 +70,13 @@ namespace :import do
     group2 = Group.new(:name => "Other Traffic")
     group2.save!  
   end
+  
+  task :rules => :environment do
+    groups = Group.find(:all)
+    groups[0].rules << Rule.new(:port_incoming_start => 80, :port_incoming_end => 80)
+    groups[1].rules << Rule.new(:port_incoming_start => 80, :port_incoming_end => 80, :not_flag => true)
+    groups.each do |group|
+      group.save!
+    end
+  end
 end
