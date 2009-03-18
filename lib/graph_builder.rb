@@ -1,5 +1,7 @@
+module OpenFlashChart
 class GraphBuilder
-  
+  # TODO: Find better way for automatic color generation
+  COLORS = %w[CA2C1E 8B955C 91332A  0F3323 F7AC00]
   attr_accessor :title, :options
   
   # type is a symbol which indicates what type of chart you are making
@@ -34,24 +36,28 @@ class GraphBuilder
   def build
     configure
     populate_graph
-    @graph
+    puts "chart: "+@chart.inspect
+    @chart
   end
   
   def populate_graph
-    max = 0
-    data.each do |key, value|
+    max = 0.0
+    color_index = 0
+    @data.each do |key, value|
+      puts "Key: "+key
       element = find_type(@type)
       element.text = key.to_s
-      element.width = @options[:line_width] if element.respond_to? :width
-      element.dot_size = @options[:dot_size] if element.respond_to? :dot_size
-      if key.respond_to? color
-        element.color = '#'+key.color
+      element.width = @options[:line_width]
+      element.dot_size = @options[:dot_size]
+      if key.respond_to? :color
+        element.colour = '#'+key.color
       else
-        element.color = '#356aa0'
+        element.colour = '#'+find_color(color_index)
+        color_index += 1
       end
       element.values = value
       
-      @graph.add_element(element)
+      @chart.add_element(element)
       max = max < value.max ? value.max : max
     end
     
@@ -61,7 +67,7 @@ class GraphBuilder
   end
   
   def configure
-    @chart.set_title(options[:title]) if @options[:title]
+    @chart.set_title(Title.new(options[:title])) if @options[:title]
     if @options[:legend]
       y_legend = YLegend.new(options[:legend])
       y_legend.set_style('{font-size: 20px; color: #770077}')
@@ -76,4 +82,9 @@ class GraphBuilder
     end
     element
   end
+  
+  def find_color(index)
+    COLORS[index]
+  end
+end
 end

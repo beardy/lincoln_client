@@ -78,7 +78,7 @@ class GraphsController < ApplicationController
 
     chart.add_element(line_inc)
     chart.add_element(line_out)
-
+    puts chart.inspect
     render :text => chart.to_s
   end
   
@@ -163,7 +163,7 @@ class GraphsController < ApplicationController
 
     chart.add_element(line_inc)
     chart.add_element(line_out)
-
+    puts chart.inspect
     render :text => chart.to_s
   end
 end
