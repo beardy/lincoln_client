@@ -1,34 +1,24 @@
 class GraphsController < ApplicationController
-  before_filter :get_time_range
   
   def packet_size_inc_vs_out
-    @streams = Stream.starting_between(@start_time, @end_time).find_all_by_port_incoming(80)
-  
-    # initialize graphing parameters
-    graph_ticks = 15
-    window_size = 5.minutes
-    time_range = @end_time - @start_time
-    time_increment = time_range / graph_ticks
-    tick_ratio = time_increment / window_size
-  
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
     #
     # initialize data
     #
-    inc_data = Array.new(graph_ticks, 0)
-    out_data = Array.new(graph_ticks, 0)
+    inc_data = Array.new(@time_range.ticks, 0)
+    out_data = Array.new(@time_range.ticks, 0)
   
     # for each stream & window
     @streams.each do |stream|
       stream.windows.each do |window|
       
         # for each tick
-        graph_ticks.times do |i|
-          tick_time = @start_time + (i * time_increment)
+        @time_range.each_tick_with_time do |tick, tick_time|
     
           # if within tick range, add data
           if window.start_time <= tick_time and window.end_time >= tick_time
-            inc_data[i] += window.size_packets_incoming * tick_ratio
-            out_data[i] += window.size_packets_outgoing * tick_ratio
+            inc_data[tick] += window.size_packets_incoming * @time_range.ratio
+            out_data[tick] += window.size_packets_outgoing * @time_range.ratio
           end
         end
 
@@ -96,33 +86,26 @@ class GraphsController < ApplicationController
   end
   
   def packet_count_inc_vs_out
-    @streams = Stream.starting_between(@start_time, @end_time).find_all_by_port_incoming(80)
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
   
-    # initialize graphing parameters
-    graph_ticks = 15
-    window_size = 5.minutes
-    time_range = @end_time - @start_time
-    time_increment = time_range / graph_ticks
-    tick_ratio = time_increment / window_size
   
     #
     # initialize data
     #
-    inc_data = Array.new(graph_ticks, 0)
-    out_data = Array.new(graph_ticks, 0)
+    inc_data = Array.new(@time_range.ticks, 0)
+    out_data = Array.new(@time_range.ticks, 0)
   
     # for each stream & window
     @streams.each do |stream|
       stream.windows.each do |window|
       
         # for each tick
-        graph_ticks.times do |i|
-          tick_time = @start_time + (i * time_increment)
+        @time_range.each_tick_with_time do |tick,tick_time|
     
           # if within tick range, add data
           if window.start_time <= tick_time and window.end_time >= tick_time
-            inc_data[i] += window.num_packets_incoming * tick_ratio
-            out_data[i] += window.num_packets_outgoing * tick_ratio
+            inc_data[tick] += window.num_packets_incoming * @time_range.ratio
+            out_data[tick] += window.num_packets_outgoing * @time_range.ratio
           end
         end
 
@@ -187,11 +170,5 @@ class GraphsController < ApplicationController
     render :text => chart.to_s
   end
   
-  # This method will eventually be tied to the date picker to 
-  #  allow for changing the current start and stop times
-  def get_time_range
-    @start_time = session[:start_date_time] ||= 2.days.ago
-    @end_time = session[:end_date_time] ||=  Time.now
-  end
 
 end

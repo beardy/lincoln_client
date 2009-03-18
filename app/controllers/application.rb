@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   
-  before_filter :find_groups
+  before_filter :find_groups, :get_time_range
   
   # This will be used to show all groups 
   # In the nav bar
@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
     @groups = Group.find(:all)
   end
 
+  def get_time_range
+    @time_range = session[:time_range] ||= TimeRange.new
+  end
+  
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => '57e4b2474d2fe510397fc865730f56c8'

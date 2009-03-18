@@ -1,13 +1,13 @@
 <div class="rounded" id="controls">
   <div id="start-control">
     <p>Start</p>
-    <%= calendar_date_select_tag "start_date_time", @start_time, :time => true, :year_range => 1, 
+    <%= calendar_date_select_tag "start_date_time", @time_range.start_time, :time => true, :year_range => 1, 
                                  :after_close => 'update_date(\'start_date_time\',$F(this));' 
     %>
   </div>
   <div id="end-control">
     <p>End</p>
-    <%= calendar_date_select_tag "end_date_time", @end_time, :time => true,:year_range => 1, 
+    <%= calendar_date_select_tag "end_date_time", @time_range.end_time, :time => true,:year_range => 1, 
                                  :after_close => 'update_date(\'end_date_time\',$F(this))' 
     %>
   </div>
