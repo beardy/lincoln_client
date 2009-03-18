@@ -4,14 +4,14 @@ class GroupsController < ApplicationController
   # GET /gene_groups
   # GET /gene_groups.xml
   def index
-    @groups = Group.find(:all)
+    # @groups = Group.find(:all)
 	
     # Here's the basic use of the starting_between named scope
     # =>  @streams = Stream.starting_between(@start_time, @end_time)
     # Here's how we can use it with the built in finds for more granularity
     #  so w're using the starting_between to scope the results, then the find
     #  to get a specific subset of that. Its beautiful!
-    @streams = Stream.starting_between(@start_time, @end_time).find(:all, :conditions => rule_string)
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
     
     # TODO : so far we're not separating by groups. See notes in group and rule models 
     #  for my current ideas. Let me know what you think.

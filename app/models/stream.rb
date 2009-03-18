@@ -10,7 +10,7 @@ class Stream < ActiveRecord::Base
   # See the groups controller index method for an example of use
   named_scope :starting_between, lambda {|start,stop| {:conditions => ["windows.start_time between ? and ?", start, stop],
                                                        :include => :windows, :order => "windows.start_time"} }
-													   
+
   def ip_incoming
     ip(raw_ip_incoming)
   end
@@ -18,29 +18,29 @@ class Stream < ActiveRecord::Base
   def ip_outgoing
     ip(raw_ip_outgoing)
   end
-
+  
   def start_time
-    windows.minimum :start_time
+    self.windows[0].start_time
   end
-
+  
   def end_time
-    windows.maximum :end_time
+    self.windows[-1].end_time
   end
-
+  
   def num_packets_incoming
-    windows.sum :num_packets_incoming
+    self.windows.inject(0) {|sum, window| sum + window.num_packets_incoming }
   end
-
+  
   def num_packets_outgoing
-    windows.sum :num_packets_outgoing
+    self.windows.inject(0) {|sum, window| sum + window.num_packets_outgoing }
   end
-
+  
   def size_packets_incoming
-    windows.sum :size_packets_incoming
+    self.windows.inject(0) {|sum, window| sum + window.size_packets_incoming }
   end
-
+  
   def size_packets_outgoing
-    windows.sum :size_packets_outgoing
+    self.windows.inject(0) {|sum, window| sum + window.size_packets_incoming }
   end
 
 end
