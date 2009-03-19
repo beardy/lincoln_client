@@ -1,11 +1,15 @@
 require 'graph_builder'
 class GroupsController < ApplicationController
   
+  before_filter :get_selected_groups
+  
+  ################################
+  ## INDEX METHODS  ##############
+  ################################
+
   # GET /gene_groups
   # GET /gene_groups.xml
   def index
-    # @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
-    
     @graph_packet_size_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_size", :id => :all,:only_path => true))
     @graph_packet_num_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_count", :id => :all,:only_path => true))
     respond_to do |format|
@@ -15,6 +19,7 @@ class GroupsController < ApplicationController
   end
   
   def all_timeline_packet_size
+    # get data
     data = acquire_all_group_data(:size_packets_all)
     # configure graph
      options = {:title => "Packet Size", :legend => "Packet Data in KB"}
@@ -24,6 +29,7 @@ class GroupsController < ApplicationController
   end
   
   def all_timeline_packet_count
+    # get data
     data = acquire_all_group_data(:num_packets_all)
     # configure graph
      options = {:title => "Packet Number", :legend => "Packet Count"}
@@ -32,9 +38,12 @@ class GroupsController < ApplicationController
      render :text => chart.render
   end
   
+  # Helper method that will grab all 'values' from the selected groups
+  #   and returns it as a hash, ready for our graph builder
   def acquire_all_group_data(*values)
     data = {}
-    @groups.each do |group|
+    @selected_groups.each do |group_index|
+      group = Group.find(group_index.to_i)
       data[group] = Array.new(@time_range.ticks, 0)
       streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => group.to_sql)
       streams.each do |stream|
@@ -54,6 +63,23 @@ class GroupsController < ApplicationController
     end
     data
   end
+  
+  def get_selected_groups
+    @selected_groups = session[:selected_groups] ||= @groups.collect {|g| g.id}
+  end
+  
+  def toggle_selected_group
+    group_id = params[:group_id].to_i
+    present = @selected_groups.delete(group_id)
+    if(!present)
+      @selected_groups << group_id
+    end
+    render :layout => false
+  end
+  
+  ################################
+  ## SHOW METHODS  ###############
+  ################################
   
 
   # GET /gene_groups/1

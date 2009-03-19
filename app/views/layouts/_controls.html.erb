@@ -11,19 +11,8 @@
                                  :after_close => 'update_date(\'start_time\',$F(this))' 
     %>
   </div>
-  <div id="groups-control">
-    <p>Groups</p>
-    <div id="groups-chooser">
-      <ul>
-        <%- unless !@groups || @groups.empty? -%>
-          <%- @groups.each do |group| -%>
-            <li><%= check_box_tag group.id %> <%= group.name %></li>
-          <%- end -%>
-        <%- else -%>
-          <li>None</li>
-        <%- end -%>
-      </ul>
-    </div>
+  <div id="specialized-control">
+    <%= yield %>
   </div>
 </div>
 

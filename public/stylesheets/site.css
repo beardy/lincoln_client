@@ -73,7 +73,7 @@ a {
   font-variant:small-caps;
 }
 
-#controls div#groups-control {
+#controls div#specialized-control {
   clear:both;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -91,7 +91,7 @@ a {
   CCborderRadius: 20px;
 }
 
-#controls div#groups-control ul li {
+#controls div#specialized-control ul li {
   list-style-type: none;
   font-size: 140%;
   color: #333333;
@@ -106,7 +106,7 @@ a {
 
 
 .site {
-  width: 80em;
+  width: 83em;
   margin-top: 0pt;
   margin-right: auto;
   margin-bottom: 0pt;

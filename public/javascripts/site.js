@@ -44,6 +44,13 @@ function update_date(name, date)
   jQuery.post('/groups/update_time_range',{'date': date, 'name': name}, function(){location.reload();});  
 }
 
+// Based off of update_date - this method will update the selected groups and then reload. Again, probably
+//  a better way to do this
+function update_selected_groups(group_id)
+{
+  jQuery.post('/groups/toggle_selected_group',{'group_id': group_id}, function(){location.reload();});  
+}
+
 jQuery(document).ready(function()
 {
   jQuery('#dropdown > li').bind('mouseover', jsddm_open)
