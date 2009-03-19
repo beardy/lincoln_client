@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090317125241) do
+ActiveRecord::Schema.define(:version => 20090319145944) do
 
   create_table "groups", :force => true do |t|
     t.string   "name"
@@ -52,7 +52,6 @@ ActiveRecord::Schema.define(:version => 20090317125241) do
   end
 
   add_index "windows", ["end_time"], :name => "index_windows_on_end_time"
-  add_index "windows", ["start_time", "end_time"], :name => "index_windows_on_start_time_and_end_time"
   add_index "windows", ["start_time"], :name => "index_windows_on_start_time"
   add_index "windows", ["stream_id"], :name => "index_windows_on_stream_id"
 
