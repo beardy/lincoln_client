@@ -44,7 +44,6 @@ class GraphBuilder
     max = 0.0
     color_index = 0
     @data.each do |key, value|
-      puts "Key: "+key
       element = find_type(@type)
       element.text = key.to_s
       element.width = @options[:line_width]
