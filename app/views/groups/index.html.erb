@@ -1,3 +1,25 @@
-<%= render :partial => 'layouts/controls' %>
-<%= @graph_packet_size_all %>
+<% content_for :head do  %>
+<%= javascript_include_tag 'ycodaslider-3.0.pack' %>
+<script type="text/javascript">
+  jQuery(document).ready(function()
+  {
+    jQuery(window).ycodacss('/stylesheets/ycodaslider-3.0.css'); 
+    jQuery(window).bind("load", function() { 
+        jQuery(".ycodaslider").ycodaslider(); 
+    });  });
+</script>
+<% end %>
 
+<%= render :partial => 'layouts/controls' %>
+<div class="ycodaslider column span-13 first last">
+	<div class="yslider-panelwrapper" title="Data Transfered">
+		<h3>Data Transfered</h3>
+    <%= @graph_packet_size_all %>
+  </div>
+  <div class="yslider-panelwrapper" title="Packets Transfered">
+		<h3>Packets Transfered</h3>
+		<%= @graph_packet_num_all %>
+	</div>
+</div>
+
+<div class="clearbox"></div>

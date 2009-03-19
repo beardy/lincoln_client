@@ -5,10 +5,11 @@ a:focus { outline:none }
 
 div.ycodaslider {
     color: #000;
-    width: 753px;
-    margin: auto;
+    width: 540px;
+/*    margin: auto;*/
     text-align: center;
     padding-bottom: 20px;
+    
 }
 
 div.ycodaslider div.yslider-wrap { 
@@ -21,13 +22,15 @@ div.ycodaslider div.yslider-wrap {
 
 div.yslider-viewer { /* This is the viewing window */
     position: relative;
-    border: 5px solid #d42d39; /* this is the border. should have the same value for the links */
+    border: 5px solid #333333; /* this is the border. should have the same value for the links */
     margin: auto;
     height: 350px;
     clear: both;
     background: #fff;
-    overflow: hidden; /* comment for debug */
-    width: 653px;     /* 1000 for debug; Also specified in  div.yslider-viewer div.yslider-container div.yslider-panel  below */
+    /* comment for debug */
+    overflow: hidden; 
+    /* 1000 for debug; Also specified in  div.yslider-viewer div.yslider-container div.yslider-panel  below */
+    width: 520px;     
 }
 
 div.yslider-viewer div.yslider-container { 
@@ -38,7 +41,7 @@ div.yslider-viewer div.yslider-container {
     left: 0; top: 0;
     width: 100%;
     list-style-type: none;
-    /* -moz-user-select: none; // This breaks CSS validation but stops accidental (and intentional - beware) panel highlighting in Firefox. Some people might find this useful, crazy fools. */
+    /*-moz-user-select: none; // This breaks CSS validation but stops accidental (and intentional - beware) panel highlighting in Firefox. Some people might find this useful, crazy fools. */
 }
 
 div.yslider-viewer div.yslider-container div.yslider-panel { 
@@ -46,7 +49,8 @@ div.yslider-viewer div.yslider-container div.yslider-panel {
     float:left;
     height: 100%;
     position: relative;
-    width: 653px; /* Also specified in  div.yslider-viewer  above */
+    /* Also specified in  div.yslider-viewer  above */
+    width: 520px; 
 }
 div.yslider-viewer div.yslider-container div.yslider-panel div.yslider-panelwrapper { 
 /* Wrapper to give some padding in the panels, without messing with existing panel width */
@@ -71,7 +75,7 @@ div.yslider-nav a { /* The nav links */
     font-weight: bold;
     text-align: center;
     line-height: 22px;
-    background: #c6e3ff;
+    background: #B3C4D4;
     color: #000;
     text-decoration: none;
     display: block;

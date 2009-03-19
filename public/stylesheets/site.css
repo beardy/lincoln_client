@@ -143,6 +143,7 @@ a {
   height: 3.4em;
 /*  padding-top: 0.4em;*/
   position: relative;
+  z-index: 100;
 }
 
 #navbar ul li a {

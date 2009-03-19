@@ -4,9 +4,10 @@ class GroupsController < ApplicationController
   # GET /gene_groups
   # GET /gene_groups.xml
   def index
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
+    # @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find_all_by_port_incoming(80)
     
     @graph_packet_size_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_size", :id => :all,:only_path => true))
+    @graph_packet_num_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_count", :id => :all,:only_path => true))
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @groups }
@@ -14,7 +15,7 @@ class GroupsController < ApplicationController
   end
   
   def all_timeline_packet_size
-    data = acquire_data(:size_packets_all)
+    data = acquire_all_group_data(:size_packets_all)
     # configure graph
      options = {:title => "Packet Size", :legend => "Packet Data in KB"}
      builder = GraphBuilder.new(:line, data, options)
@@ -22,7 +23,16 @@ class GroupsController < ApplicationController
      render :text => chart.render
   end
   
-  def acquire_data(*values)
+  def all_timeline_packet_count
+    data = acquire_all_group_data(:num_packets_all)
+    # configure graph
+     options = {:title => "Packet Number", :legend => "Packet Count"}
+     builder = GraphBuilder.new(:line, data, options)
+     chart = builder.build
+     render :text => chart.render
+  end
+  
+  def acquire_all_group_data(*values)
     data = {}
     @groups.each do |group|
       data[group] = Array.new(@time_range.ticks, 0)
