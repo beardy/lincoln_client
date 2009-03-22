@@ -1,19 +1,3 @@
-<!-- This will get inserted into the head portion of the html -->
-<% content_for :head do  %>
-  <%= javascript_include_tag 'jquery.tablesorter' %>
-  <%= stylesheet_link_tag 'tablesorter/blue/style' %>
-  <%= javascript_include_tag 'jquery.tablesorter.pager' %>
-  <%= stylesheet_link_tag 'tablesorter/pager/style' %>
-  <script type="text/javascript">
-    jQuery(document).ready(function()
-    {
-      jQuery('#streams-table')
-       .tablesorter()
-       .tablesorterPager({container: jQuery("#pager")});
-    });
-  </script>
-<% end %>
-
 <table id="streams-table" class="tablesorter">
   <thead>
   <tr>
@@ -28,7 +12,6 @@
     <th>Port Outgoing</th>
     <th># Packets Outgoing</th>
     <th>Packet Size Outgoing</th>
-    <th>Windows</th>
   </tr>
   </thead>
   <tbody>
@@ -46,26 +29,11 @@
         <td><%= stream.port_outgoing %></td>
         <td><%= stream.num_packets_outgoing %></td>
         <td><%= stream.size_packets_outgoing %></td>
-        <td><%= link_to 'windows', :controller=> 'windows', :action=> 'show',
-                                    :id => stream %>
       </tr>
       
   <%- end -%>
   </tbody>
 </table>
 
-<div id="pager" class="pager">
-  <form>
-    <img src="/images/icons/first.png" class="first"/>
-    <img src="/images/icons/prev.png" class="prev"/>
-    <input type="text" class="pagedisplay"/>
-    <img src="/images/icons/next.png" class="next"/>
-    <img src="/images/icons/last.png" class="last"/>
-    <select class="pagesize">
-      <option selected="selected"  value="20">20</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-      <option  value="200">200</option>
-    </select>
-  </form>
-</div>
+<%= will_paginate streams %>
+
