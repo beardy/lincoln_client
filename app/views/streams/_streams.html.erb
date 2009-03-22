@@ -1,5 +1,4 @@
-<table id="streams-table" class="tablesorter">
-  <thead>
+<table id="streams-table">
   <tr>
     <th>Start Time</th>
     <th>End Time</th>
@@ -13,10 +12,7 @@
     <th># Packets Outgoing</th>
     <th>Packet Size Outgoing</th>
   </tr>
-  </thead>
-  <tbody>
   <%- streams.each do |stream| -%>
-
       <tr>
         <td><%= stream.start_time.to_s(:short) %></td>
         <td><%= stream.end_time.to_s(:short) %></td>
@@ -30,9 +26,7 @@
         <td><%= stream.num_packets_outgoing %></td>
         <td><%= stream.size_packets_outgoing %></td>
       </tr>
-      
   <%- end -%>
-  </tbody>
 </table>
 
 <%= will_paginate streams %>
