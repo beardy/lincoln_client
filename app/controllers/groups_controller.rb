@@ -12,6 +12,9 @@ class GroupsController < ApplicationController
   def index
     @graph_packet_size_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_size", :id => :all,:only_path => true))
     @graph_packet_num_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_count", :id => :all,:only_path => true))
+    # check out 
+    # http://wiki.github.com/mislav/will_paginate/ajax-pagination
+    # for ajax based ideas - that would be optimal.
     @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).paginate :page => params[:page], :order => 'windows.start_time ASC'
     
     respond_to do |format|
