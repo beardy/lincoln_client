@@ -16,6 +16,8 @@ Rails::Initializer.run do |config|
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
   # See Rails::Configuration for more options.
+  
+  # config.add_support_load_paths %W( #{RAILS_ROOT}/lib/graph_builder)
 
   # Skip frameworks you're not going to use. To use Rails without a database
   # you must remove the Active Record framework.
@@ -76,3 +78,5 @@ Rails::Initializer.run do |config|
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
 end
+
+require_dependency RAILS_ROOT + "/lib/graph_builder"

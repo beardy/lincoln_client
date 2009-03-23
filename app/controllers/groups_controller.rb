@@ -1,4 +1,3 @@
-require 'graph_builder'
 class GroupsController < ApplicationController
   
   before_filter :get_selected_groups

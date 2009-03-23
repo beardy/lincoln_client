@@ -1,5 +1,5 @@
-module OpenFlashChart
 class GraphBuilder
+  include OpenFlashChart
   # TODO: Find better way for automatic color generation
   COLORS = %w[CA2C1E 8B955C 91332A  0F3323 F7AC00]
   attr_accessor :title, :options
@@ -69,7 +69,7 @@ class GraphBuilder
     @chart.set_title(Title.new(options[:title])) if @options[:title]
     if @options[:legend]
       y_legend = YLegend.new(options[:legend])
-      y_legend.set_style('{font-size: 20px; color: #770077}')
+      y_legend.set_style('{font-size: 20px; color: #770000}')
       @chart.set_y_legend(y_legend)
     end
   end
@@ -85,5 +85,4 @@ class GraphBuilder
   def find_color(index)
     COLORS[index]
   end
-end
 end

@@ -3,7 +3,6 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  
   before_filter :find_groups, :get_time_range
   
   # This will be used to show all groups 
