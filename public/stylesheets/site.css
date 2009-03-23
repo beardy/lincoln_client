@@ -31,7 +31,6 @@ a {
   float: left;
   margin-top: 6px;
   margin-bottom:-1px;
-  
 }
 
 
@@ -185,6 +184,7 @@ a {
 #dropdown li ul li a {
   width: auto;
   background: #A60000;
+  text-align: left;
 }
 
 #dropdown li ul li a:hover {
