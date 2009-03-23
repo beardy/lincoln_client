@@ -4,10 +4,10 @@ class Rule < ActiveRecord::Base
   include IPConvert
   belongs_to :group
   
-  before_create :set_ranges
-  before_update :set_ranges
+  # before_create :set_ranges
+  # before_update :set_ranges
   
-  def set_ranges
+  def after_initialize
     self.port_outgoing_end ||= self.port_outgoing_start
     self.port_incoming_end ||= self.port_incoming_start
     self.raw_ip_incoming_end ||= self.raw_ip_incoming_start
@@ -24,6 +24,15 @@ class Rule < ActiveRecord::Base
     end
     if(self.port_incoming_start && self.port_incoming_end)
       queries << "streams.port_incoming between #{self.port_incoming_start} and #{self.port_incoming_end}"
+    end
+    if(self.port_outgoing_start && self.port_outgoing_end)
+      queries << "streams.port_outgoing between #{self.port_outgoing_start} and #{self.port_outgoing_end}"
+    end
+    if(self.raw_ip_incoming_start && self.raw_ip_incoming_end)
+      queries << "streams.raw_ip_incoming between #{self.raw_ip_incoming_start} and #{self.raw_ip_incoming_end}"
+    end
+    if(self.raw_ip_outgoing_start && self.raw_ip_outgoing_end)
+      queries << "streams.raw_ip_outgoing between #{self.raw_ip_outgoing_start} and #{self.raw_ip_outgoing_end}"
     end
     sql_statement << queries.join(" AND ")
     sql_statement << ")"
