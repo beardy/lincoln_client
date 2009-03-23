@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
     # check out 
     # http://wiki.github.com/mislav/will_paginate/ajax-pagination
     # for ajax based ideas - that would be optimal.
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).paginate :page => params[:page], :order => 'windows.start_time ASC'
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
     
     respond_to do |format|
       format.html # index.html.erb
