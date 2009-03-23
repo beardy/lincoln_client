@@ -9,12 +9,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090319145944) do
+ActiveRecord::Schema.define(:version => 20090323042434) do
 
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "host_names", :force => true do |t|
+    t.integer "raw_ip_address"
+    t.string  "name"
+  end
+
+  create_table "port_names", :force => true do |t|
+    t.integer "number"
+    t.string  "name"
   end
 
   create_table "rules", :force => true do |t|
