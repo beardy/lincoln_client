@@ -49,7 +49,7 @@ class GroupsController < ApplicationController
     @selected_groups.each do |group_index|
       group = Group.find(group_index.to_i)
       data[group] = Array.new(@time_range.ticks, 0)
-      streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => group.to_sql)
+      streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
       streams.each do |stream|
         stream.windows.each do |window|
           # for each tick
