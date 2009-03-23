@@ -1,5 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :groups
+  
+  map.namespace :admin do |admin|
+    admin.resources :groups
+    admin.resources :port_names
+    admin.resources :host_names
+  end
+  
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -35,7 +42,8 @@ ActionController::Routing::Routes.draw do |map|
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   map.root :controller => "groups"
   
-  map.admin 'admin/', :controller => 'admin', :action => 'index'
+  
+  # map.admin 'admin/', :controller => 'admin', :action => 'index'
   # See how all your routes lay out with "rake routes"
 
   # Install the default routes as the lowest priority.

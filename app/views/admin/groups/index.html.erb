@@ -1,0 +1,7 @@
+<!-- Here's how to iterate through each group and then each rule -->
+<% @groups.each do |group| %>
+  <h2><%= group.name %></h2>
+  <% group.rules.each do |rule| %>
+    <p><%= rule.port_incoming_start %></p>
+  <% end %>
+<% end %>
