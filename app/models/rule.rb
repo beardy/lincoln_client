@@ -4,6 +4,16 @@ class Rule < ActiveRecord::Base
   include IPConvert
   belongs_to :group
   
+  before_create :set_ranges
+  before_update :set_ranges
+  
+  def set_ranges
+    self.port_outgoing_end ||= self.port_outgoing_start
+    self.port_incoming_end ||= self.port_incoming_start
+    self.raw_ip_incoming_end ||= self.raw_ip_incoming_start
+    self.raw_ip_outgoing_end ||= self.raw_ip_outgoing_start
+  end
+  
   def to_sql
     sql_statement = ""
     queries = []
@@ -43,7 +53,8 @@ class Rule < ActiveRecord::Base
   end
   
   def ip_incoming_start=(new_ip)
-    raw_ip_incoming_start = raw_ip(new_ip)
+    self.raw_ip_incoming_start = raw_ip(new_ip)
+    self
   end
   
   def ip_incoming_end
@@ -51,7 +62,8 @@ class Rule < ActiveRecord::Base
   end
   
   def ip_incoming_end=(new_ip)
-    raw_ip_incoming_end = raw_ip(new_ip)
+    self.raw_ip_incoming_end = raw_ip(new_ip)
+    self
   end
   
   def ip_outgoing_start
@@ -59,7 +71,8 @@ class Rule < ActiveRecord::Base
   end
   
   def ip_outgoing_start=(new_ip)
-    raw_ip_outgoing_start = raw_ip(new_ip)
+    self.raw_ip_outgoing_start = raw_ip(new_ip)
+    self
   end
   
   def ip_outgoing_end
@@ -67,7 +80,8 @@ class Rule < ActiveRecord::Base
   end
   
   def ip_outgoing_end=(new_ip)
-    raw_ip_outgoing_end = raw_ip(new_ip)
+    self.raw_ip_outgoing_end = raw_ip(new_ip)
+    self
   end
   private
   
