@@ -1,14 +1,8 @@
 class RulesController < ApplicationController
-  def index
+  def update
+    if(params[:rule][:id] == 'global')
+      @global_rule = Rule.new(params[:rule])
+      redirect_to :controller => :groups, :action => :index
+    end
   end
-
-  def show
-  end
-
-  def edit
-  end
-
-  def new
-  end
-
 end

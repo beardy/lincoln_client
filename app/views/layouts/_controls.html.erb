@@ -17,7 +17,8 @@
     </div>
   </div>
   <div class="rounded control" id="global-rule-control">
-    <% form_for @global_rule do |f| %>
+    <% form_for :rule,  @global_rule, :url => { :controller => :rules, :action => :update} do |f| %>
+    <%= f.hidden_field :id, :value => 'global' %>
     <div class="control-entry">
       <p class="control-subtitle">IP Range:</p>
       <div class="column first span-5">
@@ -53,8 +54,8 @@
         <%= f.text_field :port_outgoing_end, :size => 6%>
       </div>
     </div>
-    <% end %>
     <div class="clearbox"></div>
     <%= submit_tag 'Update', :class => 'button' %>
+    <% end %>
   </div>
 </div>

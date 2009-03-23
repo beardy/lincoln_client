@@ -4,19 +4,6 @@ class Rule < ActiveRecord::Base
   include IPConvert
   belongs_to :group
   
-  # TODO: make rules convert to sql easily
-  #  current idea -- have a to_sql method here
-  #  to be used in the groups model to combine all the 
-  #  rules sql.
-  # def to_sql
-  #   sql_statement = ""
-  #   if(self.port_incoming_start)
-  #     sql_statement << "streams.port_incoming is between #{self.port_incoming_start} and #{self.port_incoming_end}"
-  #   end
-  #   if(self.protocol)
-  #   end
-  # end
-  
   def to_sql
     sql_statement = ""
     queries = []
@@ -55,18 +42,33 @@ class Rule < ActiveRecord::Base
     ip(raw_ip_incoming_start)
   end
   
+  def ip_incoming_start=(new_ip)
+    raw_ip_incoming_start = raw_ip(new_ip)
+  end
+  
   def ip_incoming_end
     ip(raw_ip_incoming_end)
+  end
+  
+  def ip_incoming_end=(new_ip)
+    raw_ip_incoming_end = raw_ip(new_ip)
   end
   
   def ip_outgoing_start
     ip(raw_ip_outgoing_start)
   end
   
+  def ip_outgoing_start=(new_ip)
+    raw_ip_outgoing_start = raw_ip(new_ip)
+  end
+  
   def ip_outgoing_end
     ip(raw_ip_outgoing_end)
   end
   
+  def ip_outgoing_end=(new_ip)
+    raw_ip_outgoing_end = raw_ip(new_ip)
+  end
   private
   
   def create_range(start,stop)

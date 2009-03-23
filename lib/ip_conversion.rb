@@ -12,6 +12,6 @@ module IPConvert
   end
 
   def raw_ip(ip)
-    IPAddr.new(ip).to_i if ip
+    IPAddr.new(ip).to_i unless ip.empty?
   end
 end
