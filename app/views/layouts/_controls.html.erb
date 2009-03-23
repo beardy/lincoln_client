@@ -1,18 +1,60 @@
-<div class="rounded" id="controls">
-  <div id="start-control">
-    <p>Start</p>
-    <%= calendar_date_select_tag "start_date_time", @time_range.start_time, :time => true, :year_range => 1, 
-                                 :after_close => 'update_date(\'start_time\',$F(this));' 
-    %>
+<div class="controls">
+  <div class="rounded control" id="main-control">
+    <div id="start-control">
+      <p class="control-title">Start</p>
+      <%= calendar_date_select_tag "start_date_time", @time_range.start_time, :time => true, :year_range => 1, 
+                                   :after_close => 'update_date(\'start_time\',$F(this));' 
+      %>
+    </div>
+    <div id="end-control">
+      <p class="control-title">End</p>
+      <%= calendar_date_select_tag "end_date_time", @time_range.end_time, :time => true,:year_range => 1, 
+                                   :after_close => 'update_date(\'start_time\',$F(this))' 
+      %>
+    </div>
+    <div class="specialized-control">
+      <%= yield %>
+    </div>
   </div>
-  <div id="end-control">
-    <p>End</p>
-    <%= calendar_date_select_tag "end_date_time", @time_range.end_time, :time => true,:year_range => 1, 
-                                 :after_close => 'update_date(\'start_time\',$F(this))' 
-    %>
-  </div>
-  <div id="specialized-control">
-    <%= yield %>
+  <div class="rounded control" id="global-rule-control">
+    <% form_for @global_rule do |f| %>
+    <div class="control-entry">
+      <p class="control-subtitle">IP Range:</p>
+      <div class="column first span-5">
+          <%= f.label :ip_incoming_start, "Incoming:" %>
+          <br />
+          <%= f.text_field :ip_incoming_start, :size => 11%>
+          <span>-</span>
+          <%= f.text_field :ip_incoming_end, :size => 11%>
+      </div>
+      <div class="column last span-5">
+        <%= f.label :ip_outgoing_start, "Outgoing:" %>
+        <br />
+        <%= f.text_field :ip_outgoing_start, :size => 11%>
+        <span>-</span>
+        <%= f.text_field :ip_outgoing_end, :size => 11%>
+      </div>
+    </div>
+    <div class="control-entry">
+      <p class="control-subtitle">Port Range:</p>
+      <div class="column first span-5">
+          <%= f.label :port_incoming_start, "Incoming:" %>
+          <br />
+          <%= f.text_field :port_incoming_start, :size => 6%>
+          <span>-</span>
+          <%= f.text_field :port_incoming_end, :size => 6%>
+
+      </div>
+      <div class="column last span-5">
+        <%= f.label :port_outgoing_start, "Outgoing:" %>
+        <br />
+        <%= f.text_field :port_outgoing_start, :size => 6%>
+        <span>-</span>
+        <%= f.text_field :port_outgoing_end, :size => 6%>
+      </div>
+    </div>
+    <% end %>
+    <div class="clearbox"></div>
+    <%= submit_tag 'Update', :class => 'button' %>
   </div>
 </div>
-

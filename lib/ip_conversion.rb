@@ -8,10 +8,10 @@ require "ipaddr"
 module IPConvert
   
   def ip(raw_ip)
-    IPAddr.new(raw_ip, Socket::AF_INET).to_s
+    IPAddr.new(raw_ip, Socket::AF_INET).to_s if raw_ip
   end
 
   def raw_ip(ip)
-    IPAddr.new(ip).to_i
+    IPAddr.new(ip).to_i if ip
   end
 end

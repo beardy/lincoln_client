@@ -12,7 +12,7 @@
 
 <!-- This passes in the groups control as we don't want it in the show page -->
 <% render :layout => 'layouts/controls' do %>
-  <p>Groups</p>
+  <p class="control-title">Groups</p>
   <div id="groups-chooser">
     <ul>
       <%- unless !@groups || @groups.empty? -%>

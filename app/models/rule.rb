@@ -55,7 +55,7 @@ class Rule < ActiveRecord::Base
     ip(raw_ip_incoming_start)
   end
   
-  def ip_incoming_stop
+  def ip_incoming_end
     ip(raw_ip_incoming_end)
   end
   
