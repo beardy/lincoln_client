@@ -50,6 +50,7 @@ class GroupsController < ApplicationController
       group = Group.find(group_index.to_i)
       data[group] = Array.new(@time_range.ticks, 0)
       streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
+      puts "---------RESULT SIZE: "+streams.size.to_s+"---------------"
       streams.each do |stream|
         stream.windows.each do |window|
           # for each tick
