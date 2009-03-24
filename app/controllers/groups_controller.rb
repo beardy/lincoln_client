@@ -14,6 +14,10 @@ class GroupsController < ApplicationController
     @graph_all_timeline_by_packet_count = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_packet_count", :id => :all, :only_path => true))
     @graph_all_timeline_by_packet_count_normal = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_packet_count_normal", :id => :all, :only_path => true))
 
+    @graph_all_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_by_data_size", :id => :all, :only_path => true))
+    #@graph_all_top_daily_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_daily_by_data_size", :id => :all, :only_path => true))
+	#@graph_all_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_ip_by_data_size", :id => :all, :only_path => true))
+
     @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
     
     respond_to do |format|
@@ -117,6 +121,179 @@ class GroupsController < ApplicationController
     builder = GraphBuilder.new(:area, data, options)
     chart = builder.build
     render :text => chart.render
+  end
+  
+  #
+  # Distribution by Data Size (All Groups)
+  #
+  def all_by_data_size
+    # get all data
+    all_data = acquire_all_group_data(:size_packets_all)
+	
+	# sum data values
+	data = {"All" => {}}
+	unless all_data.empty?
+	  data["All"]["values"] = all_data.map{|n| n[1]["values"].inject(0){|sum, x| sum + x}}
+	  data["All"]["keys"] = data["All"]["values"].map{"#val#"}
+	  
+	  all_sum = data["All"]["values"].inject(0){|sum, x| sum + x}
+	  data["All"]["x_labels"] = all_data.zip(data["All"]["values"]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
+    end
+
+    # configure graph
+    options = {:title => "Data Size", :legend => "Data Size (in KB)"}
+    builder = GraphBuilder.new(:pie, data, options)
+    chart = builder.build
+    render :text => chart.render
+  end
+
+  #
+  # Distribution of Top IP Addresses by Data Size (All Groups)
+  #
+  def all_top_ip_by_data_size
+    @group = Group.find(params[:id])
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+	
+	top_count = 10
+	
+    # initialize all data
+    all_data = {}
+    all_data["Incoming"] = Hash.new(0)
+    all_data["Outgoing"] = Hash.new(0)
+
+    # for each stream & window
+    @streams.each do |stream|
+      stream.windows.each do |window|
+        # sum packet size
+		all_data["Incoming"][stream.ip_incoming] += window.data(:incoming, :kilobyte) * @time_range.ratio
+		all_data["Outgoing"][stream.ip_outgoing] += window.data(:outgoing, :kilobyte) * @time_range.ratio
+      end
+    end
+	
+	# initialize top data values and text
+    data = {}
+    data["Incoming"] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
+    data["Outgoing"] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
+
+	top_count.times do |i|
+	  # find max incoming (by value)
+	  max = all_data["Incoming"].max{|a,b| a[1] <=> b[1]}
+	  unless max.nil? or max.last == 0
+		data["Incoming"]["values"][i] = max.last
+		data["Incoming"]["keys"][i] = "#{max.first}<br>#{max.last}"
+		all_data["Incoming"][max.first] = 0
+	  end
+		
+	  # find max outgoing (by value)
+	  max = all_data["Outgoing"].max{|a,b| a[1] <=> b[1]}
+	  unless max.nil? or max.last == 0
+		data["Outgoing"]["values"][i] = max.last
+		data["Outgoing"]["keys"][i] = "#{max.first}<br>#val#"
+		all_data["Outgoing"][max.first] = 0
+	  end
+    end
+	  
+    # configure graph
+    options = {:title => "Top IP Address: Incoming vs Outgoing", :legend => "Data Size (in KB)"}
+    builder = GraphBuilder.new(:bar, data, options)
+    chart = builder.build
+    render :text => chart.render
+  end
+
+  #
+  # Distribution of Daily Traffic by Data Size (All Groups)
+  #
+  def all_top_daily_by_data_size
+    @group = Group.find(params[:id])
+    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+
+	top_count = 10
+	dot_size_max = 20
+	dot_size_min = 5
+	dot_size_range = dot_size_max - dot_size_min
+	
+	# initialize time information
+	start_day = Time.parse(@time_range.start_time.strftime("%a %b %d 00:00:00 %Z %Y"))
+	end_day = Time.parse(@time_range.end_time.strftime("%a %b %d 00:00:00 %Z %Y")) + 1.day
+	days = ((end_day - start_day) / 1.day).round
+	puts "DAYS: #{days}"
+	start_hour = Time.parse(@time_range.start_time.strftime("%a %b %d %H:00:00 %Z %Y"))
+	end_hour = Time.parse(@time_range.end_time.strftime("%a %b %d %H:00:00 %Z %Y")) + 1.hour
+	hours = ((end_hour - start_hour) / 1.hour).round
+	puts "HOURS: #{hours}"
+	start_day_hour = @time_range.start_time.hour
+	end_day_hour = @time_range.end_time.hour
+	
+    # initialize all data
+    all_data = {}
+    all_data["Data"] = Hash.new(0)
+	
+    # for each stream & window
+    @streams.each do |stream|
+      stream.windows.each do |window|
+		# find hour indexes
+	    start_hour_index = ((Time.parse(window.start_time.strftime("%a %b %d %H:00:00 %Z %Y")) - start_hour) / 1.hour).round
+	    end_hour_index = ((Time.parse(window.end_time.strftime("%a %b %d %H:00:00 %Z %Y")) - start_hour) / 1.hour).round
+	    # sum data
+	    if start_hour_index == end_hour_index
+		  all_data["Data"][start_hour_index] += window.data(:all, :kilobyte)
+		else
+		  start_ratio = (start_hour + end_hour_index - window.start_time) / @time_range.window
+		  all_data["Data"][start_hour_index] += window.data(:all, :kilobyte) * start_ratio
+		  if (end_hour_index < hours)
+		    all_data["Data"][end_hour_index] += window.data(:all, :kilobyte) * (1 - start_ratio)
+		  end
+		end
+      end
+    end
+	
+	# initialize top data: values, text, and x-axis labels
+    data = {}
+    data["Data"] = {
+	  "values" => Array.new()
+	}
+
+    temp = Array.new()
+
+	top_count.times do |i|
+	  # find max
+	  max = all_data["Data"].max{|a,b| a[1] <=> b[1]}
+	  unless max.nil? or max.last == 0
+		y = (start_day_hour + max.first) % 24
+		x = start_day_hour + max.first
+		data["Data"]["values"].push(ScatterValue.new(x,y))
+		data["Data"]["values"].last.tooltip = "#{max.last}"
+		temp.push(max.last)
+		all_data["Data"][max.first] = 0
+	  end
+    end
+
+    # update dot sizes
+    value_range = temp.first - temp.last
+
+    temp.each_with_index do |x, i|
+	  data["Data"]["values"][i].dot_size = ((temp[i] - temp.last) / value_range) * dot_size_range + dot_size_min
+	end
+
+    # initialize chart
+    chart = OpenFlashChart.new
+
+    title = Title.new("Scatter points")
+    chart.set_title(title)
+
+    scatter = Scatter.new('#1C6569', dot_size_min)  # color, dot size
+    scatter.values = data["Data"]["values"]
+    chart.add_element(scatter)
+
+    x = XAxis.new
+    x.set_range(0, days * 24, 24)
+    chart.set_x_axis(x)
+
+    y = YAxis.new
+    y.set_range(0,24,4)
+    chart.set_y_axis(y)
+
+    render :text => chart.to_s
   end
   
   # Helper method that will grab all 'values' from the selected groups

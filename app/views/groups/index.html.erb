@@ -46,6 +46,40 @@
 
 <div class="clearbox"></div>
 
+<!-- Here is where a series of graphs can go  -->
+<div class="column span-6 first" style="width: 315px">
+
+  <h3>Group Traffic Distribution</h3>
+  <div class="ycodaslider ycodaslider-small">
+	<div class="yslider-panelwrapper" title="Groups">
+      <%= @graph_all_by_data_size %>
+	</div>
+  </div><!-- .ycodaslider -->
+  
+</div>
+<div class="column span-6" style="width: 315px">
+
+  <h3>Daily Traffic Distribution</h3>
+  <div class="ycodaslider ycodaslider-small">
+	<div class="yslider-panelwrapper" title="Days">
+      <%= @graph_all_top_daily_by_data_size %>
+	</div>
+  </div><!-- .ycodaslider -->
+
+</div>
+<div class="column span-6 last" style="width: 315px">
+
+  <h3>IP Traffic Distribution</h3>
+  <div class="ycodaslider ycodaslider-small">
+	<div class="yslider-panelwrapper" title="IP Addresses">
+      <%= @graph_all_top_ip_by_data_size %>
+	</div>
+  </div><!-- .ycodaslider -->
+
+</div>
+
+<div class="clearbox"></div>
+
 <h1>
 <%= link_to_function("Raw Traffic", :id => "raw_traffic_link") do |page|
     page.visual_effect(:toggle_blind, 'raw_traffic')
