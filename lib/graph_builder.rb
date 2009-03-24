@@ -1,7 +1,7 @@
 class GraphBuilder
   include OpenFlashChart
   # TODO: Find better way for automatic color generation
-  COLORS = %w[CA2C1E 8B955C 91332A  0F3323 F7AC00]
+  COLORS = %w[#1C6569 #9C1146 #420E82 #F56A2A #994B25 #8E83D4 #F0A729]
   attr_accessor :title, :options
   
   # type is a symbol which indicates what type of chart you are making
@@ -27,8 +27,8 @@ class GraphBuilder
 			:line_width => 2, 
 			:dot_size => 5,
 		}.merge(options)
-		@type = type
-		@chart = OpenFlashChart.new
+    @type = type
+    @chart = OpenFlashChart.new
     @data = data
     @options = options
   end
@@ -43,21 +43,38 @@ class GraphBuilder
   def populate_graph
     max = 0.0
     color_index = 0
-    @data.each do |key, value|
-      element = find_type(@type)
+	
+    @data.each do |key, data|
+      # initialize color from default theme
+	  color = find_color(color_index)
+      color_index += 1
+	  
+	  # initialize chart element
+      element = find_element_type(@type)
       element.text = key.to_s
       element.width = @options[:line_width]
       element.dot_size = @options[:dot_size]
-      if key.respond_to? :color
-        element.colour = '#'+key.color
+	  element.colour = color
+	  element.colours = COLORS
+      element.fill = color
+      element.fill_alpha = 1
+    
+      # initialize element values (with tooltips and x-axis labels)
+      if data.has_key?("keys") and data.has_key?("x_labels")
+        element.values = data["values"].zip(data["keys"], data["x_labels"]).map{|x, y, z| 
+		  find_value_type(@type, {:color => color, :value => x, :key => y, :x_label => z}) }
+	  # initialize element values (with tooltips)
+	  elsif data.has_key?("keys")
+	    element.values = data["values"].zip(data["keys"]).map{|x, y| 
+		  find_value_type(@type, {:color => color, :value => x, :key => y}) }
       else
-        element.colour = '#'+find_color(color_index)
-        color_index += 1
+        element.values = data["values"]
       end
-      element.values = value
       
       @chart.add_element(element)
-      max = max < value.max ? value.max : max
+	  
+	  # update max value
+      max = max < data["values"].max ? data["values"].max : max
     end
     
     y = YAxis.new
@@ -69,16 +86,31 @@ class GraphBuilder
     @chart.set_title(Title.new(options[:title])) if @options[:title]
     if @options[:legend]
       y_legend = YLegend.new(options[:legend])
-      y_legend.set_style('{font-size: 20px; color: #770000}')
+      y_legend.set_style('{font-size: 20px; color: #770077}')
       @chart.set_y_legend(y_legend)
     end
   end
   
-  def find_type(type)
+  def find_element_type(type)
     element = case type
       when :line : LineDot.new
+      when :area : AreaHollow.new
+	  when :bar : Bar.new
+	  when :pie : Pie.new
       else LineDot.new
     end
+    element
+  end
+  
+  def find_value_type(type, options)	
+    element = case type
+      when :line : DotValue.new(options[:value], options[:color])
+      when :area : DotValue.new(options[:value], options[:color])
+	  when :bar : BarValue.new(options[:value])
+	  when :pie : PieValue.new(options[:value], options[:x_label])
+      else DotValue.new(options[:value], options[:color])
+	end
+    element.tooltip = options[:key]
     element
   end
   

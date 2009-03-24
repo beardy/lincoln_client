@@ -9,7 +9,10 @@ div.ycodaslider {
 /*    margin: auto;*/
     text-align: center;
     padding-bottom: 20px;
-    
+}
+
+div.ycodaslider-small {
+    width: 340px;
 }
 
 div.ycodaslider div.yslider-wrap { 
@@ -18,7 +21,6 @@ div.ycodaslider div.yslider-wrap {
     position: relative;
     width: 100%;
 }
-
 
 div.yslider-viewer { /* This is the viewing window */
     position: relative;
@@ -33,10 +35,14 @@ div.yslider-viewer { /* This is the viewing window */
     width: 520px;     
 }
 
+div.ycodaslider-small div.yslider-viewer { /* This is the viewing window */
+    height: 225px;
+    width: 270px;
+}
+
 div.yslider-viewer div.yslider-container { 
 /* This is the big long container used to house your end-to-end divs. 
    Width is calculated and specified by the JS  */
-   
     position: relative;
     left: 0; top: 0;
     width: 100%;
@@ -52,6 +58,11 @@ div.yslider-viewer div.yslider-container div.yslider-panel {
     /* Also specified in  div.yslider-viewer  above */
     width: 520px; 
 }
+
+div.ycodaslider-small div.yslider-viewer div.yslider-container div.yslider-panel { 
+	width: 270px;
+}
+
 div.yslider-viewer div.yslider-container div.yslider-panel div.yslider-panelwrapper { 
 /* Wrapper to give some padding in the panels, without messing with existing panel width */
    text-align: left;

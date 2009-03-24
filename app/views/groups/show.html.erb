@@ -9,41 +9,72 @@
     });  });
 </script>
 <% end %>
+
 <%= render :partial => 'layouts/controls' %>
+
 <h1><%= @group.name %></h1>
+
 <!-- First large graph goes in its own column -->
 <!-- This keeps it over to the left - out of the way of the  -->
 <!-- date picker -->
 
 <div class="column span-13 first last">
-  <%= @graph_max_ip_address_packet_size %>
-  <div id="switch-control">
-  </div>
+
+  <h2>Network Traffic Timeline</h2>
+  <div class="ycodaslider">
+	<div class="yslider-panelwrapper" title="Data Size">
+    <%= @graph_timeline_by_data_size %>
+	</div>
+	<div class="yslider-panelwrapper" title="Normalized Data Size">
+    <%= @graph_timeline_by_data_size_normal %>
+	</div>
+	<div class="yslider-panelwrapper" title="Packet Count">
+    <%= @graph_timeline_by_packet_count %>
+	</div>
+	<div class="yslider-panelwrapper" title="Normalized Packet Count">
+    <%= @graph_timeline_by_packet_count_normal %>
+	</div>
+  </div><!-- .ycodaslider -->
+  
+  <div id="switch-control"></div>
+  
 </div>
 
 <!-- This is just a hack to make sure everything sits as it should   -->
 <!-- We can replace with something cleaner later -->
 <div class="clearbox"></div>
-<div class="clearbox"></div>
 
-<h2>Network Traffic Timeline</h2>
-<div class="ycodaslider">
-	<div class="yslider-panelwrapper" title="Packet Size">
-		<h3>Packet Size Timeline</h3>
-    <%= @graph_timeline_packet_size %>
-	</div>
-	<div class="yslider-panelwrapper" title="Packet Count">
-		<h3>Packet Count Timeline</h3>
-    <%= @graph_timeline_packet_count %>
-	</div>		
-	<div class="yslider-panelwrapper" title="Normalized Packet Size">
-		<h3>Normalized Packet Size Timeline</h3>
-    <%= @graph_timeline_packet_size_normal %>
-	</div>
-	<div class="yslider-panelwrapper" title="Normalized Packet Count">
-		<h3>Normalized Packet Count Timeline</h3>
-    <%= @graph_timeline_packet_count_normal %>
-	</div>
-</div><!-- .ycodaslider -->
+<!-- Here is where a series of graphs can go  -->
+<div class="column span-6 first" style="width: 315px">
 
-<div class="clearbox"></div>
+  <h3>Daily Traffic Distribution</h3>
+  <div class="ycodaslider ycodaslider-small">
+	<div class="yslider-panelwrapper" title="Days">
+    <%= @graph_top_daily_by_data_size %>
+	</div>
+  </div><!-- .ycodaslider -->
+  
+</div>
+<div class="column span-6" style="width: 315px">
+
+  <h3>Port Traffic Distribution</h3>
+  <div class="ycodaslider ycodaslider-small">
+	<div class="yslider-panelwrapper" title="Incoming Ports">
+    <%= @graph_top_inc_port_by_data_size %>
+	</div>
+	<div class="yslider-panelwrapper" title="Outgoing Ports">
+    <%= @graph_top_out_port_by_data_size %>
+	</div>
+  </div><!-- .ycodaslider -->
+
+</div>
+<div class="column span-6 last" style="width: 315px">
+
+  <h3>IP Traffic Distribution</h3>
+  <div class="ycodaslider ycodaslider-small">
+	<div class="yslider-panelwrapper" title="IP Addresses">
+    <%= @graph_top_ip_by_data_size %>
+	</div>
+  </div><!-- .ycodaslider -->
+
+<div>
