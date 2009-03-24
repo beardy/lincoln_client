@@ -4,67 +4,70 @@ class Admin::GroupsController < AdminController
     # NOTE: @groups is already a variable 
     #  populated in the app/controllers/application.rb
     #  file , so you don't have to run that find again.
+	respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @group }
+    end
   end
  
   
-  # GET /groups/1
+  # GET admin/groups/1
   def show
     @group = Group.find(params[:id])
    
   end
  
-  # GET /groups/new
+  # GET admin/groups/new
   def new
     @group = Group.new
  
   end
  
-  # GET /groups/1/edit
+  # GET admin/groups/1/edit
   def edit
-    @gene = Gene.find(params[:id])
+    @group = Group.find(params[:id])
   end
  
-  # POST /groups
+  # POST admin/groups
   def create
-    @group = group.new(params[:group])
-  end
-    # respond_to do |format|
-      # if @gene.save
-        # flash[:notice] = 'Group was successfully created.'
-        # format.html { redirect_to(@group) }
-        # format.xml  { render :xml => @group, :status => :created, :location => @group }
-      # else
-        # format.html { render :action => "new" }
-        # format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
-      # end
-    # end
-  # end
- 
-  # PUT /group/1
-  # PUT /group/1.xml
-  def update
-    @gene = Gene.find(params[:id])
- 
+    @group = Group.new(params[:group])
+
     respond_to do |format|
-      if @gene.update_attributes(params[:gene])
-        flash[:notice] = 'Gene was successfully updated.'
-        format.html { redirect_to(@gene) }
-        format.xml  { head :ok }
+      if @group.save
+        flash[:notice] = 'Group was successfully created.'
+        format.html { redirect_to(@group) }
+        format.xml  { render :xml => @group, :status => :created, :location => @group }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @gene.errors, :status => :unprocessable_entity }
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
       end
     end
   end
  
-  # DELETE /genes/1
-  # DELETE /genes/1.xml
-  def destroy
-    @gene = Gene.find(params[:id])
-    @gene.destroy
+  # PUT admin/group/1
+  # PUT admin/group/1.xml
+  def update
+    @group = Group.find(params[:id])
  
     respond_to do |format|
-      format.html { redirect_to(genes_url) }
+      if @group.update_attributes(params[:group])
+        flash[:notice] = 'Group was successfully updated.'
+        format.html { redirect_to(@group) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+ 
+  # DELETE /group/1
+  def destroy
+    @group = Group.find(params[:id])
+    @group.destroy
+ 
+    respond_to do |format|
+      format.html { redirect_to(index) }
       format.xml  { head :ok }
     end
   end
