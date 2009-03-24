@@ -81,4 +81,18 @@ namespace :import do
       group.save!
     end
   end
+  
+  task :port_names => :environment do
+    input_file = 'well_known_ports.csv'
+    full_input_file = get_data_path(input_file)
+    options = default_options
+    options[:col_sep] = ","
+    port_names = []
+    FasterCSV.foreach(full_input_file, options) do |row|
+      if row["protocol"] == "tcp"
+        port_names << {:name => row["name"], :number => row["number"]}
+      end
+    end
+    PortName.create port_names
+  end
 end

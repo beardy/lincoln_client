@@ -17,6 +17,27 @@ class Stream < ActiveRecord::Base
     end
     scope
   end
+  
+  def port_incoming_name
+    port_names_hash ||= Stream.get_names
+    name = port_names_hash[self.port_incoming] ||= self.port_incoming
+    name
+  end
+  
+  def port_outgoing_name
+    port_names_hash ||= Stream.get_names
+    name = port_names_hash[self.port_outgoing] ||= self.port_outgoing
+    name    
+  end
+  
+  def self.get_names    
+    unless @port_names_hash
+      @port_names ||= PortName.find(:all)
+      @port_names_hash = {}
+      @port_names.inject(@port_names_hash) {|hash, port| hash[port.number] = port.name; hash}
+    end
+    @port_names_hash
+  end
 
   def ip_incoming
     ip(raw_ip_incoming)
