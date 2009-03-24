@@ -28,6 +28,10 @@ class Stream < ActiveRecord::Base
   def end_time
     self.windows[-1].end_time
   end
+
+  def duration
+    end_time - start_time
+  end
   
   def num_packets_incoming
     self.windows.inject(0) {|sum, window| sum + window.num_packets_incoming }
@@ -36,6 +40,10 @@ class Stream < ActiveRecord::Base
   def num_packets_outgoing
     self.windows.inject(0) {|sum, window| sum + window.num_packets_outgoing }
   end
+
+  def total_number_packets
+    num_packets_incoming + num_packets_outgoing
+  end
   
   def size_packets_incoming
     self.windows.inject(0) {|sum, window| sum + window.size_packets_incoming }
@@ -43,6 +51,10 @@ class Stream < ActiveRecord::Base
   
   def size_packets_outgoing
     self.windows.inject(0) {|sum, window| sum + window.size_packets_incoming }
+  end
+
+  def total_packet_size
+    size_packets_incoming + size_packets_outgoing
   end
 
 end

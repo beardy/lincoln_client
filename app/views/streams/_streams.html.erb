@@ -1,31 +1,50 @@
+
 <table id="streams-table">
   <tr>
     <th>Start Time</th>
     <th>End Time</th>
+    <th>Duration (sec)</th>
     <th>Protocol</th>
     <th>IP Incoming</th>
     <th>Port Incoming</th>
-    <th># Packets Incoming</th>
-    <th>Packet Size Incoming</th>
     <th>IP Outgoing</th>
     <th>Port Outgoing</th>
-    <th># Packets Outgoing</th>
-    <th>Packet Size Outgoing</th>
+    <th>Total Data</th>
+    <th>Total # Packets</th>
+    <th></th>
   </tr>
   <%- streams.each do |stream| -%>
-      <tr>
+      <% #TODO make color-coding not hard coded.  this is very very bad code :-P %>
+      <% if (stream.port_incoming == 80) then mycolor="#FAEBD7" else mycolor="#E6E6FA" end  %>
+      <tr bgcolor="<%= mycolor %>">
         <td><%= stream.start_time.to_s(:short) %></td>
         <td><%= stream.end_time.to_s(:short) %></td>
+        <td><%= stream.duration.round %></td>
         <td><%= stream.protocol %></td>
         <td><%= stream.ip_incoming %></td>
         <td><%= stream.port_incoming %></td>
-        <td><%= stream.num_packets_incoming %></td>
-        <td><%= stream.size_packets_incoming %></td>
         <td><%= stream.ip_outgoing %></td>
         <td><%= stream.port_outgoing %></td>
-        <td><%= stream.num_packets_outgoing %></td>
-        <td><%= stream.size_packets_outgoing %></td>
+        <td><%= stream.total_packet_size %></td>
+        <td><%= stream.total_number_packets %>
+        <td><%= link_to_function("more", nil) do |page|
+                mydiv = 'windows' + stream.id.to_s
+                page.visual_effect(:toggle_blind, mydiv)
+              end
+             %></td>
       </tr>
+      <tr><td colspan="10">
+         <div id="<%= "windows" + stream.id.to_s  %>" style="display:none">
+          <hr size="1" />
+          <%= render :partial => 'windows/windows', :locals => {:stream => stream} %>
+          <%= link_to_function("close", nil) do |page|
+              mydiv = 'windows' + stream.id.to_s
+              page.toggle(mydiv)
+            end
+           %>
+          <hr size="1" />
+         </div>
+      </td></tr>
   <%- end -%>
 </table>
 

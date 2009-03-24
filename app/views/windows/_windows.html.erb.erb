@@ -1,69 +1,22 @@
 
-<!-- This will get inserted into the head portion of the html -->
-<% content_for :head do  %>
-  <%= javascript_include_tag 'jquery.tablesorter' %>
-  <%= stylesheet_link_tag 'tablesorter/blue/style' %>
-  <%= javascript_include_tag 'jquery.tablesorter.pager' %>
-  <%= stylesheet_link_tag 'tablesorter/pager/style' %>
-  <script type="text/javascript">
-    jQuery(document).ready(function()
-    {
-      jQuery('#streams-table')
-       .tablesorter()
-       .tablesorterPager({container: jQuery("#pager")});
-    });
-  </script>
-<% end %>
-
-<table id="streams-table" class="tablesorter">
-  <thead>
+<table id="windows-table">
   <tr>
-    <th>Window Number</th>
     <th>Start Time</th>
     <th>End Time</th>
-    <th>Protocol</th>
-    <th>IP Incoming</th>
-    <th>Port Incoming</th>
-    <th>Packet # Incoming</th>
-    <th>Packet Size Incoming</th>
-    <th>IP Outgoing</th>
-    <th>Port Outgoing</th>
-    <th>Packet # Outgoing</th>
-    <th>Packet Size Outgoing</th>
+    <th>Incoming Data Size</th>
+    <th>Outgoing Data Size</th>
+    <th># Packets Incoming</th>
+    <th># Packets Outgoing</th>
   </tr>
-  </thead>
-  <tbody>
+
     <%- stream.windows.each do |window| -%>
       <tr>
-        <td><%= window.id %>
         <td><%= window.start_time.to_s(:short) %></td>
         <td><%= window.end_time.to_s(:short) %></td>
-        <td><%= stream.protocol %></td>
-        <td><%= stream.ip_incoming %></td>
-        <td><%= stream.port_incoming %></td>
-        <td><%= window.num_packets_incoming %></td>
         <td><%= window.size_packets_incoming %></td>
-        <td><%= stream.ip_outgoing %></td>
-        <td><%= stream.port_outgoing %></td>
-        <td><%= window.num_packets_outgoing %></td>
         <td><%= window.size_packets_outgoing %></td>
+        <td><%= window.num_packets_incoming %></td>
+        <td><%= window.num_packets_outgoing %></td>
       </tr>
     <%- end -%>
-  </tbody>
 </table>
-
-<div id="pager" class="pager">
-  <form>
-    <img src="/images/icons/first.png" class="first"/>
-    <img src="/images/icons/prev.png" class="prev"/>
-    <input type="text" class="pagedisplay"/>
-    <img src="/images/icons/next.png" class="next"/>
-    <img src="/images/icons/last.png" class="last"/>
-    <select class="pagesize">
-      <option selected="selected"  value="20">20</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-      <option  value="200">200</option>
-    </select>
-  </form>
-</div>
