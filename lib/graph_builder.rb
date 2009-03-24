@@ -36,7 +36,7 @@ class GraphBuilder
   def build
     configure
     populate_graph
-    puts "chart: "+@chart.inspect
+    # puts "chart: "+@chart.inspect
     @chart
   end
   

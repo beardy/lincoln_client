@@ -2,7 +2,6 @@ class RulesController < ApplicationController
   def update_global_rule
     if(params[:rule][:id] == 'global')
       session[:global_rule] = Rule.new(params[:rule])
-      puts session[:global_rule].inspect
       respond_to do |format|
         format.html
         format.js
