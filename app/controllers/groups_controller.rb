@@ -17,8 +17,8 @@ class GroupsController < ApplicationController
     @graph_all_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_by_data_size", :id => :all, :only_path => true))
     #@graph_all_top_daily_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_daily_by_data_size", :id => :all, :only_path => true))
 	#@graph_all_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_ip_by_data_size", :id => :all, :only_path => true))
-
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
+    
+    @streams = Stream.relevant_streams(@time_range, @global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
     
     respond_to do |format|
       format.html # index.html.erb
@@ -152,7 +152,7 @@ class GroupsController < ApplicationController
   #
   def all_top_ip_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 	
 	top_count = 10
 	
@@ -205,7 +205,7 @@ class GroupsController < ApplicationController
   #
   def all_top_daily_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 
 	top_count = 10
 	dot_size_max = 20
@@ -303,7 +303,8 @@ class GroupsController < ApplicationController
     @selected_groups.each do |group_index|
       group = Group.find(group_index.to_i)
 	  data[group] = {"values" => Array.new(@time_range.ticks, 0)}
-      streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
+      # streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
+      streams = Stream.relevant_streams(@time_range, group, @global_rule )
       puts "---------RESULT SIZE: "+streams.size.to_s+"---------------"
       streams.each do |stream|
         stream.windows.each do |window|
@@ -365,7 +366,7 @@ class GroupsController < ApplicationController
   #
   def timeline_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range,  @group, @global_rule)
 
     # initialize data
     data = {}
@@ -398,7 +399,7 @@ class GroupsController < ApplicationController
   #
   def timeline_by_packet_count
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 
     # initialize data
     data = {}
@@ -431,7 +432,7 @@ class GroupsController < ApplicationController
   #
   def timeline_by_data_size_normal
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 
     # initialize data values
     data = {}
@@ -476,7 +477,7 @@ class GroupsController < ApplicationController
   #
   def timeline_by_packet_count_normal
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 
     # initialize data
     data = {}
@@ -521,7 +522,7 @@ class GroupsController < ApplicationController
   #
   def top_ip_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 	
 	top_count = 10
 	
@@ -574,7 +575,7 @@ class GroupsController < ApplicationController
   #
   def top_inc_port_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 	
 	top_count = 5
 	
@@ -628,7 +629,7 @@ class GroupsController < ApplicationController
   #
   def top_out_port_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 	
 	top_count = 5
 	
@@ -683,7 +684,7 @@ class GroupsController < ApplicationController
   #
   def top_daily_by_data_size
     @group = Group.find(params[:id])
-    @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).find(:all, :conditions => @group.to_sql)
+    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
 
 	top_count = 10
 	dot_size_max = 20

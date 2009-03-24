@@ -4,14 +4,19 @@ class Stream < ActiveRecord::Base
   include IPConvert
   has_many :windows, :order => 'start_time'
   
-  # Named scopes are bad-ass. Here we're scoping the returned 
-  # streams based on start and stop times for its windows
-  # which are brought in when we call it (which is why we need the lambda)
-  # See the groups controller index method for an example of use
   named_scope :starting_between, lambda {|start,stop| {:conditions => ["windows.start_time between ? and ?", start, stop],
                                                        :include => :windows, :order => "windows.start_time"} }
                                                        
-  named_scope :filtered_by, lambda {|rule| {:conditions => rule.to_sql } }
+  named_scope :filtered_by, lambda {|rule| {:conditions => rule.to_sql, :include => :windows, :order => "windows.start_time" } }
+  
+  def self.relevant_streams(time_range, *rules)
+    scope = self.scoped({})
+    scope = scope.starting_between(time_range.start_time, time_range.end_time)
+    rules.each do |rule|
+      scope = scope.filtered_by rule
+    end
+    scope
+  end
 
   def ip_incoming
     ip(raw_ip_incoming)
