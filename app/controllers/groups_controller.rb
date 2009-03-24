@@ -15,8 +15,8 @@ class GroupsController < ApplicationController
     @graph_all_timeline_by_packet_count_normal = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_packet_count_normal", :id => :all, :only_path => true))
 
     @graph_all_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_by_data_size", :id => :all, :only_path => true))
-    #@graph_all_top_daily_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_daily_by_data_size", :id => :all, :only_path => true))
-	#@graph_all_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_ip_by_data_size", :id => :all, :only_path => true))
+    @graph_all_top_daily_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_daily_by_data_size", :id => :all, :only_path => true))
+	@graph_all_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "all_top_ip_by_data_size", :id => :all, :only_path => true))
     
     @streams = Stream.relevant_streams(@time_range, @global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
     
@@ -151,50 +151,43 @@ class GroupsController < ApplicationController
   # Distribution of Top IP Addresses by Data Size (All Groups)
   #
   def all_top_ip_by_data_size
-    @group = Group.find(params[:id])
-    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
-	
 	top_count = 10
 	
     # initialize all data
     all_data = {}
-    all_data["Incoming"] = Hash.new(0)
-    all_data["Outgoing"] = Hash.new(0)
-
-    # for each stream & window
-    @streams.each do |stream|
-      stream.windows.each do |window|
-        # sum packet size
-		all_data["Incoming"][stream.ip_incoming] += window.data(:incoming, :kilobyte) * @time_range.ratio
-		all_data["Outgoing"][stream.ip_outgoing] += window.data(:outgoing, :kilobyte) * @time_range.ratio
+    @selected_groups.each do |group_index|
+      group = Group.find(group_index.to_i)
+	  all_data[group] = Hash.new(0)
+      streams = Stream.relevant_streams(@time_range, group, @global_rule )
+	  
+      streams.each do |stream|
+        stream.windows.each do |window|
+          # sum packet size
+		  all_data[group][stream.ip_incoming] += window.data(:incoming, :kilobyte)
+		  all_data[group][stream.ip_outgoing] += window.data(:outgoing, :kilobyte)
+        end
       end
     end
-	
+  
 	# initialize top data values and text
     data = {}
-    data["Incoming"] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
-    data["Outgoing"] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
+    @selected_groups.each do |group_index|
+	  group = Group.find(group_index.to_i)
+      data[group] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
 
-	top_count.times do |i|
-	  # find max incoming (by value)
-	  max = all_data["Incoming"].max{|a,b| a[1] <=> b[1]}
-	  unless max.nil? or max.last == 0
-		data["Incoming"]["values"][i] = max.last
-		data["Incoming"]["keys"][i] = "#{max.first}<br>#{max.last}"
-		all_data["Incoming"][max.first] = 0
-	  end
-		
-	  # find max outgoing (by value)
-	  max = all_data["Outgoing"].max{|a,b| a[1] <=> b[1]}
-	  unless max.nil? or max.last == 0
-		data["Outgoing"]["values"][i] = max.last
-		data["Outgoing"]["keys"][i] = "#{max.first}<br>#val#"
-		all_data["Outgoing"][max.first] = 0
-	  end
-    end
-	  
+	  top_count.times do |i|
+	    # find max (by value)
+	    max = all_data[group].max{|a,b| a[1] <=> b[1]}
+	    unless max.nil? or max.last == 0
+		  data[group]["values"][i] = max.last
+		  data[group]["keys"][i] = "#{max.first}<br>#{max.last}"
+		  all_data[group][max.first] = 0
+	    end
+      end
+	end
+	
     # configure graph
-    options = {:title => "Top IP Address: Incoming vs Outgoing", :legend => "Data Size (in KB)"}
+    options = {:title => "Top IP Address", :legend => "Data Size (in KB)"}
     builder = GraphBuilder.new(:bar, data, options)
     chart = builder.build
     render :text => chart.render
@@ -204,9 +197,6 @@ class GroupsController < ApplicationController
   # Distribution of Daily Traffic by Data Size (All Groups)
   #
   def all_top_daily_by_data_size
-    @group = Group.find(params[:id])
-    @streams = Stream.relevant_streams(@time_range, @group, @global_rule)
-
 	top_count = 10
 	dot_size_max = 20
 	dot_size_min = 5
@@ -228,22 +218,29 @@ class GroupsController < ApplicationController
     all_data = {}
     all_data["Data"] = Hash.new(0)
 	
-    # for each stream & window
-    @streams.each do |stream|
-      stream.windows.each do |window|
-		# find hour indexes
-	    start_hour_index = ((Time.parse(window.start_time.strftime("%a %b %d %H:00:00 %Z %Y")) - start_hour) / 1.hour).round
-	    end_hour_index = ((Time.parse(window.end_time.strftime("%a %b %d %H:00:00 %Z %Y")) - start_hour) / 1.hour).round
-	    # sum data
-	    if start_hour_index == end_hour_index
-		  all_data["Data"][start_hour_index] += window.data(:all, :kilobyte)
-		else
-		  start_ratio = (start_hour + end_hour_index - window.start_time) / @time_range.window
-		  all_data["Data"][start_hour_index] += window.data(:all, :kilobyte) * start_ratio
-		  if (end_hour_index < hours)
-		    all_data["Data"][end_hour_index] += window.data(:all, :kilobyte) * (1 - start_ratio)
+    @selected_groups.each do |group_index|
+      group = Group.find(group_index.to_i)
+      # streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
+      streams = Stream.relevant_streams(@time_range, group, @global_rule )
+      puts "---------RESULT SIZE: "+streams.size.to_s+"---------------"
+      streams.each do |stream|
+        stream.windows.each do |window|
+
+		  # find hour indexes
+	      start_hour_index = ((Time.parse(window.start_time.strftime("%a %b %d %H:00:00 %Z %Y")) - start_hour) / 1.hour).round
+	      end_hour_index = ((Time.parse(window.end_time.strftime("%a %b %d %H:00:00 %Z %Y")) - start_hour) / 1.hour).round
+	      # sum data
+	      if start_hour_index == end_hour_index
+		    all_data["Data"][start_hour_index] += window.data(:all, :kilobyte)
+		  else
+		    start_ratio = (start_hour + end_hour_index - window.start_time) / @time_range.window
+		    all_data["Data"][start_hour_index] += window.data(:all, :kilobyte) * start_ratio
+		    if (end_hour_index < hours)
+		      all_data["Data"][end_hour_index] += window.data(:all, :kilobyte) * (1 - start_ratio)
+		    end
 		  end
-		end
+
+        end
       end
     end
 	
