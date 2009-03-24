@@ -9,8 +9,10 @@ class GroupsController < ApplicationController
   # GET /gene_groups
   # GET /gene_groups.xml
   def index
-    @graph_packet_size_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_size", :id => :all,:only_path => true))
-    @graph_packet_num_all = open_flash_chart_object(500,300,url_for(:action => "all_timeline_packet_count", :id => :all,:only_path => true))
+    @graph_all_timeline_by_data_size = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_data_size", :id => :all, :only_path => true))
+    @graph_all_timeline_by_data_size_normal = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_data_size_normal", :id => :all, :only_path => true))
+    @graph_all_timeline_by_packet_count = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_packet_count", :id => :all, :only_path => true))
+    @graph_all_timeline_by_packet_count_normal = open_flash_chart_object(500, 300, url_for(:action => "all_timeline_by_packet_count_normal", :id => :all, :only_path => true))
 
     @streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
     
@@ -25,24 +27,96 @@ class GroupsController < ApplicationController
     end
   end
   
-  def all_timeline_packet_size
+  #
+  # Timeline of Network Traffic by Data Sizes (All Groups)
+  #
+  def all_timeline_by_data_size
     # get data
     data = acquire_all_group_data(:size_packets_all)
+	
     # configure graph
-     options = {:title => "Packet Size", :legend => "Packet Data in KB"}
-     builder = GraphBuilder.new(:line, data, options)
-     chart = builder.build
-     render :text => chart.render
+    options = {:title => "Data Size Timeline", :legend => "Data Size (in KB)"}
+    builder = GraphBuilder.new(:line, data, options)
+    chart = builder.build
+    render :text => chart.render
   end
   
-  def all_timeline_packet_count
+  #
+  # Timeline of Network Traffic by Packet Counts (All Groups)
+  #
+  def all_timeline_by_packet_count
     # get data
     data = acquire_all_group_data(:num_packets_all)
+	
     # configure graph
-     options = {:title => "Packet Number", :legend => "Packet Count"}
-     builder = GraphBuilder.new(:line, data, options)
-     chart = builder.build
-     render :text => chart.render
+	options = {:title => "Packet Count Timeline", :legend => "Packet Count"}
+    builder = GraphBuilder.new(:line, data, options)
+    chart = builder.build
+    render :text => chart.render
+  end
+
+  #
+  # Timeline of Network Traffic by Normalized Data Sizes (All Groups)
+  #
+  def all_timeline_by_data_size_normal
+    # get data
+    data = acquire_all_group_data(:size_packets_all)
+	
+	# normalize data values
+	unless data.empty?
+	  sum = data.inject(Array.new(@time_range.ticks, 0)){|sum, n| sum.zip(n[1]["values"]).map{|x, y| x + y}}
+	  data.each_key{|key| 
+	    # normalize data values
+	    data[key]["values"] = data[key]["values"].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
+		# initialize data text
+		data[key]["keys"] = data[key]["values"].map{|x| "#{(x * 100).round}%"}
+	  }
+	  
+	  # sum normalized data
+	  data.to_a.reverse.inject(Array.new(@time_range.ticks, 0)){|sum, n|
+	    tmp = sum.zip(n[1]["values"]).map{|x, y| x + y}
+		data[n[0]]["values"] = tmp
+		tmp
+	  }
+	end
+    
+    # configure graph
+    options = {:title => "Data Size Timeline", :legend => "Data Size (in %)"}
+    builder = GraphBuilder.new(:area, data, options)
+    chart = builder.build
+    render :text => chart.render
+  end
+
+  #
+  # Timeline of Network Traffic by Normalized Packet Counts (All Groups)
+  #
+  def all_timeline_by_packet_count_normal
+    # get data
+    data = acquire_all_group_data(:num_packets_all)
+	
+	# normalize data values
+	unless data.empty?
+	  sum = data.inject(Array.new(@time_range.ticks, 0)){|sum, n| sum.zip(n[1]["values"]).map{|x, y| x + y}}
+	  data.each_key{|key| 
+	    # normalize data values
+	    data[key]["values"] = data[key]["values"].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
+		# initialize data text
+		data[key]["keys"] = data[key]["values"].map{|x| "#{(x * 100).round}%"}
+	  }
+	  
+	  # sum normalized data
+	  data.to_a.reverse.inject(Array.new(@time_range.ticks, 0)){|sum, n|
+	    tmp = sum.zip(n[1]["values"]).map{|x, y| x + y}
+		data[n[0]]["values"] = tmp
+		tmp
+	  }
+	end
+    
+    # configure graph
+    options = {:title => "Packet Count Timeline", :legend => "Packet Count (in %)"}
+    builder = GraphBuilder.new(:area, data, options)
+    chart = builder.build
+    render :text => chart.render
   end
   
   # Helper method that will grab all 'values' from the selected groups
@@ -51,7 +125,7 @@ class GroupsController < ApplicationController
     data = {}
     @selected_groups.each do |group_index|
       group = Group.find(group_index.to_i)
-      data[group] = Array.new(@time_range.ticks, 0)
+	  data[group] = {"values" => Array.new(@time_range.ticks, 0)}
       streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
       puts "---------RESULT SIZE: "+streams.size.to_s+"---------------"
       streams.each do |stream|
@@ -60,9 +134,8 @@ class GroupsController < ApplicationController
           @time_range.each_tick_with_time do |tick, tick_time|
             # if within tick range, add data
             if window.between?(tick_time)
-              # data["Incoming"][tick] += window.data(:incoming, :kilobyte) * @time_range.ratio
               values.each do |value|
-                data[group][tick] += window.send(value.to_sym)*@time_range.ratio
+                data[group]["values"][tick] += window.send(value.to_sym)*@time_range.ratio
               end
             end
           end
@@ -99,10 +172,10 @@ class GroupsController < ApplicationController
 	@graph_timeline_by_packet_count = open_flash_chart_object(500, 300, url_for(:action => "timeline_by_packet_count", :id => @group.id, :only_path => true))
   	@graph_timeline_by_packet_count_normal = open_flash_chart_object(500, 300, url_for(:action => "timeline_by_packet_count_normal", :id => @group.id, :only_path => true))
 	
-	@graph_top_daily_by_data_size = open_flash_chart_object(250,200,url_for(:action => "top_daily_by_data_size", :id => @group.id, :only_path => true))
-	@graph_top_inc_port_by_data_size = open_flash_chart_object(250,200,url_for(:action => "top_inc_port_by_data_size", :id => @group.id, :only_path => true))
-	@graph_top_out_port_by_data_size = open_flash_chart_object(250,200,url_for(:action => "top_out_port_by_data_size", :id => @group.id, :only_path => true))
-	@graph_top_ip_by_data_size = open_flash_chart_object(250,200,url_for(:action => "top_ip_by_data_size", :id => @group.id, :only_path => true))
+	@graph_top_daily_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_daily_by_data_size", :id => @group.id, :only_path => true))
+	@graph_top_inc_port_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_inc_port_by_data_size", :id => @group.id, :only_path => true))
+	@graph_top_out_port_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_out_port_by_data_size", :id => @group.id, :only_path => true))
+	@graph_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_ip_by_data_size", :id => @group.id, :only_path => true))
 	
     respond_to do |format|
       format.html # show.html.erb

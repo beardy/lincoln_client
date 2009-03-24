@@ -12,6 +12,7 @@
 
 <!-- This passes in the groups control as we don't want it in the show page -->
 <% render :layout => 'layouts/controls' do %>
+
   <p class="control-title">Groups</p>
   <div id="groups-chooser">
     <ul>
@@ -26,15 +27,21 @@
     </ul>
   </div>
 <% end %>
+
+<h2>Network Traffic Timeline</h2>
 <div class="ycodaslider column span-14 first last">
-	<div class="yslider-panelwrapper" title="Data Transfered">
-		<h3>Data Transfered</h3>
-    <%= @graph_packet_size_all %>
+  <div class="yslider-panelwrapper" title="Data Size">
+    <%= @graph_all_timeline_by_data_size %>
   </div>
-  <div class="yslider-panelwrapper" title="Packets Transfered">
-		<h3>Packets Transfered</h3>
-		<%= @graph_packet_num_all %>
-	</div>
+  <div class="yslider-panelwrapper" title="Normalized Data Size">
+    <%= @graph_all_timeline_by_data_size_normal %>
+  </div>
+  <div class="yslider-panelwrapper" title="Packet Count">
+    <%= @graph_all_timeline_by_packet_count %>
+  </div>
+  <div class="yslider-panelwrapper" title="Normalized Packet Count">
+    <%= @graph_all_timeline_by_packet_count_normal %>
+  </div>
 </div>
 
 <div class="clearbox"></div>
