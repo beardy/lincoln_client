@@ -61,6 +61,7 @@
     </div>
       <div class="clearbox"></div>  
       <%= submit_tag 'Update', :class => 'button' %>
+      <%= link_to_remote 'clear',:url => {:action => :clear_global_rule, :controller => :rules, :id => 'global'} %>
     <% end %>
   </div>
 </div>

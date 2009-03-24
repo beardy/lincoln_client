@@ -7,4 +7,12 @@ class RulesController < ApplicationController
       redirect_to :controller => :groups, :action => :index
     end
   end
+  
+  def clear_global_rule
+    session[:global_rule] = Rule.new()
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
 end
