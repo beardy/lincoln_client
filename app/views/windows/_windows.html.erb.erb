@@ -1,5 +1,5 @@
 
-<table id="windows-table">
+<table class="windows-table">
   <tr>
     <th>Start Time</th>
     <th>End Time</th>
@@ -8,8 +8,7 @@
     <th># Packets Incoming</th>
     <th># Packets Outgoing</th>
   </tr>
-
-    <%- stream.windows.each do |window| -%>
+    <%- windows.each do |window| -%>
       <tr>
         <td><%= window.start_time.to_s(:short) %></td>
         <td><%= window.end_time.to_s(:short) %></td>
