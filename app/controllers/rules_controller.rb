@@ -1,10 +1,12 @@
 class RulesController < ApplicationController
-  def update
-    puts params.inspect
+  def update_global_rule
     if(params[:rule][:id] == 'global')
       session[:global_rule] = Rule.new(params[:rule])
       puts session[:global_rule].inspect
-      redirect_to :controller => :groups, :action => :index
+      respond_to do |format|
+        format.html
+        format.js
+      end
     end
   end
   

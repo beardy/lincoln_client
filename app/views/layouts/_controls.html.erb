@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="rounded control" id="global-rule-control">
-    <% form_for :rule,  @global_rule, :url => { :controller => :rules, :action => :update} do |f| %>
+    <% remote_form_for :rule,  @global_rule, :url => { :controller => :rules, :action => :update_global_rule} do |f| %>
     <%= f.hidden_field :id, :value => 'global' %>
     <div class="control-entry">
       <p class="control-subtitle">IP Range:</p>
