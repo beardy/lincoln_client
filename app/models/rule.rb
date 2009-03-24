@@ -36,6 +36,7 @@ class Rule < ActiveRecord::Base
     end
     sql_statement << queries.join(" AND ")
     sql_statement << ")"
+    sql_statement = sql_statement.gsub(/(\(\))/,"").strip.empty? ? "" : sql_statement
     sql_statement
   end
   

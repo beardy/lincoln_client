@@ -1,3 +1,6 @@
+require "ipaddr"
+require 'faster_csv'
+
 def get_data_path(filename)
   File.expand_path(File.join(RAILS_ROOT, 'data', filename))   
 end
@@ -12,7 +15,7 @@ def clean_row(row)
   row = row.to_hash
   row['raw_ip_incoming'] = IPAddr.new(row['raw_ip_incoming']).to_i
   row['raw_ip_outgoing'] = IPAddr.new(row['raw_ip_outgoing']).to_i
-  %w[port_in port_out protocol num_packets_incoming 
+  %w[port_incoming port_outgoing protocol num_packets_incoming 
     size_packets_incoming num_packets_outgoing size_packets_outgoing].each do |col|
     row[col] = row[col].to_i
   end
@@ -35,10 +38,9 @@ end
 
 
 namespace :import do
-  task :all => ['db:reset',:test]
+  task :all => ['db:reset',:test,:groups,:rules]
   
   task :test => :environment do
-    require 'faster_csv'
     input_file = 'data.txt'
     full_input_file = get_data_path(input_file)
     options = default_options

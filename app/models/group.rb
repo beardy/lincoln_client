@@ -30,6 +30,7 @@ class Group < ActiveRecord::Base
       end
       sql << "(" << true_sql << ")"
     end
+    sql = sql.gsub(/(\(\))/,"").strip.empty? ? "" : sql
     sql
   end #to_sql
 end

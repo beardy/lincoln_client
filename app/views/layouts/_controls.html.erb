@@ -9,7 +9,7 @@
     <div id="end-control">
       <p class="control-title">End</p>
       <%= calendar_date_select_tag "end_date_time", @time_range.end_time, :time => true,:year_range => 1, 
-                                   :after_close => 'update_date(\'start_time\',$F(this))' 
+                                   :after_close => 'update_date(\'end_time\',$F(this))' 
       %>
     </div>
     <div class="specialized-control">
