@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   # This will be used to show all groups 
   # In the nav bar
   def find_groups
-    @groups = Group.find(:all)
+    @groups ||= Group.find(:all)
   end
 
   def get_time_range
