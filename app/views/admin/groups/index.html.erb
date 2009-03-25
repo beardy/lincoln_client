@@ -3,66 +3,73 @@
 <h1>Groups:</h1>
 <% @groups.each do |group| %>
   <h2><%= link_to_function(group.name) do |page|
-    page.visual_effect(:toggle_blind, "rule-list-#{group.id}")
-  end %></h2>
+    page.visual_effect(:toggle_blind, "rule-list-#{group.id}") end %></h2>
+	
+	
   <div id="rule-list-<%= group.id.to_s %>" style="display:none;">
   <h3>Rules:</h3>
   <% group.rules.each do |@rule| %>
   
-		<%= render :partial => 'admin/rules/show.html.erb' %>
+		<%= render :partial => 'admin/rules/edit.html.erb' %>
 		
   <% end %>
-        <!-- New Rule Form: -->
-        <h3>Create New Rule:</h3>
-        <div class="rounded control" id="global-rule-control">
-        <% remote_form_for :rule, :url => { :controller => :rules, :action => :edit_a_rule} do |f| %>
-        <%= f.hidden_field :id, :value => 'global' %>
+  
+		<!-- New Rule Form: -->
+		<h2><%= button_to_function("Create New Rule") do |page|
+		page.visual_effect(:toggle_blind, "new-rule-#{group.id}")
+		end %></h2>
+		
+		<div id="new-rule-<%= group.id.to_s %>" style="display:none;">
+			<!-- Couldn't get the partial to work -->
+				<div class="rounded control" id="global-rule-control">
+				<% form_for([:admin, @rule]) do |f| %>
+				<%= f.hidden_field :group_id, :value => group.id %>
+				<div class="control-entry">
+				<p class="control-subtitle">IP Range:</p>
+				<div class="column first span-5">
+					<%= f.label :ip_incoming_start, "Incoming:" %>
+					<br />
+					<%= f.text_field :ip_incoming_start, :size => 11%>
+					<span>-</span>
+					<%= f.text_field :ip_incoming_end, :size => 11%>
+				</div>
+				<div class="column last span-5">
+				  <%= f.label :ip_outgoing_start, "Outgoing:" %>
+				  <br />
+				  <%= f.text_field :ip_outgoing_start, :size => 11%>
+				  <span>-</span>
+				  <%= f.text_field :ip_outgoing_end, :size => 11%>
+				</div>
+				</div>
+				<div class="control-entry">
+				<p class="control-subtitle">Port Range:</p>
+				<div class="column first span-4">
+					<%= f.label :port_incoming_start, "Incoming:" %>
+					<br />
+					<%= f.text_field :port_incoming_start, :size => 6%>
+					<span>-</span>
+					<%= f.text_field :port_incoming_end, :size => 6%>
 
-        <div class="control-entry">
-        <p class="control-subtitle">IP Range:</p>
-        <div class="column first span-5">
-            <%= f.label :ip_incoming_start, "Incoming:" %>
-            <br />
-            <%= f.text_field :ip_incoming_start, :size => 11%>
-            <span>-</span>
-            <%= f.text_field :ip_incoming_end, :size => 11%>
-        </div>
-        <div class="column last span-5">
-          <%= f.label :ip_outgoing_start, "Outgoing:" %>
-          <br />
-          <%= f.text_field :ip_outgoing_start, :size => 11%>
-          <span>-</span>
-          <%= f.text_field :ip_outgoing_end, :size => 11%>
-        </div>
-        </div>
-        <div class="control-entry">
-        <p class="control-subtitle">Port Range:</p>
-        <div class="column first span-4">
-            <%= f.label :port_incoming_start, "Incoming:" %>
-            <br />
-            <%= f.text_field :port_incoming_start, :size => 6%>
-            <span>-</span>
-            <%= f.text_field :port_incoming_end, :size => 6%>
-
-        </div>
-        <div class="column span-4">
-          <%= f.label :port_outgoing_start, "Outgoing:" %>
-          <br />
-          <%= f.text_field :port_outgoing_start, :size => 6%>
-          <span>-</span>
-          <%= f.text_field :port_outgoing_end, :size => 6%>
-        </div>
-        <div class="column last span-2">
-          <%= f.label :not_flag, "Not:" %>
-          <br />
-          <%= f.check_box :not_flag %>
-        </div>
-        </div>
-        <div class="clearbox"></div>
-        <%= submit_tag 'Create Rule', :class => 'button' %>
-        <%= link_to_remote 'Delete Rule', :class => 'button', :url => {:action => :clear_global_rule, :controller => :rules, :id => 'global'} %>
-        <% end %>
-        </div>
+				</div>
+				<div class="column span-4">
+				  <%= f.label :port_outgoing_start, "Outgoing:" %>
+				  <br />
+				  <%= f.text_field :port_outgoing_start, :size => 6%>
+				  <span>-</span>
+				  <%= f.text_field :port_outgoing_end, :size => 6%>
+				</div>
+				<div class="column last span-2">
+				  <%= f.label :not_flag, "Not:" %>
+				  <br />
+				  <%= f.check_box :not_flag %>
+				</div>
+				</div>
+				<div class="clearbox"></div>
+				<%= submit_tag 'Create', :class => 'button' %>
+				<% end %>
+				</div>
+		
+		</div>
 		
 		</div>
 		
