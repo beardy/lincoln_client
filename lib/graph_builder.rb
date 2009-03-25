@@ -83,7 +83,11 @@ class GraphBuilder
   end
   
   def configure
-    @chart.set_title(Title.new(options[:title])) if @options[:title]
+    if @options[:title]
+	  title = Title.new(options[:title])
+	  title.set_style('{font-size: 20px;}')
+	  @chart.set_title(title)
+	end
     if @options[:legend]
       y_legend = YLegend.new(options[:legend])
       y_legend.set_style('{font-size: 20px; color: #770077}')

@@ -38,8 +38,23 @@ class GroupsController < ApplicationController
     # get data
     data = acquire_all_group_data(:size_packets_all)
 	
+	# find max data value
+	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+
+	# scale data
+	scale = 1
+	labels = %w[B KB MB GB TB PB EB]
+	label = labels[0]
+	labels.each { |n| if max / (scale * 1024) > 1 then scale *= 1024; label = n; else break end }
+	
+	# update values
+	data.each_value { |v| 
+	 v["values"].map! { |n| n / scale }
+	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	}
+	
     # configure graph
-    options = {:title => "Data Size Timeline", :legend => "Data Size (in KB)"}
+    options = {:title => "Group Data Sizes (in #{label})", :x_axis_label_format => "%4.4f"}
     builder = GraphBuilder.new(:line, data, options)
     chart = builder.build
     render :text => chart.render
@@ -53,7 +68,7 @@ class GroupsController < ApplicationController
     data = acquire_all_group_data(:num_packets_all)
 	
     # configure graph
-	options = {:title => "Packet Count Timeline", :legend => "Packet Count"}
+	options = {:title => "Group Packet Counts"}
     builder = GraphBuilder.new(:line, data, options)
     chart = builder.build
     render :text => chart.render
@@ -85,7 +100,7 @@ class GroupsController < ApplicationController
 	end
     
     # configure graph
-    options = {:title => "Data Size Timeline", :legend => "Data Size (in %)"}
+    options = {:title => "Group Data Sizes (in %)"}
     builder = GraphBuilder.new(:area, data, options)
     chart = builder.build
     render :text => chart.render
@@ -117,7 +132,7 @@ class GroupsController < ApplicationController
 	end
     
     # configure graph
-    options = {:title => "Packet Count Timeline", :legend => "Packet Count (in %)"}
+    options = {:title => "Group Packet Counts (in %)"}
     builder = GraphBuilder.new(:area, data, options)
     chart = builder.build
     render :text => chart.render
@@ -134,14 +149,30 @@ class GroupsController < ApplicationController
 	data = {"All" => {}}
 	unless all_data.empty?
 	  data["All"]["values"] = all_data.map{|n| n[1]["values"].inject(0){|sum, x| sum + x}}
-	  data["All"]["keys"] = data["All"]["values"].map{"#val#"}
+	  #data["All"]["keys"] = data["All"]["values"].map{"#val#"}
 	  
 	  all_sum = data["All"]["values"].inject(0){|sum, x| sum + x}
 	  data["All"]["x_labels"] = all_data.zip(data["All"]["values"]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
     end
 
+
+	# find max data value
+	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+
+	# scale data
+	scale = 1
+	labels = %w[B KB MB GB TB PB EB]
+	label = labels[0]
+	labels.each { |n| if max / (scale * 1024) > 1 then scale *= 1024; label = n; else break end }
+	
+	# update values
+	data.each_value { |v| 
+	 v["values"].map! { |n| n / scale }
+	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	}
+
     # configure graph
-    options = {:title => "Data Size", :legend => "Data Size (in KB)"}
+    options = {}#{:title => "Data Size", :legend => "Data Size (in KB)"}
     builder = GraphBuilder.new(:pie, data, options)
     chart = builder.build
     render :text => chart.render
@@ -180,14 +211,29 @@ class GroupsController < ApplicationController
 	    max = all_data[group].max{|a,b| a[1] <=> b[1]}
 	    unless max.nil? or max.last == 0
 		  data[group]["values"][i] = max.last
-		  data[group]["keys"][i] = "#{max.first}<br>#{max.last}"
+		  data[group]["keys"][i] = "#{max.first}"#<br>#{max.last}"
 		  all_data[group][max.first] = 0
 	    end
       end
 	end
 	
+	# find max data value
+	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+
+	# scale data
+	scale = 1
+	labels = %w[B KB MB GB TB PB EB]
+	label = labels[0]
+	labels.each { |n| if max / (scale * 1024) > 1 then scale *= 1024; label = n; else break end }
+	
+	# update values
+	data.each_value { |v| 
+	 v["values"].map! { |n| n / scale }
+	 v["keys"] = v["keys"].zip(v["values"]).map { |k, v| sprintf("#{k}<br>%6.6f #{label}", v) }
+	}
+	
     # configure graph
-    options = {:title => "Top IP Address", :legend => "Data Size (in KB)"}
+    options = {}#{:title => "Top Data Sizes (in #{label})", :x_axis_label_format => "%4.4f"}
     builder = GraphBuilder.new(:bar, data, options)
     chart = builder.build
     render :text => chart.render
@@ -251,7 +297,17 @@ class GroupsController < ApplicationController
 	}
 
     temp = Array.new()
+	
 
+	# find max data value
+	all_max = all_data["Data"].max{|a,b| a[1] <=> b[1]}
+
+	# scale data
+	scale = 1
+	labels = %w[B KB MB GB TB PB EB]
+	label = labels[0]
+	labels.each { |n| if all_max[1] / (scale * 1024) > 1 then scale *= 1024; label = n; else break end }
+	
 	top_count.times do |i|
 	  # find max
 	  max = all_data["Data"].max{|a,b| a[1] <=> b[1]}
@@ -259,7 +315,7 @@ class GroupsController < ApplicationController
 		y = (start_day_hour + max.first) % 24
 		x = start_day_hour + max.first
 		data["Data"]["values"].push(ScatterValue.new(x,y))
-		data["Data"]["values"].last.tooltip = "#{max.last}"
+		data["Data"]["values"].last.tooltip = sprintf("%6.6f #{label}",  max.last / scale)
 		temp.push(max.last)
 		all_data["Data"][max.first] = 0
 	  end
@@ -275,8 +331,8 @@ class GroupsController < ApplicationController
     # initialize chart
     chart = OpenFlashChart.new
 
-    title = Title.new("Scatter points")
-    chart.set_title(title)
+    #title = Title.new("Scatter points")
+    #chart.set_title(title)
 
     scatter = Scatter.new('#1C6569', dot_size_min)  # color, dot size
     scatter.values = data["Data"]["values"]
