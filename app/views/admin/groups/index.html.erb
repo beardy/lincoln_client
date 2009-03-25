@@ -74,5 +74,16 @@
 		</div>
 		
 <% end %>
- <h2><u> <%= link_to "Create New Group", :action => "new" %> </u></h2>
+<h2><u> <%= button_to "Create New Group", :action => "new" %> </u></h2>
 
+<h1>Host Names:</h1>
+<% @groups.each do |group| %>
+	<h2> <%= group.name %> </h2>
+<% end %>
+<h2><u> <%= button_to "Create New Host Name", :action => "new" %> </u></h2>
+
+<h1>Port Names:</h1>
+<% @groups.each do |group| %>
+	<h2> <%= group.name %> </h2>
+<% end %>
+<h2><u> <%= button_to "Create New Port Name", :action => "new" %> </u></h2>
