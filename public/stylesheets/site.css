@@ -133,6 +133,28 @@ a {
   margin-bottom :10px;
 }
 
+#wide-rule-control {
+  color: #333333;
+  width: 100%;
+}
+
+#wide-rule-control label {
+  vertical-align: middle;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wide-rule-control input {
+  font-size: 80%;
+/*  width: 3em;*/
+/*  height: 1em;*/
+}
+
+#wide-rule-control input.button {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom :10px;
+}
 #switch-control {
   padding-top: 15px;
   text-align:center;
