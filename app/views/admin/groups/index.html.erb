@@ -4,7 +4,7 @@
 <a href="#groups">Groups</a> | <a href="#hostnames">Host Names</a> | <a href="#portnames">Port Names</a>
 </center>
 
-<a name="groups"><h1>Groups:</h1></a>
+<h1><a name="groups">Groups</a>  <span style="font-size:12px;text-decoration:underline;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1> 
 <% @groups.each do |group| %>
   <h2><%= link_to_function(image_tag("diagArrow1.jpg") ) do |page|
     page.visual_effect(:toggle_blind, "rule-list-#{group.id}") end %> <%= group.name %></h2>
@@ -79,16 +79,13 @@
 		</div>
 		
 <% end %>
-<h2><u> <%= button_to "Create New Group", :action => "new" %> </u></h2>
 
 <br>
 <br>
 <br>
 
-<p>
-<a name="hostnames"><h1>Host Names:</h1></a>
+<h1><a name="hostnames">Host Names</a>  <span style="font-size:12px;text-decoration:underline;">(<%= link_to "Add New Host Name", :action => "new" %>) </span> </h1> 
 
-<h2><u> <%= button_to "Create New Host Name", :action => "new" %> </u></h2>
 
 <br>
 <br>
