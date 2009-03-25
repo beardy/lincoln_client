@@ -7,6 +7,7 @@ class Admin::PortNamesController < ApplicationController
   end
 
   def edit
+	@port_name = PortName.find(params[:id])
   end
 
 end

@@ -6,7 +6,7 @@ class Admin::RulesController < AdminController
     #  file , so you don't have to run that find again.
 	respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @group }
+      format.xml  { render :xml => @rule }
     end
   end
  
@@ -33,16 +33,16 @@ class Admin::RulesController < AdminController
  
   # POST admin/groups
   def create
-    @group = Group.new(params[:group])
+    @rule = Rule.new(params[:rule])
 
     respond_to do |format|
-      if @group.save
-        flash[:notice] = 'Group was successfully created.'
-        format.html { redirect_to(@group) }
-        format.xml  { render :xml => @group, :status => :created, :location => @group }
+      if @rule.save
+        flash[:notice] = 'Rule was successfully created.'
+        format.html { redirect_to(@rule) }
+        format.xml  { render :xml => @rule, :status => :created, :location => @rule }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @rule.errors, :status => :unprocessable_entity }
       end
     end
   end

@@ -5,7 +5,7 @@ class Admin::GroupsController < AdminController
     #  populated in the app/controllers/application.rb
     #  file , so you don't have to run that find again.
 	
-	@portnames ||= PortName.find(:all)
+	@port_names ||= PortName.find(:all)
 	#@hostnames ||= HostName.find(:all)
 	
 	

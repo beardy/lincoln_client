@@ -102,8 +102,8 @@
 	</span>
 </h1>
 <div id="port-names"  style="display:none;">
-	<% @portnames.each do |portnames| %>
-		<h3> <%= portnames.name %> - <%= portnames.number %>  </h3>
+	<% @port_names.each do |@port_name| %>
+		<%= render :partial => 'admin/port_names/edit.html.erb' %>
 	<% end %>
 <h2><u> <%= button_to "Create New Port Name", :action => "new" %> </u></h2>
 </div>
