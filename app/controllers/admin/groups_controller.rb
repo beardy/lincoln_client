@@ -4,6 +4,11 @@ class Admin::GroupsController < AdminController
     # NOTE: @groups is already a variable 
     #  populated in the app/controllers/application.rb
     #  file , so you don't have to run that find again.
+	
+	@portnames ||= PortName.find(:all)
+	#@hostnames ||= HostName.find(:all)
+	
+	
 	respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @group }
