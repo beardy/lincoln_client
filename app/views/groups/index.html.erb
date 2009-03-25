@@ -84,7 +84,15 @@
 <%= link_to_function("Raw Traffic", :id => "raw_traffic_link") do |page|
     page.visual_effect(:toggle_blind, 'raw_traffic')
   end
- %></h1>
+ %>&nbsp;&nbsp;&nbsp;&nbsp;
+<span style="font-size:12px;text-decoration:underline;">
+<%= link_to_function("show / hide", :id => "raw_traffic_link") do |page|
+    page.visual_effect(:toggle_blind, 'raw_traffic')
+  end
+ %>
+</span>
+</h1>
+
  <div id="raw_traffic" style="display:none">
   <%= render :partial => 'streams/streams', :locals => {:streams => @streams} %>
   <%= link_to_function("close", nil) do |page|
