@@ -1,0 +1,21 @@
+  <div class="rounded control" id="wide-rule-control" style="padding-bottom:20px; margin-bottom: 10px;">
+		<% form_for([:admin, @port_name]) do |f| %>
+
+		<div class="clearbox"></div>
+			
+			<div class="column first prepend-1 span-7">
+				<%= f.label :name, "Name:" %>
+				<%= f.text_field :name, :size => 11%>
+				<span>-</span><%= f.label :ip_outgoing_start, "Number:" %>
+				<%= f.text_field :number, :size => 11%>
+			</div>
+			
+  
+        <div class="clearbox"></div>
+		<div class="column first prepend-1 span-2">
+			<%= submit_tag 'Update', :class => 'button' %>
+		</div>
+		<!-- This is not correct -->
+        <%= link_to_remote 'Delete Port Name',:url => {:action => :clear_global_rule, :controller => :rules, :id => 'global'} %>
+        <% end %>
+        </div>
