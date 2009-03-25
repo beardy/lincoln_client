@@ -45,11 +45,11 @@
 <div class="clearbox"></div>
 
 <!-- Here is where a series of graphs can go  -->
+<h2>Network Traffic Details</h2>
 <div class="column span-6 first" style="width: 315px">
 
-  <h3>Daily Traffic Distribution</h3>
   <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Days">
+	<div class="yslider-panelwrapper" title="Daily Traffic">
       <%= @graph_top_daily_by_data_size %>
 	</div>
   </div><!-- .ycodaslider -->
@@ -57,12 +57,11 @@
 </div>
 <div class="column span-6" style="width: 315px">
 
-  <h3>Port Traffic Distribution</h3>
   <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Incoming Ports">
+	<div class="yslider-panelwrapper" title="Top Incoming Ports">
       <%= @graph_top_inc_port_by_data_size %>
 	</div>
-	<div class="yslider-panelwrapper" title="Outgoing Ports">
+	<div class="yslider-panelwrapper" title="Top Outgoing Ports">
       <%= @graph_top_out_port_by_data_size %>
 	</div>
   </div><!-- .ycodaslider -->
@@ -70,9 +69,8 @@
 </div>
 <div class="column span-6 last" style="width: 315px">
 
-  <h3>IP Traffic Distribution</h3>
   <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="IP Addresses">
+	<div class="yslider-panelwrapper" title="Top IP Addresses">
       <%= @graph_top_ip_by_data_size %>
 	</div>
   </div><!-- .ycodaslider -->
