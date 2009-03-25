@@ -6,7 +6,8 @@ class Admin::GroupsController < AdminController
     #  file , so you don't have to run that find again.
 	
 	@port_names ||= PortName.find(:all)
-	#@hostnames ||= HostName.find(:all)
+	#no hostnames yet
+	#@hostnames ||= HostNames.find(:all)
 	
 	
 	respond_to do |format|
