@@ -15,6 +15,35 @@ module OpenFlashChart
       <div id="#{div_name}"></div>
       OUTPUT
     end
+    
+    def js_open_flash_multi_chart_object(div_name, width, height, base="/")
+      data_name = "#{div_name.gsub(" ","_")}"
+      <<-OUTPUT
+      <script type="text/javascript">
+      swfobject.embedSWF("#{base}open-flash-chart.swf", "#{div_name}", "#{width}", "#{height}", "9.0.0", "expressInstall.swf", {"get-data":"get_data_#{data_name}"});
+      function get_data_#{data_name}()
+      {
+        var data = #{self.render};
+        return Object.toJSON(data);
+      }
+      </script>
+      <div id="#{div_name}"></div>
+      OUTPUT
+    end
+    
+    def findSWF
+      <<-OUTPUT
+      <script type="text/javascript">
+      function findSWF(movieName) {
+        if (navigator.appName.indexOf("Microsoft")!= -1) {
+          return window[movieName];
+          } else {
+            return document[movieName];
+          }
+        }
+        </script>
+        OUTPUT
+    end
 
     def link_to_ofc_load(link_text, div_name)
       data_name = "#{link_text.gsub(" ","_")}_#{div_name.gsub(" ","_")}"
