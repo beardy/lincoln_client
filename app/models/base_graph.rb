@@ -21,6 +21,7 @@ class BaseGraph
   # so we can create and use the builder here.
   # perhaps saving the resulting graph in @ofc
   def postprocess()
+    puts "Should overwrite postprocess method"
   end
   
   # Get the raw ofc graph out of our graph shell
