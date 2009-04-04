@@ -1,0 +1,7 @@
+<div class="ycodaslider">
+  <%- graphs.each do |graph| -%>
+  <div class="yslider-panelwrapper" title="<%= graph.title %>" >
+    <%= graph.ofc_graph.js_open_flash_chart_object_mult(graph.name, graph.height, graph.width) %>
+  </div>
+  <%- end -%>
+</div>
