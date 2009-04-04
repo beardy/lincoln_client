@@ -7,8 +7,8 @@ class BaseGraph
   # :width & :height
   def initialize(title, options = {})
     @title = title
-    @width = options[:width] || 500
-    @height = options[:height] || 
+    @width = options[:width] || 200
+    @height = options[:height] || 250
   end
   
   # bring in the raw data and process it as needed
