@@ -1,16 +1,7 @@
-<!-- Here's how to iterate through each group and then each rule -->
-
-<center>
-<a href="#groups">Groups</a> | <a href="#hostnames">Host Names</a> | <a href="#portnames">Port Names</a>
-</center>
-
-<h1><a name="groups">Groups</a>  <span style="font-size:12px;text-decoration:underline;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1> 
+<h1>Groups <span style="font-size:12px;text-decoration:underline;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1> 
 <% @groups.each do |group| %>
-  <h2><%= link_to_function(image_tag("diagArrow1.jpg") ) do |page|
-    page.visual_effect(:toggle_blind, "rule-list-#{group.id}") end %> <%= group.name %></h2>
-	
-
-	
+  <h2><%= link_to_function(image_tag("#{group.name}"), :class => "closed" ) do |page|
+    page.visual_effect(:toggle_blind, "rule-list-#{group.id}") end %></h2>	
   <div id="rule-list-<%= group.id.to_s %>" style="display:none;">
   <h3>Rules:</h3>
   <% group.rules.each do |@rule| %>
@@ -80,29 +71,12 @@
 		
 <% end %>
 
-<br>
-<br>
-<br>
-
-<h1><a name="hostnames">Host Names</a>  <span style="font-size:12px;text-decoration:underline;">(<%= link_to "Add New Host Name", :action => "new" %>) </span> </h1> 
-
-
-<br>
-<br>
-<br>
-<h1> <a name="portnames">Port Names:</a> 
-	<span style="font-size:12px;text-decoration:underline;">
-		<%= link_to_function("Show / Hide" ) do |page|
-		page.visual_effect(:toggle_blind, "port-names") end %>
-	</span>
-</h1>
-<div id="port-names"  style="display:none;">
-	<% @port_names.each do |@port_name| %>
-		<%= render :partial => 'admin/port_names/edit.html.erb' %>
-	<% end %>
-<h2><u> <%= button_to "Create New Port Name", :action => "new" %> </u></h2>
+<div class="clearbox">
+  
 </div>
 
-<center>
-<a href="#groups">Groups</a> | <a href="#hostnames">Host Names</a> | <a href="#portnames">Port Names</a>
-</center>
+<h1><%= link_to "Host Names", admin_host_names_url %></h1>
+<div class="clearbox">
+  
+</div>
+<h1><%= link_to "Port Names", admin_port_names_url %></h1>

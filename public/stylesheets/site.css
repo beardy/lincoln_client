@@ -2,9 +2,17 @@ body { background-color: #fff; color: #333; }
 
 a { 
   color: #000; 
-  text-decoration: none;
+/*  text-decoration: none;*/
 }
 
+a.closed {
+  background-image: url(/images/arrow_down.png);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 0px 50%;
+  padding-left: 18px;
+}
 /*a:visited { color: #666; }*/
 /*a:hover { color: #fff; background-color:#000; }*/
 
