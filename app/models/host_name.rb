@@ -1,2 +1,2 @@
-class HostNames < ActiveRecord::Base
+class HostName < ActiveRecord::Base
 end

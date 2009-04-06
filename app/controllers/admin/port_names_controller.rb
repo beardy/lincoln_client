@@ -1,6 +1,6 @@
 class Admin::PortNamesController < ApplicationController
   def index
-    @port_names = PortName.find(:all)
+    @port_names = PortName.find(:all).paginate :page => params[:page]
   end
 
   def new

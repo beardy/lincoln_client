@@ -1,5 +1,6 @@
 class Admin::HostNamesController < ApplicationController
   def index
+    @host_names = HostName.find(:all)
   end
 
   def new
