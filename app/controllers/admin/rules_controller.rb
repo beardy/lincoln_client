@@ -1,29 +1,9 @@
 class Admin::RulesController < AdminController
   
-  def index
-    # NOTE: @groups is already a variable 
-    #  populated in the app/controllers/application.rb
-    #  file , so you don't have to run that find again.
-	respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @rule }
-    end
-  end
- 
-  
-  # GET admin/rules/1
-  def show
-    @rule = Rule.find(params[:id])
-   
-  end
- 
   # GET admin/rules/new
   def new
     @rule = Rule.new
-	
-	respond_to do |format|
-      render "admin/groups/index.html.erb"
-    end
+	  redirect_to :controller => 'admin/groups', :action => 'index'
   end
  
   # GET admin/groups/1/edit
@@ -38,10 +18,11 @@ class Admin::RulesController < AdminController
     respond_to do |format|
       if @rule.save
         flash[:notice] = 'Rule was successfully created.'
-        format.html { redirect_to(@rule) }
+        format.html { redirect_to :controller => 'admin/groups', :action => 'index' }
         format.xml  { render :xml => @rule, :status => :created, :location => @rule }
+        format.js
       else
-        format.html { render :action => "new" }
+        format.html { redirect_to :controller => 'admin/groups', :action => 'index' }
         format.xml  { render :xml => @rule.errors, :status => :unprocessable_entity }
       end
     end

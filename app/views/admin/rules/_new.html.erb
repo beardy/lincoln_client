@@ -1,47 +1,11 @@
-  <div class="rounded control" id="global-rule-control">
-		<% form_for([:admin, @rule]) do |f| %>
-		<%= f.hidden_field :group_id, :value => group.id %>
-        <div class="control-entry">
-        <p class="control-subtitle">IP Range:</p>
-        <div class="column first span-5">
-            <%= f.label :ip_incoming_start, "Incoming:" %>
-            <br />
-            <%= f.text_field :ip_incoming_start, :size => 11%>
-            <span>-</span>
-            <%= f.text_field :ip_incoming_end, :size => 11%>
-        </div>
-        <div class="column last span-5">
-          <%= f.label :ip_outgoing_start, "Outgoing:" %>
-          <br />
-          <%= f.text_field :ip_outgoing_start, :size => 11%>
-          <span>-</span>
-          <%= f.text_field :ip_outgoing_end, :size => 11%>
-        </div>
-        </div>
-        <div class="control-entry">
-        <p class="control-subtitle">Port Range:</p>
-        <div class="column first span-4">
-            <%= f.label :port_incoming_start, "Incoming:" %>
-            <br />
-            <%= f.text_field :port_incoming_start, :size => 6%>
-            <span>-</span>
-            <%= f.text_field :port_incoming_end, :size => 6%>
-
-        </div>
-        <div class="column span-4">
-          <%= f.label :port_outgoing_start, "Outgoing:" %>
-          <br />
-          <%= f.text_field :port_outgoing_start, :size => 6%>
-          <span>-</span>
-          <%= f.text_field :port_outgoing_end, :size => 6%>
-        </div>
-        <div class="column last span-2">
-          <%= f.label :not_flag, "Not:" %>
-          <br />
-          <%= f.check_box :not_flag %>
-        </div>
-        </div>
-        <div class="clearbox"></div>
-        <%= submit_tag 'Create', :class => 'button' %>
-        <% end %>
-        </div>
+<div class="rounded control wide-rule-control" id="group-<%= group.id %>-rule-new">
+  <div class="right">
+    <%= link_to_remote 'Cancel',:url => {:action => :clear_global_rule, :controller => :rules, :id => 'global'} %>
+  </div>
+	<% form_remote_for([:admin, rule]) do |f| %>
+	<%= f.hidden_field :group_id, :value => group.id %>
+  <%= render :partial => 'admin/rules/form', :locals => {:f => f} %>
+  <div class="clearbox"></div>
+  <%= submit_tag 'Create', :class => 'button' %>
+  <% end %>
+</div>

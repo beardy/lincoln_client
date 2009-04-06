@@ -1,0 +1,41 @@
+<div class="clearbox"></div>
+<div class="column first prepend-1 span-5">
+	<%= f.label :ip_incoming_start, "IP Range Incoming:" %>
+	<br />
+	<%= f.text_field :ip_incoming_start, :size => 11%>
+	<span>-</span>
+	<%= f.text_field :ip_incoming_end, :size => 11%>
+</div>
+
+<div class="column span-5 append-2" >
+  <%= f.label :ip_outgoing_start, "IP Range Outgoing:" %>
+  <br />
+  <%= f.text_field :ip_outgoing_start, :size => 11%>
+  <span>-</span>
+  <%= f.text_field :ip_outgoing_end, :size => 11%>
+</div>
+
+
+<div class="column span-5">
+	<%= f.label :port_incoming_start, "Port Range Incoming:" %>
+	<br />
+	<%= f.text_field :port_incoming_start, :size => 6%>
+	<span>-</span>
+	<%= f.text_field :port_incoming_end, :size => 6%>
+</div>
+
+<div class="column span-5">
+  <%= f.label :port_outgoing_start, "Port Range Outgoing:" %>
+  <br />
+  <%= f.text_field :port_outgoing_start, :size => 6%>
+  <span>-</span>
+  <%= f.text_field :port_outgoing_end, :size => 6%>
+</div>
+
+<div class="column last span-2">
+  <%= f.label :not_flag, "Not:" %>
+  <br />
+  <%= f.check_box :not_flag %>
+</div>
+
+<div class="clearbox"></div>

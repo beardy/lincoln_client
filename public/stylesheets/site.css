@@ -13,6 +13,12 @@ a.closed {
   background-position: 0px 50%;
   padding-left: 18px;
 }
+
+.right {
+  float:right;
+  padding-right: 25px;
+  padding-top:10px;
+}
 /*a:visited { color: #666; }*/
 /*a:hover { color: #fff; background-color:#000; }*/
 
@@ -141,24 +147,26 @@ a.closed {
   margin-bottom :10px;
 }
 
-#wide-rule-control {
+.wide-rule-control {
   color: #333333;
   width: 100%;
+/*  padding-bottom:20px;*/
+  margin-bottom: 10px;
 }
 
-#wide-rule-control label {
+.wide-rule-control label {
   vertical-align: middle;
   padding-left: 5px;
   padding-right: 5px;
 }
 
-#wide-rule-control input {
+.wide-rule-control input {
   font-size: 80%;
 /*  width: 3em;*/
 /*  height: 1em;*/
 }
 
-#wide-rule-control input.button {
+.wide-rule-control input.button {
   margin-left: 15px;
   margin-right: 15px;
   margin-bottom :10px;
