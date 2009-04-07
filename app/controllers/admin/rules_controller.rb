@@ -35,11 +35,12 @@ class Admin::RulesController < AdminController
  
     respond_to do |format|
       if @rule.update_attributes(params[:rule])
-        flash[:notice] = 'rule was successfully updated.'
-        format.html { redirect_to(@rule) }
+        # flash[:notice] = 'rule was successfully updated.'
+        format.html {  redirect_to :controller => 'admin/groups', :action => 'index'  }
         format.xml  { head :ok }
+        format.js
       else
-        format.html { render :action => "edit" }
+        format.html { redirect_to :controller => 'admin/groups', :action => 'index'  }
         format.xml  { render :xml => @rule.errors, :status => :unprocessable_entity }
       end
     end

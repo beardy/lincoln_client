@@ -1,0 +1,2 @@
+page.replace "group-"+@rule.group_id.to_s+"-rule-"+@rule.id.to_s, :partial => 'admin/rules/edit', :locals => {:rule => @rule, :group => @rule.group}
+page.visual_effect(:highlight, "group-"+@rule.group_id.to_s+"-rule-"+@rule.id.to_s)
