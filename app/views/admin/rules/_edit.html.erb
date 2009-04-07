@@ -1,6 +1,6 @@
 <div class="rounded control wide-rule-control" id="group-<%= group.id %>-rule-<%= rule.id %>">
   <div class="right">
-    <%= link_to_remote 'Delete Rule',:url => {:action => :clear_global_rule, :controller => :rules, :id => 'global'} %>
+    <%= button_to_remote 'Delete', :url => {:controller => 'admin/rules', :action => :destroy, :id => rule.id}, :method => :delete %>
   </div>
 	<% form_remote_for([:admin, rule]) do |f| %>
 		<%= render :partial => 'admin/rules/form', :locals => {:f => f} %>

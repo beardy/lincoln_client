@@ -6,12 +6,10 @@ class Admin::RulesController < AdminController
 	  redirect_to :controller => 'admin/groups', :action => 'index'
   end
  
-  # GET admin/groups/1/edit
   def edit
     @rule = Rule.find(params[:id])
   end
  
-  # POST admin/groups
   def create
     @rule = Rule.new(params[:rule])
 
@@ -28,8 +26,6 @@ class Admin::RulesController < AdminController
     end
   end
  
-  # PUT admin/group/1
-  # PUT admin/group/1.xml
   def update
     @rule = Rule.find(params[:id])
  
@@ -46,14 +42,15 @@ class Admin::RulesController < AdminController
     end
   end
  
-  # DELETE /group/1
   def destroy
-    @group = Group.find(params[:id])
-    @group.destroy
+    puts "----DESTROY CALLED----"
+    @rule = Rule.find(params[:id])
+    @rule.destroy
  
     respond_to do |format|
-      format.html { redirect_to(index) }
+      format.html { redirect_to :controller => 'admin/groups', :action => 'index' }
       format.xml  { head :ok }
+      format.js
     end
   end
     
