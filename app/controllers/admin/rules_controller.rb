@@ -17,7 +17,7 @@ class Admin::RulesController < AdminController
 
     respond_to do |format|
       if @rule.save
-        flash[:notice] = 'Rule was successfully created.'
+        # flash[:notice] = 'Rule was successfully created.'
         format.html { redirect_to :controller => 'admin/groups', :action => 'index' }
         format.xml  { render :xml => @rule, :status => :created, :location => @rule }
         format.js

@@ -1,8 +1,8 @@
 <div class="rounded control wide-rule-control" id="group-<%= group.id %>-rule-new">
-  <div class="right">
-    <%= link_to_remote 'Cancel',:url => {:action => :clear_global_rule, :controller => :rules, :id => 'global'} %>
-  </div>
-	<% form_remote_for([:admin, rule]) do |f| %>
+  <!-- <div class="right">
+    <%= link_to_function('Cancel') {|page| page.visual_effect(:toggle_blind, "group-#{group.id}-rule-new")} %>
+  </div> -->
+	<% form_remote_for([:admin, rule], :id => "group-#{group.id}-new-rule-form") do |f| %>
 	<%= f.hidden_field :group_id, :value => group.id %>
   <%= render :partial => 'admin/rules/form', :locals => {:f => f} %>
   <div class="clearbox"></div>
