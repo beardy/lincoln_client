@@ -12,6 +12,18 @@ module IPConvert
   end
 
   def raw_ip(ip)
-    IPAddr.new(ip).to_i unless ip.empty?
+    # raw = nil
+    # begin
+    #   raw = IPAddr.new(ip).to_i unless ip.empty? or !valid_ip(ip)
+    # rescue
+    #   raw = nil
+    # end
+    # raw
+    IPAddr.new(ip).to_i unless ip.empty? or !valid_ip(ip)
+  end
+  
+  #Nasty IP regular expression is from http://www.regular-expressions.info/examples.html
+  def valid_ip(ip)
+    ip =~ /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
   end
 end
