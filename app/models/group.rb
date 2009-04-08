@@ -1,9 +1,12 @@
 class Group < ActiveRecord::Base
   has_many :rules, :dependent => :destroy
   
+  validates_uniqueness_of :name
+  
   def to_s
     self.name
   end
+  
   def to_sql
     not_sql = ""
     true_sql = ""

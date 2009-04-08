@@ -11,3 +11,5 @@
     <%= f.submit "Update" %>
   </p>
 <% end %>
+
+<%= link_to 'Destroy',  [:admin, @group], :confirm => 'Delete this group and all its rules?', :method => :delete %>

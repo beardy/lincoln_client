@@ -1,10 +1,11 @@
-<h1>Groups <span style="font-size:12px;text-decoration:underline;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1> 
+<h1>Groups <span style="font-size:12px;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1> 
 <% @groups.each do |group| %>
   <h2>
     <%= link_to_function(group.name, :class => "closed" ) do |page|
-          page.visual_effect(:toggle_blind, "rule-list-#{group.id}") 
-        end 
-    %>
+          page.visual_effect(:toggle_blind, "rule-list-#{group.id}")
+          page.visual_effect(:toggle_blind, "group-#{group.id.to_s}-edit-link")
+        end
+    %>  <span id="group-<%= group.id.to_s %>-edit-link"style="font-size:12px;display:none;">(<%= link_to "Edit", edit_admin_group_url(group) %>) </span>
   </h2>	
   <div id="rule-list-<%= group.id.to_s %>" style="display:none;">
     <h3>Rules:</h3>

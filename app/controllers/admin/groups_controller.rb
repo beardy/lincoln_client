@@ -4,29 +4,15 @@ class Admin::GroupsController < AdminController
     # NOTE: @groups is already a variable 
     #  populated in the app/controllers/application.rb
     #  file , so you don't have to run that find again.
-	
-	@port_names ||= PortName.find(:all)
-	#no hostnames yet
-	#@hostnames ||= HostNames.find(:all)
-	
-	
-	respond_to do |format|
+	  respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @group }
     end
   end
  
-  
-  # GET admin/groups/1
-  def show
-    @group = Group.find(params[:id])
-   
-  end
- 
   # GET admin/groups/new
   def new
     @group = Group.new
- 
   end
  
   # GET admin/groups/1/edit
@@ -41,10 +27,10 @@ class Admin::GroupsController < AdminController
     respond_to do |format|
       if @group.save
         flash[:notice] = 'Group was successfully created.'
-        format.html { redirect_to(@group) }
+        format.html { redirect_to(admin_groups_url) }
         format.xml  { render :xml => @group, :status => :created, :location => @group }
       else
-        format.html { render :action => "new" }
+        format.html { render :controllers => 'admin/groups', :action => "new" }
         format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
       end
     end
@@ -58,7 +44,7 @@ class Admin::GroupsController < AdminController
     respond_to do |format|
       if @group.update_attributes(params[:group])
         flash[:notice] = 'Group was successfully updated.'
-        format.html { redirect_to(@group) }
+        format.html { redirect_to(admin_groups_url) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -73,7 +59,7 @@ class Admin::GroupsController < AdminController
     @group.destroy
  
     respond_to do |format|
-      format.html { redirect_to(index) }
+      format.html { redirect_to(admin_groups_url) }
       format.xml  { head :ok }
     end
   end

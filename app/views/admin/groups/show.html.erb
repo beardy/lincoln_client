@@ -1,5 +1,5 @@
 <!-- Here's how to iterate through each group and then each rule -->
-
+<!-- TODO: Delete this file -->
 
 <h2><%= @group.name %></h2>
 <h3>Rules:</h3>
@@ -58,5 +58,5 @@
         </div>
 		
 	<% end %>
-	<%= link_to 'Destroy',  @group, :confirm => 'Are you sure?', :method => [:admin, :delete] %>
+	<%= link_to 'Destroy',  [:admin, @group], :confirm => 'Are you sure?', :method => :delete %>
 	
