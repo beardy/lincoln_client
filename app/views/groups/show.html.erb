@@ -78,3 +78,25 @@
 </div>
 
 <div class="clearbox"></div>
+
+<h1>
+<%= link_to_function("Raw Traffic", :id => "raw_traffic_link") do |page|
+    page.visual_effect(:toggle_blind, 'raw_traffic')
+  end
+ %>&nbsp;&nbsp;
+<span style="font-size:12px;">
+<%= link_to_function("show / hide", :id => "raw_traffic_link") do |page|
+    page.visual_effect(:toggle_blind, 'raw_traffic')
+  end
+ %>
+</span>
+</h1>
+
+ <div id="raw_traffic" style="display:none">
+  <%= render :partial => 'streams/streams', :locals => {:streams => @streams} %>
+  <%= link_to_function("close", nil) do |page|
+      page.toggle('raw_traffic')
+    end
+   %>
+ </div>
+

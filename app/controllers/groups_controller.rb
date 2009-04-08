@@ -405,10 +405,15 @@ class GroupsController < ApplicationController
 	@graph_top_inc_port_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_inc_port_by_data_size", :id => @group.id, :only_path => true))
 	@graph_top_out_port_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_out_port_by_data_size", :id => @group.id, :only_path => true))
 	@graph_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:action => "top_ip_by_data_size", :id => @group.id, :only_path => true))
-	
+	@streams = Stream.relevant_streams(@time_range, @global_rule, @group).paginate :page => params[:page], :order => 'windows.start_time ASC'
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @group }
+      format.js { # AJAX pagination
+        render :update do |page|
+          page.replace_html 'raw_traffic', :partial => 'streams/streams'
+      end
+      }
     end
   end
   
