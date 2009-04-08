@@ -3,38 +3,38 @@
   <tr>
     <th></th>
     <th>Start Time
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>End Time
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>Duration (sec)
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>IP Incoming
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>Port Incoming
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>IP Outgoing
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>Port Outgoing
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>Total Data
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
     <th>Total # Packets
-        <%= image_tag("upanddownArrow1.jpg") %>
+        <!-- <%= image_tag("upanddownArrow1.jpg") %> -->
     </th>
   </tr>
   <%- @streams.each do |stream| -%>
       <% #TODO make color-coding not hard coded.  this is very very bad code :-P %>
       <% if (stream.port_incoming == 80) then mycolor="#FAEBD7" else mycolor="#E6E6FA" end  %>
       <tr bgcolor="<%= mycolor %>">
-        <td><%= link_to_function(image_tag("diagArrow1.jpg"), nil) do |page|
+        <td><%= link_to_function(image_tag("arrow_down.png"), nil) do |page|
                 mydiv = 'windows' + stream.id.to_s
                 page.visual_effect(:toggle_blind, mydiv)
               end
