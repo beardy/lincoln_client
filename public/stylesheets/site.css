@@ -311,8 +311,9 @@ pre {
 **********************/
 .fieldWithErrors {
   padding: 2px;
-  background-color: red;
-  display: table;
+  color: #979797;
+  background-color: #800000;
+  display: inline-table;
 }
 
 #errorExplanation {

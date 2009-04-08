@@ -1,4 +1,9 @@
-page.insert_html :bottom, "rule-list-rules-"+@rule.group_id.to_s, :partial => 'admin/rules/edit', :locals => {:rule => @rule, :group => @rule.group}
-page.visual_effect(:highlight, "group-"+@rule.group_id.to_s+"-rule-"+@rule.id.to_s)
-
+if @rule.id
+  page.insert_html :bottom, "rule-list-rules-"+@rule.group_id.to_s, :partial => 'admin/rules/edit', :locals => {:rule => @rule, :group => @rule.group}
+  page.visual_effect(:highlight, "group-"+@rule.group_id.to_s+"-rule-"+@rule.id.to_s)
+else
+  page.replace 'group-'+@rule.group_id.to_s+'-rule-new', :partial => 'admin/rules/new', :locals => {:rule => @rule, :group => @rule.group}
+  page.visual_effect(:shake, 'group-'+@rule.group_id.to_s+'-rule-new')
+end
+  # page.replace_html :notice, flash[:notice]
 # page['group-'+@rule.group_id.to_s+"-new-rule-form"].reset

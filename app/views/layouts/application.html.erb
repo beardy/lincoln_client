@@ -28,7 +28,7 @@
 <%= render :partial => 'layouts/header' %>
   <div id="content">
     <div class="site">
-      <p style="color: green"><%= flash[:notice] %></p>
+      <p id="notice" style="color: green"><%= flash[:notice] %></p>
       <%= yield  %>
     </div>
   </div>

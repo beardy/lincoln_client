@@ -4,8 +4,7 @@ class Rule < ActiveRecord::Base
   include IPConvert
   belongs_to :group
   
-  # before_create :set_ranges
-  # before_update :set_ranges
+  validates_numericality_of :port_incoming_start, :port_incoming_end, :port_outgoing_start, :port_outgoing_end, :allow_nil => true
   
   def after_initialize
     self.port_outgoing_end ||= self.port_outgoing_start
@@ -38,21 +37,6 @@ class Rule < ActiveRecord::Base
     sql_statement << ")"
     sql_statement = sql_statement.gsub(/(\(\))/,"").strip.empty? ? "" : sql_statement
     sql_statement
-  end
-  
-  # creates a new Range
-  #  representing the 
-  #  range of the incoming ports
-  def port_incoming_range
-    create_range(port_incoming_start,
-                 port_incoming_stop)
-  end
-  
-  # creates a new Range for
-  #  the outgoing port range
-  def port_outgoing_range
-    create_range(port_outgoing_start,
-                 port_outgoing_stop)
   end
   
   # methods convert the raw
@@ -92,11 +76,6 @@ class Rule < ActiveRecord::Base
   def ip_outgoing_end=(new_ip)
     self.raw_ip_outgoing_end = raw_ip(new_ip)
     self
-  end
-  private
-  
-  def create_range(start,stop)
-    Range.new(start,stop)
   end
   
 end

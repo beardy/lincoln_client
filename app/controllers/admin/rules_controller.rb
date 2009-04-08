@@ -22,6 +22,7 @@ class Admin::RulesController < AdminController
       else
         format.html { redirect_to :controller => 'admin/groups', :action => 'index' }
         format.xml  { render :xml => @rule.errors, :status => :unprocessable_entity }
+        format.js
       end
     end
   end
@@ -38,6 +39,7 @@ class Admin::RulesController < AdminController
       else
         format.html { redirect_to :controller => 'admin/groups', :action => 'index'  }
         format.xml  { render :xml => @rule.errors, :status => :unprocessable_entity }
+        format.js
       end
     end
   end
