@@ -307,6 +307,24 @@ pre {
 }
 
 /*********************
+** Rails Notice
+**********************/
+
+#notice {
+  margin:auto;
+  text-align:center;
+  font-size: 150%;
+  color:#979797;
+  width: 60%;
+  padding: 15px;
+  background-color: #333333;
+  
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  CCborderRadius: 20px;
+}
+
+/*********************
 ** Rails Errors
 **********************/
 .fieldWithErrors {

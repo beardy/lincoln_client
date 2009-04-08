@@ -69,7 +69,7 @@ document.observe("dom:loaded", function() {
 
   if (container) {
     var img = new Image
-    img.src = '/images/slider/loading.gif'
+    img.src = '/images/small_spinner.gif'
 
     function createSpinner() {
       new Element('img', { src: img.src, 'class': 'spinner' })
