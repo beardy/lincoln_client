@@ -60,19 +60,5 @@ module BeardGraph
       self.ofc_graph.js_open_flash_multi_chart_object(self.name, self.height, self.width)
     end
     
-    private
-    
-    def determine_scale_and_label
-      max = @processed_data.inject(0) { |max, n| [max, n[1][:values].max].max }
-      # scale data
-      #  can we move this into a library or the graph builder or something?
-      #  why such ugly code?
-     	scale = 1
-     	labels = %w[B KB MB GB TB PB EB]
-     	label = labels[0]
-     	labels.each { |n| if max / (scale * 1024) > 1 then scale *= 1024; label = n; else break end }
-     	[scale, label]
-    end #determine_scale_and_label
-    
   end
 end

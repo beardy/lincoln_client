@@ -1,5 +1,5 @@
 module BeardGraph
-  class TopIPGraph < BaseGraph
+  class TopIPGraph < TopGraph
     
     def preprocess
       @top_count = 10
@@ -7,25 +7,19 @@ module BeardGraph
     end
     
     def process
-        @processed_data = {}
-        each_group do |group|
-          # each data_value is a particular aggregation in our @data - like :incoming or :outgoing
-          each_data_value do |data_value, data_value_name|
-            # form a new entry in our processed data for this data value
-            @processed_data[data_value_name] = {:values => Array.new(@top_count, 0), :keys => Array.new(@top_count, 0)}
-          
-            @top_count.times do |count|
-              max = @data[group][data_value].max{|a,b| a[1] <=> b[1]}
-              unless max.nil? or max.last == 0
-                @processed_data[data_value_name][:values][count] = max.last
-                @processed_data[data_value_name][:keys][count] = "#{max.first}"
-                # Then we have this line:
-                  @data[group][data_value][max.first] = 0
-                #     but we really don't want to delete data from the @data now              
-              end #unless
-            end #times
-          end #each data_value
-        end #each group
+      each_data_component_with_values do |data_component, values|
+
+        @top_count.times do |count|
+          max = values.max{|a,b| a[1] <=> b[1]}
+          unless max.nil? or max.last == 0
+            data_component[:values][count] = max.last
+            data_component[:keys][count] = "#{max.first}"
+            # Then we have this line:
+            values[max.first] = 0
+          end #unless
+        end #times
+        puts data_component.inspect
+      end #each data_component
     end #process
     
     def postprocess
