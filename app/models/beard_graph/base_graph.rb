@@ -9,10 +9,12 @@ module BeardGraph
   
     # options could have
     # :width & :height
+    # :values - the hash of values to extract from the data
     def initialize(title, options = {})
       @title = title
       @width = options[:width] || 200 # defaults to the small graphs
       @height = options[:height] || 250
+      @data_values = options[:values] if options[:values]
     end
       
     # Should be overridden in subclass if preprocessing is necessary
@@ -48,7 +50,16 @@ module BeardGraph
     def each_data_value
       @data_values = @data_values
       @data_values.each {|data_value, name| yield data_value, name}
-    end    
+    end
+    
+    def each_processed_data_value
+       each_group do |group|
+         @processed_data[group].each_value do |v|
+           yield v
+         end
+      end
+    end
+    
     
   
     # converts the title into a unique name

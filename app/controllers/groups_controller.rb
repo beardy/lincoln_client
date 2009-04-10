@@ -374,9 +374,6 @@ class GroupsController < ApplicationController
     data
   end
   
-  def get_selected_groups
-    @selected_groups = session[:selected_groups] ||= @groups.collect {|g| g.id}
-  end
   
   def toggle_selected_group
     group_id = params[:group_id].to_i
@@ -898,11 +895,5 @@ class GroupsController < ApplicationController
     chart.set_y_axis(y)
 
     render :text => chart.to_s
-  end
-
-  def update_time_range
-    @time_range.update(params[:name], params[:date])
-    # session[params[:name].to_sym] = Time.zone.parse(params["date"])
-    render :layout => false
   end
 end

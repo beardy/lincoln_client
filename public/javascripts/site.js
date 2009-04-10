@@ -41,7 +41,7 @@ function jsddm_canceltimer()
 //  not the best solution.
 function update_date(name, date)
 {
-  jQuery.post('/groups/update_time_range',{'date': date, 'name': name}, function(){location.reload();});  
+  jQuery.post('/time_ranges/update_time_range',{'date': date, 'name': name}, function(){location.reload();});  
 }
 
 // Based off of update_date - this method will update the selected groups and then reload. Again, probably

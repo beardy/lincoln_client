@@ -1,6 +1,10 @@
 module BeardGraph
   class TopGraph < BaseGraph
     attr_accessor :top_count
+    
+    def preprocess
+      @top_count = 5
+    end
       
     def each_data_component_with_values
       @processed_data = Hash.new
@@ -9,10 +13,6 @@ module BeardGraph
         @processed_data[group] = Hash.new {|h,k| h[k] = Hash.new() }
         # each data_value is a particular aggregation in our @data - like :incoming or :outgoing
         each_data_value do |data_value, data_value_name|
-          
-          puts "VALUES::"
-          puts "group: #{group} -- data value: #{data_value} -- data value name #{data_value_name}"
-          
            @processed_data[group][data_value_name][:values]  = Array.new(self.top_count, 0)
            @processed_data[group][data_value_name][:keys]  = Array.new(self.top_count, 0)
            @processed_data[group][data_value_name][:x_labels]  = Array.new(self.top_count, 0)
@@ -21,16 +21,7 @@ module BeardGraph
           puts @processed_data[group][data_value_name].inspect
         end
       end
-    end #each_data_component
-    
-    def each_processed_data_value
-       each_group do |group|
-         @processed_data[group].each_value do |v|
-           yield v
-         end
-      end
-    end
-    
+    end #each_data_component    
     
     # Work around for current limitations of graph builder - 
     #  or just to make graph builders job easier

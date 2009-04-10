@@ -2,8 +2,12 @@ class GraphsController < ApplicationController
   GRAPH_HOOKS = %w(preprocess process postprocess generate_graph)
   
   def index
-    @graph_groups = detail_graphs
-    @graph_top_ip_by_data_size = open_flash_chart_object(250, 200, url_for(:controller => 'groups', :action => "top_ip_by_data_size", :id => Group.find(:first).id, :only_path => true))
+    @graph_groups = detail_graphs(:all)
+    
+  end
+  
+  def show
+    @graph_groups = detail_graphs(params[:id])
   end
   
   # will create an array of TrafficTimelineGraphs that hold the graphs to be displayed at the top portion of the page
@@ -16,38 +20,57 @@ class GraphsController < ApplicationController
   end
   
   # will return an array of arrays for the mid-page graphs each inner-array will be a column
-  def detail_graphs
-    selected_groups = Group.find(:first).to_a
-    graph_groups = create_detail_graphs(selected_groups)
-    graph_groups = generate_detail_graphs(graph_groups, selected_groups)
+  def detail_graphs(id)
+    blank_groups = nil
+    data = nil
+    if id == :all
+      selected_groups = Group.find(@selected_groups)
+      data = aggregate_data(selected_groups)
+      blank_groups = all_group_detail_graphs(selected_groups)
+    else
+      selected_group = Group.find(id)
+      selected_group = selected_group.to_a
+      data = aggregate_data(selected_group)
+      blank_groups = individual_group_detail_graphs(selected_group)
+    end
+    
+    graph_groups = generate_detail_graphs(blank_groups, data)
     graph_groups
   end
   
-  def create_detail_graphs(groups)
+  def individual_group_detail_graphs(group)
     graph_groups = []
-    a = BeardGraph::TopIPGraph.new("Test Top IP")
-    b = BeardGraph::TopPortGraph.new("test top port")
-    graph_groups << [a] << [b]
+    g1 = []
+    g1 << BeardGraph::TopPortGraph.new("Top Incoming Ports", :values => {:port_incoming_size => "Incoming"})
+    g1 << BeardGraph::TopPortGraph.new("Top Outgoing Ports", :values => {:port_outgoing_size => "Outgoing"})
+    g2 = []
+    g2 << BeardGraph::TopIPGraph.new("Top IP Addresses", :values => {:ip_incoming_size => "Incoming", :ip_outgoing_size => "Outgoing"})
+    graph_groups << g1 << g2
+    graph_groups = add_names(graph_groups, group)
+    graph_groups
+  end
+  
+  def all_group_detail_graphs(groups)
+    graph_groups = []
     
+    # create instances of groups and add them to graph_groups
+    
+    graph_groups = add_names(graph_groups, groups)
+    graph_groups
+  end
+  
+  def add_names(blank_graphs, groups)
     group_names = groups.map {|g| g.name}
-    graph_groups.each do |graphs|
+    blank_graphs.each do |graphs|
       graphs.each do |graph|
         graph.groups = group_names
       end
     end
-    
-    cc = BeardGraph::TopIPGraph.new("Test Group IP")
-    cc.data_values = {:ip_all_size => "all"}
-    all_groups = Group.find(:all).to_a.map {|g| g.name}
-    cc.groups = all_groups
-    graph_groups << [cc]
+    blank_graphs
   end
     
   # graph_groups is an array of arrays of our shell graphs
-  def generate_detail_graphs(graph_groups, selected_groups)
-    # generate data
-    data = self.aggregate_data(selected_groups)
-    
+  def generate_detail_graphs(graph_groups, data)    
     # populate graphs with data
     graph_groups.each do |graphs|
       graphs.each do |graph|
@@ -67,10 +90,11 @@ class GraphsController < ApplicationController
   end
   
   def aggregate_data(groups)
-    groups = Group.find(:all)
     data = {}
     groups.to_a.each do |group|
       data[group.name] = Hash.new {|hash, key| hash[key] = Hash.new(0)}
+      data[group.name][:all_size] = 0
+      data[group.name][:all_num] = 0
       streams = Stream.relevant_streams(@time_range, group, @global_rule)
       puts "STREAM SIZE: "+streams.size.to_s
       streams.each do |stream|
@@ -87,6 +111,9 @@ class GraphsController < ApplicationController
           data[group.name][:port_incoming_num][stream.port_incoming] += window.num_packets_incoming
           data[group.name][:port_outgoing_size][stream.port_outgoing] += window.size_packets_outgoing
           data[group.name][:port_outgoing_num][stream.port_outgoing] += window.num_packets_outgoing
+          
+          data[group.name][:all_size] += window.size_packets_all
+          data[group.name][:all_num] += window.num_packets_all
         end
       end
     end

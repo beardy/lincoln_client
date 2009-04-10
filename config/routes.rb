@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :groups
+  map.resources :graphs
   map.resources :rules
   map.namespace :admin do |admin|
     admin.resources :groups
