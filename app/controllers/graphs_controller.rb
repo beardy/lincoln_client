@@ -36,6 +36,11 @@ class GraphsController < ApplicationController
       end
     end
     
+    cc = BeardGraph::TopIPGraph.new("Test Group IP")
+    cc.data_values = {:ip_all_size => "all"}
+    all_groups = Group.find(:all).to_a.map {|g| g.name}
+    cc.groups = all_groups
+    graph_groups << [cc]
   end
     
   # graph_groups is an array of arrays of our shell graphs
@@ -62,7 +67,7 @@ class GraphsController < ApplicationController
   end
   
   def aggregate_data(groups)
-    puts groups.inspect
+    groups = Group.find(:all)
     data = {}
     groups.to_a.each do |group|
       data[group.name] = Hash.new {|hash, key| hash[key] = Hash.new(0)}
@@ -75,6 +80,9 @@ class GraphsController < ApplicationController
           data[group.name][:ip_outgoing_size][stream.ip_outgoing] += window.size_packets_outgoing
           data[group.name][:ip_outgoing_num][stream.ip_outgoing] += window.num_packets_outgoing
           
+          data[group.name][:ip_all_size][stream.ip_incoming] += window.data(:incoming, :kilobyte)
+          data[group.name][:ip_all_size][stream.ip_outgoing] += window.data(:outgoing, :kilobyte)
+            
           data[group.name][:port_incoming_size][stream.port_incoming] += window.size_packets_incoming
           data[group.name][:port_incoming_num][stream.port_incoming] += window.num_packets_incoming
           data[group.name][:port_outgoing_size][stream.port_outgoing] += window.size_packets_outgoing

@@ -6,9 +6,12 @@ module BeardGraph
       @processed_data = Hash.new
       
       each_group do |group|
-        @processed_data[group] = Hash.new {|h,k| h[k] = Hash.new()}
+        @processed_data[group] = Hash.new {|h,k| h[k] = Hash.new() }
         # each data_value is a particular aggregation in our @data - like :incoming or :outgoing
         each_data_value do |data_value, data_value_name|
+          
+          puts "VALUES::"
+          puts "group: #{group} -- data value: #{data_value} -- data value name #{data_value_name}"
           
            @processed_data[group][data_value_name][:values]  = Array.new(self.top_count, 0)
            @processed_data[group][data_value_name][:keys]  = Array.new(self.top_count, 0)
@@ -28,11 +31,17 @@ module BeardGraph
       end
     end
     
+    
+    # Work around for current limitations of graph builder - 
+    #  or just to make graph builders job easier
     def processed_data_for_builder
       processed_data = nil
       if self.groups.size == 1        
         processed_data = @processed_data[self.groups[0]]
       else
+        each_group do |group|
+          @processed_data[group] = @processed_data[group].shift[1]
+        end
         processed_data = @processed_data
       end
       processed_data
