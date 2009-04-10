@@ -26,8 +26,16 @@ class GraphsController < ApplicationController
   def create_detail_graphs(groups)
     graph_groups = []
     a = BeardGraph::TopIPGraph.new("Test Top IP")
-    a.groups = groups.map {|g| g.name}
-    graph_groups << [a]
+    b = BeardGraph::TopPortGraph.new("test top port")
+    graph_groups << [a] << [b]
+    
+    group_names = groups.map {|g| g.name}
+    graph_groups.each do |graphs|
+      graphs.each do |graph|
+        graph.groups = group_names
+      end
+    end
+    
   end
     
   # graph_groups is an array of arrays of our shell graphs

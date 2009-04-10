@@ -60,8 +60,8 @@ class GraphBuilder
       element.fill_alpha = 1
     
       # initialize element values (with tooltips and x-axis labels)
-      if data.has_key?(:keys) and data.has_key?("x_labels")
-        element.values = data[:values].zip(data[:keys], data["x_labels"]).map{|x, y, z| 
+      if data.has_key?(:keys) and data.has_key?(:x_labels)
+        element.values = data[:values].zip(data[:keys], data[:x_labels]).map{|x, y, z| 
 		  find_value_type(@type, {:color => color, :value => x, :key => y, :x_label => z}) }
 	  # initialize element values (with tooltips)
 	  elsif data.has_key?(:keys)

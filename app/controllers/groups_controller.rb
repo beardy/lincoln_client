@@ -152,7 +152,7 @@ class GroupsController < ApplicationController
 	  #data["All"][:keys] = data["All"][:values].map{"#val#"}
 	  
 	  all_sum = data["All"][:values].inject(0){|sum, x| sum + x}
-	  data["All"]["x_labels"] = all_data.zip(data["All"][:values]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
+	  data["All"][:x_labels] = all_data.zip(data["All"][:values]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
     end
 
 	# find max data value
@@ -684,7 +684,7 @@ class GroupsController < ApplicationController
     data["Incoming"] = {
 	  :values => Array.new(), 
 	  :keys => Array.new(),
-	  "x_labels" => Array.new()
+	  :x_labels => Array.new()
 	}
 
 	top_count.times do |i|
@@ -693,7 +693,7 @@ class GroupsController < ApplicationController
 	  unless max.nil? or max.last == 0
 		data["Incoming"][:values].push(max.last)
 		#data["Incoming"][:keys].push("#val#")
-		data["Incoming"]["x_labels"].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
+		data["Incoming"][:x_labels].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
 		all_data["Incoming"][max.first] = 0
 	  end
     end
@@ -701,7 +701,7 @@ class GroupsController < ApplicationController
     other_sum = all_data["Incoming"].inject(0){|sum,n| sum + n[1]}
 	data["Incoming"][:values].push(other_sum)
 	#data["Incoming"][:keys].push("#val#")
-	data["Incoming"]["x_labels"].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
+	data["Incoming"][:x_labels].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
 	
 	# find max data value
 	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
@@ -754,7 +754,7 @@ class GroupsController < ApplicationController
     data["Outgoing"] = {
 	  :values => Array.new(), 
 	  :keys => Array.new(),
-	  "x_labels" => Array.new()
+	  :x_labels => Array.new()
 	}
 
 	top_count.times do |i|
@@ -763,7 +763,7 @@ class GroupsController < ApplicationController
 	  unless max.nil? or max.last == 0
 		data["Outgoing"][:values].push(max.last)
 		#data["Outgoing"][:keys].push("#val#")
-		data["Outgoing"]["x_labels"].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
+		data["Outgoing"][:x_labels].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
 		all_data["Outgoing"][max.first] = 0
 	  end
     end
@@ -771,7 +771,7 @@ class GroupsController < ApplicationController
     other_sum = all_data["Outgoing"].inject(0){|sum,n| sum + n[1]}
 	data["Outgoing"][:values].push(other_sum)
 	#data["Outgoing"][:keys].push("#val#")
-	data["Outgoing"]["x_labels"].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
+	data["Outgoing"][:x_labels].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
 	
 	# find max data value
 	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }

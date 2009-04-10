@@ -1,7 +1,5 @@
 module BeardGraph
   class TopIPGraph < BaseGraph
-    # the values we want out of the data
-    attr_accessor :data_values
     
     def preprocess
       @top_count = 10
@@ -44,23 +42,5 @@ module BeardGraph
       @graph = builder.build
     end #generate_graph
     
-    def each_data_value
-      @data_values = @data_values
-      @data_values.each {|data_value, name| yield data_value, name}
-    end
-    
-    private
-    
-    def determine_scale_and_label
-      max = @processed_data.inject(0) { |max, n| [max, n[1][:values].max].max }
-      # scale data
-      #  can we move this into a library or the graph builder or something?
-      #  why such ugly code?
-     	scale = 1
-     	labels = %w[B KB MB GB TB PB EB]
-     	label = labels[0]
-     	labels.each { |n| if max / (scale * 1024) > 1 then scale *= 1024; label = n; else break end }
-     	[scale, label]
-    end #determine_scale_and_label
   end #top_ip_graph
 end #beard_graph
