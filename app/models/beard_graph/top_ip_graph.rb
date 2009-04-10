@@ -8,7 +8,6 @@ module BeardGraph
     
     def process
       each_data_component_with_values do |data_component, values|
-
         @top_count.times do |count|
           max = values.max{|a,b| a[1] <=> b[1]}
           unless max.nil? or max.last == 0
@@ -18,21 +17,20 @@ module BeardGraph
             values[max.first] = 0
           end #unless
         end #times
-        puts data_component.inspect
       end #each data_component
     end #process
     
     def postprocess
      scale, label = determine_scale_and_label
      	# update values
-     	@processed_data.each_value do |v| 
+     	each_processed_data_value do |v| 
      	  v[:values].map! { |n| n / scale }
      	  v[:keys] = v[:keys].zip(v[:values]).map { |k, v| sprintf("#{k}<br>%6.6f #{label}", v) }
      	end #each_value
     end #postprocess
     
     def generate_graph
-      builder = GraphBuilder.new(:bar, self.processed_data)
+      builder = GraphBuilder.new(:bar, self.processed_data_for_builder)
       @graph = builder.build
     end #generate_graph
     

@@ -36,6 +36,10 @@ module BeardGraph
       @groups = groups.to_a
     end
     
+    def groups
+      @groups.to_a
+    end
+    
     def each_group
       @groups ||= 0
       @groups.each {|group| yield group}
