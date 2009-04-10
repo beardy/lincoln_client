@@ -40,7 +40,15 @@ module BeardGraph
   
     # converts the title into a unique name
     def name
-      self.title.lowercase.split(' ').join("_")
+      self.title.downcase.split(' ').join("_")
+    end
+    
+    def ofc_graph
+      @graph
+    end
+    
+    def display
+      self.ofc_graph.js_open_flash_multi_chart_object(self.name, self.height, self.width)
     end
   end
 end

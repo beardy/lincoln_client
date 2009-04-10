@@ -60,21 +60,21 @@ class GraphBuilder
       element.fill_alpha = 1
     
       # initialize element values (with tooltips and x-axis labels)
-      if data.has_key?("keys") and data.has_key?("x_labels")
-        element.values = data["values"].zip(data["keys"], data["x_labels"]).map{|x, y, z| 
+      if data.has_key?(:keys) and data.has_key?("x_labels")
+        element.values = data[:values].zip(data[:keys], data["x_labels"]).map{|x, y, z| 
 		  find_value_type(@type, {:color => color, :value => x, :key => y, :x_label => z}) }
 	  # initialize element values (with tooltips)
-	  elsif data.has_key?("keys")
-	    element.values = data["values"].zip(data["keys"]).map{|x, y| 
+	  elsif data.has_key?(:keys)
+	    element.values = data[:values].zip(data[:keys]).map{|x, y| 
 		  find_value_type(@type, {:color => color, :value => x, :key => y}) }
       else
-        element.values = data["values"]
+        element.values = data[:values]
       end
       
       @chart.add_element(element)
 	  
 	  # update max value
-      max = max < data["values"].max ? data["values"].max : max
+      max = max < data[:values].max ? data[:values].max : max
     end
     
     y = YAxis.new

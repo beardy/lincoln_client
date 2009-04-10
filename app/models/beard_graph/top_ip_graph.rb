@@ -5,24 +5,24 @@ module BeardGraph
     
     def preprocess
       @top_count = 10
-      @data_values ||= [:ip_incoming, :ip_outgoing]
+      @data_values ||= {:ip_incoming_size => "Incoming", :ip_outgoing_size => "Outgoing"}
     end
     
     def process
         @processed_data = {}
         each_group do |group|
           # each data_value is a particular aggregation in our @data - like :incoming or :outgoing
-          each_data_value do |data_value|
+          each_data_value do |data_value, data_value_name|
             # form a new entry in our processed data for this data value
-            @processed_data[data_value] = {:values => Array.new(@top_count, 0), :keys => Array.new(@top_count, 0)}
+            @processed_data[data_value_name] = {:values => Array.new(@top_count, 0), :keys => Array.new(@top_count, 0)}
           
             @top_count.times do |count|
               max = @data[group][data_value].max{|a,b| a[1] <=> b[1]}
               unless max.nil? or max.last == 0
-                @processed_data[data_value][:values][count] = max.last
-                @processed_data[data_value][:keys][count] = "#{max.first}"
+                @processed_data[data_value_name][:values][count] = max.last
+                @processed_data[data_value_name][:keys][count] = "#{max.first}"
                 # Then we have this line:
-                #   @data[data_value][max.first] = 0
+                  @data[group][data_value][max.first] = 0
                 #     but we really don't want to delete data from the @data now              
               end #unless
             end #times
@@ -45,8 +45,8 @@ module BeardGraph
     end #generate_graph
     
     def each_data_value
-      @data_values = @data_values.to_a
-      @data_values.each {|data_value| yield data_value}
+      @data_values = @data_values
+      @data_values.each {|data_value, name| yield data_value, name}
     end
     
     private

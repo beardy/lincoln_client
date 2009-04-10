@@ -1,0 +1,5 @@
+<%- @graph_groups.each do |graphs| -%>
+  <%= render :partial => 'graphs', :locals => {:graphs => graphs} %>
+<%- end -%>
+
+<%= @graph_top_ip_by_data_size %>
