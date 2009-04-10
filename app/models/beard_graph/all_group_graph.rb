@@ -1,7 +1,8 @@
 module BeardGraph
-  class TopGroupGraph < BaseGraph
+  class AllGroupGraph < BaseGraph
     
     def preprocess
+      @data_values ||= {:port_outgoing_size => "Outgoing"}
     end #preprocess
     
     def process
