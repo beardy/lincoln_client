@@ -1,0 +1,14 @@
+<table style="width:60%; margin:auto;">
+  <tr>
+    <th>Port Name</th>
+    <th>Port Number</th>
+    <th>Update</th>
+    <th>Remove</th>
+  </tr>
+    <%- port_names.each do |port_name| -%>
+      <%= render :partial => 'port_name', :locals => {:port_name => port_name} %>
+    <%- end -%>
+</table>
+<br/>
+<br/>
+<%= will_paginate port_names, :class => "port_name_pagination" %>

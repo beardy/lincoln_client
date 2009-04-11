@@ -1,0 +1,9 @@
+<tr>
+  <% form_for([:admin, host_name]) do |f| %>
+    <%= hidden_field_tag :page, params[:page] %>
+    <td><%=f.text_field :name, :size => 10 %></td>
+    <td><%=f.text_field :ip_address, :size => 12 %></td>
+    <td><%= f.submit "Update", :class => 'button' %></td>    
+  <% end %>
+  <td><%= link_to image_tag("cancel.png"), admin_host_name_path(host_name, :page => params[:page]), :method => :delete %></td>
+</tr>

@@ -1,18 +1,8 @@
-<h1>Host Names</h1>
+<h1>Host Name Associations</h1>
+<div id="host_names">
+  <%= render :partial => 'host_names', :locals => {:host_names => @host_names}%>  
+</div>
+<br/>
+<br/>
 
-<table style="width:60%; margin:auto;">
-  <tr>
-    <th>IP Address</th>
-    <th>Alias</th>
-  </tr>
-    <%- @host_names.each do |host| -%>
-      <tr>
-        <td><%=text_field_tag "", host.raw_ip_address, :size => 10 %></td>
-        <td><%=text_field_tag "", host.name, :size => 10 %></td>
-        <td><%= button_to_remote "Update" %></td>
-        <td><%= image_tag("cancel.png") %></td>
-      </tr>
-    <%- end -%>
-</table>
-<br/>
-<br/>
+<%= link_to "New Host Name Association", new_admin_host_name_url %>

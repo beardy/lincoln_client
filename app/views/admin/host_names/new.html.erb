@@ -1,2 +1,11 @@
-<h1>Admin::HostNames#new</h1>
-<p>Find me in app/views/admin/host_names/new.html.erb</p>
+
+<% form_for([:admin, @host_name]) do |f| %>  
+  <%= render :partial => 'admin/host_names/form', :locals => {:f => f} %>
+  <div class="column first span-5 prepend-6">
+    <%= f.submit "Create" %>
+  </div>
+  <div class="column last span-6">
+    <%= link_to "Cancel", admin_host_names_url %>
+  </div>
+   
+<% end %>
