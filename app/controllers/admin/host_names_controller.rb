@@ -32,7 +32,6 @@ class Admin::HostNamesController < AdminController
         format.js
         format.xml  { render :xml => @host_name, :status => :created, :location => @host_name }
       else
-        flash[:notice] = 'Problem with creating new Host Association'
         format.html { render :controllers => 'admin/host_names', :action => "new" }
         format.js
         format.xml  { render :xml => @host_name.errors, :status => :unprocessable_entity }

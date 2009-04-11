@@ -51,7 +51,6 @@ class Admin::PortNamesController < AdminController
         format.js
         format.xml  { head :ok }
       else
-        flash[:notice] = "Problem with updating #{@port_name.name} "
         format.html { redirect_to(admin_port_names_url(@general_params)) }
         format.js
         format.xml  { render :xml => @port_name.errors, :status => :unprocessable_entity }
