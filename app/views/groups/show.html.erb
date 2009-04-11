@@ -1,5 +1,8 @@
 <% content_for :head do  %>
 <%= javascript_include_tag 'ycodaslider-3.0.pack' %>
+<%= javascript_include_tag 'ColorPicker/colorpicker' %>
+<%= stylesheet_link_tag 'ColorPicker/colorpicker' %>
+<%= stylesheet_link_tag 'ColorPicker/layout' %>
 <script type="text/javascript">
   jQuery(document).ready(function()
   {
@@ -7,12 +10,45 @@
     jQuery(window).bind("load", function() { 
         jQuery(".ycodaslider").ycodaslider(); 
     });  });
+
+  
 </script>
 <% end %>
 
 <%= render :partial => 'layouts/controls' %>
 
+
+  <div id="colorSelector" style="float:left; margin-right:14px;">
+    <div></div>
+  </div>
+
 <h1><%= @group.name %></h1>
+
+
+
+
+<script type="text/javascript">
+  jQuery('#colorSelector div').css('backgroundColor', '#' + '<%= @group.color %>' );
+  jQuery('#colorSelector').ColorPicker({
+	color: '#<%= @group.color %> ',
+	onShow: function (colpkr) {
+		jQuery(colpkr).fadeIn(500);
+		return false;
+	},
+	onHide: function (colpkr, hex) {
+		jQuery(colpkr).fadeOut(500);
+        //TODO: Function to Save color in group model
+		return false;
+	},
+	onChange: function (hsb, hex, rgb) {
+		jQuery('#colorSelector div').css('backgroundColor', '#' + hex);
+	},
+    onSubmit: function (hex) {
+      //TODO: Function to Save color in group model
+    }
+});
+
+</script>
 
 <!-- First large graph goes in its own column -->
 <!-- This keeps it over to the left - out of the way of the  -->
