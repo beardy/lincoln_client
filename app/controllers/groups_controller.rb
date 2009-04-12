@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
     data = acquire_all_group_data(:size_packets_all)
 	
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -49,8 +49,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:values].map { |n| sprintf("%6.6f #{label}", n) }
 	}
 	
     # configure graph
@@ -83,18 +83,18 @@ class GroupsController < ApplicationController
 	
 	# normalize data values
 	unless data.empty?
-	  sum = data.inject(Array.new(@time_range.ticks, 0)){|sum, n| sum.zip(n[1]["values"]).map{|x, y| x + y}}
+	  sum = data.inject(Array.new(@time_range.ticks, 0)){|sum, n| sum.zip(n[1][:values]).map{|x, y| x + y}}
 	  data.each_key{|key| 
 	    # normalize data values
-	    data[key]["values"] = data[key]["values"].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
+	    data[key][:values] = data[key][:values].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
 		# initialize data text
-		data[key]["keys"] = data[key]["values"].map{|x| "#{(x * 100).round}%"}
+		data[key][:keys] = data[key][:values].map{|x| "#{(x * 100).round}%"}
 	  }
 	  
 	  # sum normalized data
 	  data.to_a.reverse.inject(Array.new(@time_range.ticks, 0)){|sum, n|
-	    tmp = sum.zip(n[1]["values"]).map{|x, y| x + y}
-		data[n[0]]["values"] = tmp
+	    tmp = sum.zip(n[1][:values]).map{|x, y| x + y}
+		data[n[0]][:values] = tmp
 		tmp
 	  }
 	end
@@ -115,18 +115,18 @@ class GroupsController < ApplicationController
 	
 	# normalize data values
 	unless data.empty?
-	  sum = data.inject(Array.new(@time_range.ticks, 0)){|sum, n| sum.zip(n[1]["values"]).map{|x, y| x + y}}
+	  sum = data.inject(Array.new(@time_range.ticks, 0)){|sum, n| sum.zip(n[1][:values]).map{|x, y| x + y}}
 	  data.each_key{|key| 
 	    # normalize data values
-	    data[key]["values"] = data[key]["values"].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
+	    data[key][:values] = data[key][:values].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
 		# initialize data text
-		data[key]["keys"] = data[key]["values"].map{|x| "#{(x * 100).round}%"}
+		data[key][:keys] = data[key][:values].map{|x| "#{(x * 100).round}%"}
 	  }
 	  
 	  # sum normalized data
 	  data.to_a.reverse.inject(Array.new(@time_range.ticks, 0)){|sum, n|
-	    tmp = sum.zip(n[1]["values"]).map{|x, y| x + y}
-		data[n[0]]["values"] = tmp
+	    tmp = sum.zip(n[1][:values]).map{|x, y| x + y}
+		data[n[0]][:values] = tmp
 		tmp
 	  }
 	end
@@ -148,15 +148,15 @@ class GroupsController < ApplicationController
 	# sum data values
 	data = {"All" => {}}
 	unless all_data.empty?
-	  data["All"]["values"] = all_data.map{|n| n[1]["values"].inject(0){|sum, x| sum + x}}
-	  #data["All"]["keys"] = data["All"]["values"].map{"#val#"}
+	  data["All"][:values] = all_data.map{|n| n[1][:values].inject(0){|sum, x| sum + x}}
+	  #data["All"][:keys] = data["All"][:values].map{"#val#"}
 	  
-	  all_sum = data["All"]["values"].inject(0){|sum, x| sum + x}
-	  data["All"]["x_labels"] = all_data.zip(data["All"]["values"]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
+	  all_sum = data["All"][:values].inject(0){|sum, x| sum + x}
+	  data["All"][:x_labels] = all_data.zip(data["All"][:values]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
     end
 
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -166,8 +166,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:values].map { |n| sprintf("%6.6f #{label}", n) }
 	}
 
     # configure graph
@@ -203,21 +203,21 @@ class GroupsController < ApplicationController
     data = {}
     @selected_groups.each do |group_index|
 	  group = Group.find(group_index.to_i)
-      data[group] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
+      data[group] = {:values => Array.new(top_count, 0), :keys => Array.new(top_count, 0)}
 
 	  top_count.times do |i|
 	    # find max (by value)
 	    max = all_data[group].max{|a,b| a[1] <=> b[1]}
 	    unless max.nil? or max.last == 0
-		  data[group]["values"][i] = max.last
-		  data[group]["keys"][i] = "#{max.first}"#<br>#{max.last}"
+		  data[group][:values][i] = max.last
+		  data[group][:keys][i] = "#{max.first}"#<br>#{max.last}"
 		  all_data[group][max.first] = 0
 	    end
       end
 	end
 	
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -227,8 +227,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["keys"].zip(v["values"]).map { |k, v| sprintf("#{k}<br>%6.6f #{label}", v) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:keys].zip(v[:values]).map { |k, v| sprintf("#{k}<br>%6.6f #{label}", v) }
 	}
 	
     # configure graph
@@ -292,7 +292,7 @@ class GroupsController < ApplicationController
 	# initialize top data: values, text, and x-axis labels
     data = {}
     data["Data"] = {
-	  "values" => Array.new()
+	  :values => Array.new()
 	}
 
     temp = Array.new()
@@ -312,8 +312,8 @@ class GroupsController < ApplicationController
 	  unless max.nil? or max.last == 0
 		y = (start_day_hour + max.first) % 24
 		x = start_day_hour + max.first
-		data["Data"]["values"].push(ScatterValue.new(x,y))
-		data["Data"]["values"].last.tooltip = sprintf("%6.6f #{label}",  max.last / scale)
+		data["Data"][:values].push(ScatterValue.new(x,y))
+		data["Data"][:values].last.tooltip = sprintf("%6.6f #{label}",  max.last / scale)
 		temp.push(max.last)
 		all_data["Data"][max.first] = 0
 	  end
@@ -323,7 +323,7 @@ class GroupsController < ApplicationController
     value_range = temp.first - temp.last
 
     temp.each_with_index do |x, i|
-	  data["Data"]["values"][i].dot_size = ((temp[i] - temp.last) / value_range) * dot_size_range + dot_size_min
+	  data["Data"][:values][i].dot_size = ((temp[i] - temp.last) / value_range) * dot_size_range + dot_size_min
 	end
 
     # initialize chart
@@ -333,7 +333,7 @@ class GroupsController < ApplicationController
     #chart.set_title(title)
 
     scatter = Scatter.new('#1C6569', dot_size_min)  # color, dot size
-    scatter.values = data["Data"]["values"]
+    scatter.values = data["Data"][:values]
     chart.add_element(scatter)
 
     x = XAxis.new
@@ -353,7 +353,7 @@ class GroupsController < ApplicationController
     data = {}
     @selected_groups.each do |group_index|
       group = Group.find(group_index.to_i)
-	  data[group] = {"values" => Array.new(@time_range.ticks, 0)}
+	  data[group] = {:values => Array.new(@time_range.ticks, 0)}
       # streams = Stream.starting_between(@time_range.start_time, @time_range.end_time).filtered_by(@global_rule).filtered_by(group)
       streams = Stream.relevant_streams(@time_range, group, @global_rule )
       puts "---------RESULT SIZE: "+streams.size.to_s+"---------------"
@@ -364,7 +364,7 @@ class GroupsController < ApplicationController
             # if within tick range, add data
             if window.between?(tick_time)
               values.each do |value|
-                data[group]["values"][tick] += window.send(value.to_sym)*@time_range.ratio
+                data[group][:values][tick] += window.send(value.to_sym)*@time_range.ratio
               end
             end
           end
@@ -374,9 +374,6 @@ class GroupsController < ApplicationController
     data
   end
   
-  def get_selected_groups
-    @selected_groups = session[:selected_groups] ||= @groups.collect {|g| g.id}
-  end
   
   def toggle_selected_group
     group_id = params[:group_id].to_i
@@ -426,8 +423,8 @@ class GroupsController < ApplicationController
 
     # initialize data
     data = {}
-    data["Incoming"] = {"values" => Array.new(@time_range.ticks, 0)}
-    data["Outgoing"] = {"values" => Array.new(@time_range.ticks, 0)}
+    data["Incoming"] = {:values => Array.new(@time_range.ticks, 0)}
+    data["Outgoing"] = {:values => Array.new(@time_range.ticks, 0)}
     
     # for each stream & window
     @streams.each do |stream|
@@ -436,15 +433,15 @@ class GroupsController < ApplicationController
         @time_range.each_tick_with_time do |tick, tick_time|
           # if within tick range, add data
           if window.between?(tick_time)
-            data["Incoming"]["values"][tick] += window.data(:incoming, :kilobyte) * @time_range.ratio
-            data["Outgoing"]["values"][tick] += window.data(:outgoing, :kilobyte) * @time_range.ratio
+            data["Incoming"][:values][tick] += window.data(:incoming, :kilobyte) * @time_range.ratio
+            data["Outgoing"][:values][tick] += window.data(:outgoing, :kilobyte) * @time_range.ratio
           end
         end
       end
     end
     
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -454,8 +451,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:values].map { |n| sprintf("%6.6f #{label}", n) }
 	}
 	
     # configure graph
@@ -474,8 +471,8 @@ class GroupsController < ApplicationController
 
     # initialize data
     data = {}
-    data["Incoming"] = {"values" => Array.new(@time_range.ticks, 0)}
-    data["Outgoing"] = {"values" => Array.new(@time_range.ticks, 0)}
+    data["Incoming"] = {:values => Array.new(@time_range.ticks, 0)}
+    data["Outgoing"] = {:values => Array.new(@time_range.ticks, 0)}
 
     # for each stream & window
     @streams.each do |stream|
@@ -484,8 +481,8 @@ class GroupsController < ApplicationController
         @time_range.each_tick_with_time do |tick, tick_time|
           # if within tick range, add data
           if window.between?(tick_time)
-            data["Incoming"]["values"][tick] += window.num_packets_incoming * @time_range.ratio
-            data["Outgoing"]["values"][tick] += window.num_packets_outgoing * @time_range.ratio
+            data["Incoming"][:values][tick] += window.num_packets_incoming * @time_range.ratio
+            data["Outgoing"][:values][tick] += window.num_packets_outgoing * @time_range.ratio
           end
         end
       end
@@ -507,8 +504,8 @@ class GroupsController < ApplicationController
 
     # initialize data values
     data = {}
-    data["Incoming"] = {"values" => Array.new(@time_range.ticks, 0)}
-    data["Outgoing"] = {"values" => Array.new(@time_range.ticks, 0)}
+    data["Incoming"] = {:values => Array.new(@time_range.ticks, 0)}
+    data["Outgoing"] = {:values => Array.new(@time_range.ticks, 0)}
 
     # for each stream & window
     @streams.each do |stream|
@@ -517,24 +514,24 @@ class GroupsController < ApplicationController
         @time_range.each_tick_with_time do |tick, tick_time|
           # if within tick range, add data
           if window.between?(tick_time)
-            data["Incoming"]["values"][tick] += window.data(:incoming, :kilobyte) * @time_range.ratio
-            data["Outgoing"]["values"][tick] += window.data(:outgoing, :kilobyte) * @time_range.ratio
+            data["Incoming"][:values][tick] += window.data(:incoming, :kilobyte) * @time_range.ratio
+            data["Outgoing"][:values][tick] += window.data(:outgoing, :kilobyte) * @time_range.ratio
           end
         end
       end
     end
 
 	# normalize data values
-	sum = data["Incoming"]["values"].zip(data["Outgoing"]["values"]).map{|x, y| x + y}
-	data["Incoming"]["values"] = data["Incoming"]["values"].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
-	data["Outgoing"]["values"] = data["Outgoing"]["values"].zip(sum).map{|x, y| if y == 0  then 0 else  x / y  end }
+	sum = data["Incoming"][:values].zip(data["Outgoing"][:values]).map{|x, y| x + y}
+	data["Incoming"][:values] = data["Incoming"][:values].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
+	data["Outgoing"][:values] = data["Outgoing"][:values].zip(sum).map{|x, y| if y == 0  then 0 else  x / y  end }
 	
 	# initialize data text
-	data["Incoming"]["keys"] = data["Incoming"]["values"].map{|x| "#{(x * 100).round}%"}
-	data["Outgoing"]["keys"] = data["Outgoing"]["values"].map{|x| "#{(x * 100).round}%"}
+	data["Incoming"][:keys] = data["Incoming"][:values].map{|x| "#{(x * 100).round}%"}
+	data["Outgoing"][:keys] = data["Outgoing"][:values].map{|x| "#{(x * 100).round}%"}
 	
 	# sum normalized data
-	data["Outgoing"]["values"] = data["Outgoing"]["values"].zip(data["Incoming"]["values"]).map{|x, y| x + y}
+	data["Outgoing"][:values] = data["Outgoing"][:values].zip(data["Incoming"][:values]).map{|x, y| x + y}
     
     # configure graph
     options = {:title => "Incoming vs Outgoing Data Size (in %): "}
@@ -552,8 +549,8 @@ class GroupsController < ApplicationController
 
     # initialize data
     data = {}
-    data["Incoming"] = {"values" => Array.new(@time_range.ticks, 0)}
-    data["Outgoing"] = {"values" => Array.new(@time_range.ticks, 0)}
+    data["Incoming"] = {:values => Array.new(@time_range.ticks, 0)}
+    data["Outgoing"] = {:values => Array.new(@time_range.ticks, 0)}
 
     # for each stream & window
     @streams.each do |stream|
@@ -562,24 +559,24 @@ class GroupsController < ApplicationController
         @time_range.each_tick_with_time do |tick, tick_time|
           # if within tick range, add data
           if window.between?(tick_time)
-            data["Incoming"]["values"][tick] += window.num_packets_incoming * @time_range.ratio
-            data["Outgoing"]["values"][tick] += window.num_packets_outgoing * @time_range.ratio
+            data["Incoming"][:values][tick] += window.num_packets_incoming * @time_range.ratio
+            data["Outgoing"][:values][tick] += window.num_packets_outgoing * @time_range.ratio
           end
         end
       end
     end
 
 	# normalize data values
-	sum = data["Incoming"]["values"].zip(data["Outgoing"]["values"]).map{|x, y| x + y}
-	data["Incoming"]["values"] = data["Incoming"]["values"].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
-	data["Outgoing"]["values"] = data["Outgoing"]["values"].zip(sum).map{|x, y| if y == 0  then 0 else  x / y  end }
+	sum = data["Incoming"][:values].zip(data["Outgoing"][:values]).map{|x, y| x + y}
+	data["Incoming"][:values] = data["Incoming"][:values].zip(sum).map{|x, y| if y == 0 then 0  else  x / y end }
+	data["Outgoing"][:values] = data["Outgoing"][:values].zip(sum).map{|x, y| if y == 0  then 0 else  x / y  end }
 	
 	# initialize data text
-	data["Incoming"]["keys"] = data["Incoming"]["values"].map{|x| "#{(x * 100).round}%"}
-	data["Outgoing"]["keys"] = data["Outgoing"]["values"].map{|x| "#{(x * 100).round}%"}
+	data["Incoming"][:keys] = data["Incoming"][:values].map{|x| "#{(x * 100).round}%"}
+	data["Outgoing"][:keys] = data["Outgoing"][:values].map{|x| "#{(x * 100).round}%"}
 	
 	# sum normalized data
-	data["Outgoing"]["values"] = data["Outgoing"]["values"].zip(data["Incoming"]["values"]).map{|x, y| x + y}
+	data["Outgoing"][:values] = data["Outgoing"][:values].zip(data["Incoming"][:values]).map{|x, y| x + y}
     
     # configure graph
     options = {:title => "Incoming vs Outgoing Packet Counts (in %)"}
@@ -613,29 +610,29 @@ class GroupsController < ApplicationController
 	
 	# initialize top data values and text
     data = {}
-    data["Incoming"] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
-    data["Outgoing"] = {"values" => Array.new(top_count, 0), "keys" => Array.new(top_count, 0)}
+    data["Incoming"] = {:values => Array.new(top_count, 0), :keys => Array.new(top_count, 0)}
+    data["Outgoing"] = {:values => Array.new(top_count, 0), :keys => Array.new(top_count, 0)}
 
 	top_count.times do |i|
 	  # find max incoming (by value)
 	  max = all_data["Incoming"].max{|a,b| a[1] <=> b[1]}
 	  unless max.nil? or max.last == 0
-		data["Incoming"]["values"][i] = max.last
-		data["Incoming"]["keys"][i] = "#{max.first}"#<br>#{max.last}"
+		data["Incoming"][:values][i] = max.last
+		data["Incoming"][:keys][i] = "#{max.first}"#<br>#{max.last}"
 		all_data["Incoming"][max.first] = 0
 	  end
 		
 	  # find max outgoing (by value)
 	  max = all_data["Outgoing"].max{|a,b| a[1] <=> b[1]}
 	  unless max.nil? or max.last == 0
-		data["Outgoing"]["values"][i] = max.last
-		data["Outgoing"]["keys"][i] = "#{max.first}"#<br>#val#"
+		data["Outgoing"][:values][i] = max.last
+		data["Outgoing"][:keys][i] = "#{max.first}"#<br>#val#"
 		all_data["Outgoing"][max.first] = 0
 	  end
     end
 
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -645,8 +642,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["keys"].zip(v["values"]).map { |k, v| sprintf("#{k}<br>%6.6f #{label}", v) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:keys].zip(v[:values]).map { |k, v| sprintf("#{k}<br>%6.6f #{label}", v) }
 	}
 	
     # configure graph
@@ -682,29 +679,29 @@ class GroupsController < ApplicationController
 	# initialize top data: values, text, and x-axis labels
     data = {}
     data["Incoming"] = {
-	  "values" => Array.new(), 
-	  "keys" => Array.new(),
-	  "x_labels" => Array.new()
+	  :values => Array.new(), 
+	  :keys => Array.new(),
+	  :x_labels => Array.new()
 	}
 
 	top_count.times do |i|
 	  # find max incoming (by value)
 	  max = all_data["Incoming"].max{|a,b| a[1] <=> b[1]}
 	  unless max.nil? or max.last == 0
-		data["Incoming"]["values"].push(max.last)
-		#data["Incoming"]["keys"].push("#val#")
-		data["Incoming"]["x_labels"].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
+		data["Incoming"][:values].push(max.last)
+		#data["Incoming"][:keys].push("#val#")
+		data["Incoming"][:x_labels].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
 		all_data["Incoming"][max.first] = 0
 	  end
     end
 
     other_sum = all_data["Incoming"].inject(0){|sum,n| sum + n[1]}
-	data["Incoming"]["values"].push(other_sum)
-	#data["Incoming"]["keys"].push("#val#")
-	data["Incoming"]["x_labels"].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
+	data["Incoming"][:values].push(other_sum)
+	#data["Incoming"][:keys].push("#val#")
+	data["Incoming"][:x_labels].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
 	
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -714,8 +711,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:values].map { |n| sprintf("%6.6f #{label}", n) }
 	}
 
     # configure graph
@@ -752,29 +749,29 @@ class GroupsController < ApplicationController
 	# initialize top data values and text
     data = {}
     data["Outgoing"] = {
-	  "values" => Array.new(), 
-	  "keys" => Array.new(),
-	  "x_labels" => Array.new()
+	  :values => Array.new(), 
+	  :keys => Array.new(),
+	  :x_labels => Array.new()
 	}
 
 	top_count.times do |i|
 	  # find max outgoing (by value)
 	  max = all_data["Outgoing"].max{|a,b| a[1] <=> b[1]}
 	  unless max.nil? or max.last == 0
-		data["Outgoing"]["values"].push(max.last)
-		#data["Outgoing"]["keys"].push("#val#")
-		data["Outgoing"]["x_labels"].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
+		data["Outgoing"][:values].push(max.last)
+		#data["Outgoing"][:keys].push("#val#")
+		data["Outgoing"][:x_labels].push("#{max.first} (#{if all_sum == 0 then 0 else (max.last * 100 / all_sum).round end}%)")
 		all_data["Outgoing"][max.first] = 0
 	  end
     end
 
     other_sum = all_data["Outgoing"].inject(0){|sum,n| sum + n[1]}
-	data["Outgoing"]["values"].push(other_sum)
-	#data["Outgoing"]["keys"].push("#val#")
-	data["Outgoing"]["x_labels"].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
+	data["Outgoing"][:values].push(other_sum)
+	#data["Outgoing"][:keys].push("#val#")
+	data["Outgoing"][:x_labels].push("Other (#{if all_sum == 0 then 0 else (other_sum * 100 / all_sum).round end}%)")
 	
 	# find max data value
-	max = data.inject(0) { |max, n| [max, n[1]["values"].max].max }
+	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }
 
 	# scale data
 	scale = 1
@@ -784,8 +781,8 @@ class GroupsController < ApplicationController
 	
 	# update values
 	data.each_value { |v| 
-	 v["values"].map! { |n| n / scale }
-	 v["keys"] = v["values"].map { |n| sprintf("%6.6f #{label}", n) }
+	 v[:values].map! { |n| n / scale }
+	 v[:keys] = v[:values].map { |n| sprintf("%6.6f #{label}", n) }
 	}
 
     # configure graph
@@ -845,7 +842,7 @@ class GroupsController < ApplicationController
 	# initialize top data: values, text, and x-axis labels
     data = {}
     data["Data"] = {
-	  "values" => Array.new()
+	  :values => Array.new()
 	}
 
     temp = Array.new()
@@ -865,8 +862,8 @@ class GroupsController < ApplicationController
 	  unless max.nil? or max.last == 0
 		y = (start_day_hour + max.first) % 24
 		x = start_day_hour + max.first
-		data["Data"]["values"].push(ScatterValue.new(x,y))
-		data["Data"]["values"].last.tooltip = sprintf("%6.6f #{label}",  max.last / scale)
+		data["Data"][:values].push(ScatterValue.new(x,y))
+		data["Data"][:values].last.tooltip = sprintf("%6.6f #{label}",  max.last / scale)
 		temp.push(max.last)
 		all_data["Data"][max.first] = 0
 	  end
@@ -876,7 +873,7 @@ class GroupsController < ApplicationController
     value_range = temp.first - temp.last
 
     temp.each_with_index do |x, i|
-	  data["Data"]["values"][i].dot_size = ((temp[i] - temp.last) / value_range) * dot_size_range + dot_size_min
+	  data["Data"][:values][i].dot_size = ((temp[i] - temp.last) / value_range) * dot_size_range + dot_size_min
 	end
 
     # initialize chart
@@ -886,7 +883,7 @@ class GroupsController < ApplicationController
     #chart.set_title(title)
 
     scatter = Scatter.new('#1C6569', dot_size_min)  # color, dot size
-    scatter.values = data["Data"]["values"]
+    scatter.values = data["Data"][:values]
     chart.add_element(scatter)
 
     x = XAxis.new
@@ -898,11 +895,5 @@ class GroupsController < ApplicationController
     chart.set_y_axis(y)
 
     render :text => chart.to_s
-  end
-
-  def update_time_range
-    @time_range.update(params[:name], params[:date])
-    # session[params[:name].to_sym] = Time.zone.parse(params["date"])
-    render :layout => false
   end
 end

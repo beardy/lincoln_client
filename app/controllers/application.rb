@@ -3,17 +3,22 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  before_filter :find_groups, :get_time_range, :get_global_rule
+  before_filter :find_groups, :get_time_range, :get_global_rule, :get_selected_groups
   
   # This will be used to show all groups 
   # In the nav bar
   def find_groups
     @groups ||= Group.find(:all)
   end
+  
+  def get_selected_groups
+    @selected_groups = session[:selected_groups] ||= @groups.collect {|g| g.id}
+  end
+  
 
   def get_time_range
     @time_range = session[:time_range] ||= TimeRange.new
-  end
+  end  
   
   def get_global_rule
     @global_rule = session[:global_rule] ||= Rule.new

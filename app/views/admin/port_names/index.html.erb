@@ -1,26 +1,8 @@
 <h1>Port Number Associations</h1>
-
-<table style="width:60%; margin:auto;">
-  <tr>
-    <th>Port Name</th>
-    <th>Port Number</th>
-    <th>Update</th>
-    <th>Remove</th>
-  </tr>
-    <%- @port_names.each do |port| -%>
-      <tr>
-        <td><%=text_field_tag "", port.name, :size => 10 %></td>
-        <td><%=text_field_tag "", port.number, :size => 4 %></td>
-        <td><%= button_to_remote "Update" %></td>
-        <td><%= image_tag("cancel.png") %></td>
-      </tr>
-    <%- end -%>
-</table>
-<br/>
-<br/>
-<%= will_paginate @port_names %>
-
+<div id="port_names">
+  <%= render :partial => 'port_names', :locals => {:port_names => @port_names}%>  
+</div>
 <br/>
 <br/>
 
-<%= link_to "New Association" %>
+<%= link_to "New Port Association", new_admin_port_name_url %>

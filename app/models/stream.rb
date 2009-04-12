@@ -5,9 +5,9 @@ class Stream < ActiveRecord::Base
   has_many :windows, :order => 'start_time'
   
   named_scope :starting_between, lambda {|start,stop| {:conditions => ["windows.start_time between ? and ?", start, stop],
-                                                       :include => :windows, :order => "windows.start_time"} }
+                                                       :include => :windows} }
                                                        
-  named_scope :filtered_by, lambda {|rule| {:conditions => rule.to_sql, :include => :windows, :order => "windows.start_time" } }
+  named_scope :filtered_by, lambda {|rule| {:conditions => rule.to_sql, :include => :windows } }
   
   def self.relevant_streams(time_range, *rules)
     scope = self.scoped({})

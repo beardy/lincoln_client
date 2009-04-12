@@ -15,12 +15,14 @@ div.ycodaslider-small {
     width: 340px;
 }
 
+
 div.ycodaslider div.yslider-wrap { 
 /* This div isn't entirely necessary but good for getting the side arrows vertically centered */
     margin: 20px 0;
     position: relative;
     width: 100%;
 }
+
 
 div.yslider-viewer { /* This is the viewing window */
     position: relative;
@@ -29,10 +31,8 @@ div.yslider-viewer { /* This is the viewing window */
     height: 350px;
     clear: both;
     background: #fff;
-    /* comment for debug */
-    overflow: hidden; 
-    /* 1000 for debug; Also specified in  div.yslider-viewer div.yslider-container div.yslider-panel  below */
-    width: 520px;     
+    overflow: hidden; /* comment for debug */
+    width: 520px;     /* 1000 for debug; Also specified in  div.yslider-viewer div.yslider-container div.yslider-panel  below */
 }
 
 div.ycodaslider-small div.yslider-viewer { /* This is the viewing window */
@@ -40,14 +40,16 @@ div.ycodaslider-small div.yslider-viewer { /* This is the viewing window */
     width: 270px;
 }
 
+
 div.yslider-viewer div.yslider-container { 
 /* This is the big long container used to house your end-to-end divs. 
    Width is calculated and specified by the JS  */
+   
     position: relative;
     left: 0; top: 0;
     width: 100%;
     list-style-type: none;
-    /*-moz-user-select: none; // This breaks CSS validation but stops accidental (and intentional - beware) panel highlighting in Firefox. Some people might find this useful, crazy fools. */
+    /* -moz-user-select: none; // This breaks CSS validation but stops accidental (and intentional - beware) panel highlighting in Firefox. Some people might find this useful, crazy fools. */
 }
 
 div.yslider-viewer div.yslider-container div.yslider-panel { 
@@ -55,13 +57,13 @@ div.yslider-viewer div.yslider-container div.yslider-panel {
     float:left;
     height: 100%;
     position: relative;
-    /* Also specified in  div.yslider-viewer  above */
-    width: 520px; 
+    width: 520px; /* Also specified in  div.yslider-viewer  above */
 }
 
 div.ycodaslider-small div.yslider-viewer div.yslider-container div.yslider-panel { 
 	width: 270px;
 }
+
 
 div.yslider-viewer div.yslider-container div.yslider-panel div.yslider-panelwrapper { 
 /* Wrapper to give some padding in the panels, without messing with existing panel width */
@@ -86,7 +88,7 @@ div.yslider-nav a { /* The nav links */
     font-weight: bold;
     text-align: center;
     line-height: 22px;
-    background: #B3C4D4;
+    background: #c6e3ff;
     color: #000;
     text-decoration: none;
     display: block;

@@ -1,9 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :groups
+  map.resources :graphs
   map.resources :rules
   map.namespace :admin do |admin|
     admin.resources :groups
-	admin.resources :rules
+	  admin.resources :rules
     admin.resources :port_names
     admin.resources :host_names
   end

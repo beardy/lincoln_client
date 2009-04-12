@@ -1,0 +1,14 @@
+<table style="width:60%; margin:auto;">
+  <tr>
+    <th>Host Name</th>
+    <th>IP Address</th>
+    <th>Update</th>
+    <th>Remove</th>
+  </tr>
+    <%- host_names.each do |host_name| -%>
+      <%= render :partial => 'host_name', :locals => {:host_name => host_name} %>
+    <%- end -%>
+</table>
+<br/>
+<br/>
+<%= will_paginate host_names, :class => "host_name_pagination" %>
