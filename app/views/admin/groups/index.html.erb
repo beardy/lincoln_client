@@ -1,12 +1,26 @@
-<h1>Groups <span style="font-size:12px;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1> 
+<% content_for :head do %>
+<%= stylesheet_link_tag 'ColorPicker/layout' %>
+<% end %>
+
+<h1>Groups <span style="font-size:12px;">(<%= link_to "Add New Group", :action => "new" %>) </span> </h1>
 <% @groups.each do |group| %>
+  <div id="colorShower-<%= group.id.to_s %>" class="colorShower" style="float:left">
+    <div></div>
+  </div>
   <h2>
     <%= link_to_function(group.name, :class => "closed" ) do |page|
           page.visual_effect(:toggle_blind, "rule-list-#{group.id}")
           page.visual_effect(:toggle_blind, "group-#{group.id.to_s}-edit-link")
         end
-    %>  <span id="group-<%= group.id.to_s %>-edit-link"style="font-size:12px;display:none;">(<%= link_to "Edit", edit_admin_group_url(group) %>) </span>
-  </h2>	
+    %>
+	  <span id="group-<%= group.id.to_s %>-edit-link"style="font-size:12px;display:none;">(<%= link_to "Edit", edit_admin_group_url(group) %>) </span>
+  </h2>
+
+  <script type="text/javascript">
+  	divID = '#colorShower-<%= group.id.to_s %> div';
+    jQuery( divID ).css('backgroundColor', '#' + '<%= group.color %>' );
+  </script>
+
   <div id="rule-list-<%= group.id.to_s %>" style="display:none;">
     <h3>Rules:</h3>
     <div id="rule-list-rules-<%= group.id.to_s %>">
@@ -14,26 +28,26 @@
     		<%= render :partial => 'admin/rules/edit', :locals => {:rule => rule, :group => group} %>
       <% end %>
     </div>
-  
+
   		<!-- New Rule Form: -->
   		<h2><%= button_to_function("Create New Rule") do |page|
   		page.visual_effect(:toggle_blind, "new-rule-#{group.id}")
   		end %></h2>
-		
+
 		<div id="new-rule-<%= group.id.to_s %>" style="display:none;">
 		  <%= render :partial => 'admin/rules/new', :locals => {:rule => Rule.new, :group => group} %>
 		</div>
-		
+
 	</div>
-		
+
 <% end %>
 
 <div class="clearbox">
-  
+
 </div>
 
 <h1><%= link_to "Host Names", admin_host_names_url %></h1>
 <div class="clearbox">
-  
+
 </div>
 <h1><%= link_to "Port Names", admin_port_names_url %></h1>

@@ -84,6 +84,22 @@
 	margin-top: 16px;
 }
 
+.colorShower {
+	position: relative;
+	width: 36px;
+	height: 36px;
+	background: url(/images/ColorPicker/select2-no-arrow.png);
+}
+.colorShower div {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 28px;
+		height: 28px;
+	background: url(/images/ColorPicker/select2-no-arrow.png) center;
+	background-color: #0000ff;
+}
+
 #colorSelector {
 	position: relative;
 	width: 36px;
