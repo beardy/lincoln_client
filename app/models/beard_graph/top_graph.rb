@@ -26,16 +26,19 @@ module BeardGraph
     # Work around for current limitations of graph builder - 
     #  or just to make graph builders job easier
     def processed_data_for_builder
-      processed_data = nil
-      if self.groups.size == 1        
-        processed_data = @processed_data[self.groups[0]]
-      else
-        each_group do |group|
-          @processed_data[group] = @processed_data[group].shift[1]
+      unless @data_for_builder
+        processed_data = nil
+        if self.groups.size == 1        
+          processed_data = @processed_data[self.groups[0]]
+        else
+          each_group do |group|
+            @processed_data[group] = @processed_data[group].shift[1]
+          end
+          processed_data = @processed_data
         end
-        processed_data = @processed_data
+        @data_for_builder = processed_data
       end
-      processed_data
+      @data_for_builder
     end
     
     

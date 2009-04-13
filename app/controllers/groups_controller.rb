@@ -149,11 +149,15 @@ class GroupsController < ApplicationController
 	data = {"All" => {}}
 	unless all_data.empty?
 	  data["All"][:values] = all_data.map{|n| n[1][:values].inject(0){|sum, x| sum + x}}
+	  puts "____OLD _ DATA ____"
+	  puts data.inspect
 	  #data["All"][:keys] = data["All"][:values].map{"#val#"}
 	  
 	  all_sum = data["All"][:values].inject(0){|sum, x| sum + x}
 	  data["All"][:x_labels] = all_data.zip(data["All"][:values]).map{|x, y| "#{x[0]} (#{if all_sum == 0 then 0 else (y * 100 / all_sum).round end}%)"}
     end
+	  puts "____OLD _ DATA ____"
+	  puts data.inspect
 
 	# find max data value
 	max = data.inject(0) { |max, n| [max, n[1][:values].max].max }

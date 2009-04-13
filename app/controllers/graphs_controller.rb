@@ -26,19 +26,19 @@ class GraphsController < ApplicationController
     if id == :all
       selected_groups = Group.find(@selected_groups)
       data = aggregate_data(selected_groups)
-      blank_groups = all_group_detail_graphs(selected_groups)
+      blank_groups = all_group_detail_graphs
     else
       selected_group = Group.find(id)
-      selected_group = selected_group.to_a
-      data = aggregate_data(selected_group)
-      blank_groups = individual_group_detail_graphs(selected_group)
+      selected_groups = selected_group.to_a
+      data = aggregate_data(selected_groups)
+      blank_groups = individual_group_detail_graphs
     end
-    
+    graph_groups = add_names(blank_groups, selected_groups)
     graph_groups = generate_detail_graphs(blank_groups, data)
     graph_groups
   end
   
-  def individual_group_detail_graphs(group)
+  def individual_group_detail_graphs
     graph_groups = []
     g1 = []
     g1 << BeardGraph::TopPortGraph.new("Top Incoming Ports", :values => {:port_incoming_size => "Incoming"})
@@ -46,17 +46,14 @@ class GraphsController < ApplicationController
     g2 = []
     g2 << BeardGraph::TopIPGraph.new("Top IP Addresses", :values => {:ip_incoming_size => "Incoming", :ip_outgoing_size => "Outgoing"})
     graph_groups << g1 << g2
-    graph_groups = add_names(graph_groups, group)
     graph_groups
   end
   
-  def all_group_detail_graphs(groups)
-    graph_groups = []
+  def all_group_detail_graphs
+    g1 = [BeardGraph::AllGroupGraph.new("Group Distributions", :values => {:all_size => "All"})]
     
     # create instances of groups and add them to graph_groups
-    
-    graph_groups = add_names(graph_groups, groups)
-    graph_groups
+    [g1]
   end
   
   def add_names(blank_graphs, groups)
