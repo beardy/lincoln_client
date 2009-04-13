@@ -1,25 +1,15 @@
-<% content_for :head do  %>
-<%= javascript_include_tag 'ycodaslider-3.0.pack' %>
-<script type="text/javascript">
-  jQuery(document).ready(function()
-  {
-    jQuery(window).ycodacss('/stylesheets/ycodaslider-3.0.css'); 
-    jQuery(window).bind("load", function() { 
-        jQuery(".ycodaslider").ycodaslider(); 
-    });  });
-</script>
-<% end %>
-
+<%= render :partial => 'header' %>
 <!-- This passes in the groups control as we don't want it in the show page -->
 <% render :layout => 'layouts/controls' do %>
-
   <p class="control-title">Groups</p>
   <div id="groups-chooser">
     <ul>
       <%- unless !@groups || @groups.empty? -%>
         <%- @groups.each do |group| -%>
-          <li><%= check_box_tag group.id, group.id, @selected_groups.include?(group.id), :onclick => "update_selected_groups(#{group.id});" %> 
-              <%= link_to group.name, group_url(group) %></li>
+          <li><%= check_box_tag group.id, group.id, @selected_groups.include?(group.id), 
+                  :onclick => "update_selected_groups(#{group.id});" %> 
+              <%= link_to group.name, group_url(group) %>
+          </li>
         <%- end -%>
       <%- else -%>
         <li>None</li>
@@ -29,9 +19,7 @@
 <% end %>
 
 
-<div class="clearbox">
-  
-</div>
+<div class="clearbox"></div>
 
 <h2>Network Traffic Details</h2>
 <%- @graph_groups.each_with_index do |graphs, index| -%>

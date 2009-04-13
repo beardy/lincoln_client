@@ -2,16 +2,17 @@ class GraphsController < ApplicationController
   GRAPH_HOOKS = %w(preprocess process postprocess generate_graph)
   
   def index
-    @graph_groups = detail_graphs(:all)
-    
+    @timeline_graphs = timeline_graphs(:all)
+    @detail_graph_groups = detail_graphs(:all)
   end
   
   def show
-    @graph_groups = detail_graphs(params[:id])
+    @timeline_graphs = timeline_graphs(params[:id])
+    @detail_graph_groups = detail_graphs(params[:id])
   end
   
   # will create an array of TrafficTimelineGraphs that hold the graphs to be displayed at the top portion of the page
-  def timeline_graphs
+  def timeline_graphs(id)
     # figure out which group / groups are going to be generated
     # acquire data for group set from database
     # create instances of the TrafficTimelineGraphs to populate 
@@ -39,21 +40,18 @@ class GraphsController < ApplicationController
   end
   
   def individual_group_detail_graphs
-    graph_groups = []
-    g1 = []
-    g1 << BeardGraph::TopPortGraph.new("Top Incoming Ports", :values => {:port_incoming_size => "Incoming"})
-    g1 << BeardGraph::TopPortGraph.new("Top Outgoing Ports", :values => {:port_outgoing_size => "Outgoing"})
-    g2 = []
-    g2 << BeardGraph::TopIPGraph.new("Top IP Addresses", :values => {:ip_incoming_size => "Incoming", :ip_outgoing_size => "Outgoing"})
-    graph_groups << g1 << g2
-    graph_groups
+    port_g = [BeardGraph::TopPortGraph.new("Top Incoming Ports", :values => {:port_incoming_size => "Incoming"})]
+    port_g << BeardGraph::TopPortGraph.new("Top Outgoing Ports", :values => {:port_outgoing_size => "Outgoing"})
+    
+    ip_g =  [BeardGraph::TopIPGraph.new("Top IP Addresses", :values => {:ip_incoming_size => "Incoming", :ip_outgoing_size => "Outgoing"})]
+    [port_g, ip_g]
   end
   
   def all_group_detail_graphs
-    g1 = [BeardGraph::AllGroupGraph.new("Group Distributions", :values => {:all_size => "All"})]
-    
+    group_g = [BeardGraph::AllGroupGraph.new("Group Distributions", :values => {:all_size => "All"})]
+    ip_g = [BeardGraph::TopIPGraph.new("Top IP Addresses", :values => {:ip_all_size => "All"})]
     # create instances of groups and add them to graph_groups
-    [g1]
+    [group_g,ip_g]
   end
   
   def add_names(blank_graphs, groups)

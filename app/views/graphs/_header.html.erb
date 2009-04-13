@@ -1,0 +1,11 @@
+<% content_for :head do  %>
+<%= javascript_include_tag 'ycodaslider-3.0.pack' %>
+<script type="text/javascript">
+  jQuery(document).ready(function()
+  {
+    jQuery(window).ycodacss('/stylesheets/ycodaslider-3.0.css'); 
+    jQuery(window).bind("load", function() { 
+        jQuery(".ycodaslider").ycodaslider(); 
+    });  });
+</script>
+<% end %>
