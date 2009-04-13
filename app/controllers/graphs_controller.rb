@@ -7,35 +7,48 @@ class GraphsController < ApplicationController
   end
   
   def show
+    @group = Group.find(params[:id])
     @timeline_graphs = timeline_graphs(params[:id])
     @detail_graph_groups = detail_graphs(params[:id])
   end
   
   # will create an array of TrafficTimelineGraphs that hold the graphs to be displayed at the top portion of the page
   def timeline_graphs(id)
-    # figure out which group / groups are going to be generated
-    # acquire data for group set from database
-    # create instances of the TrafficTimelineGraphs to populate 
-    # populate accordingly
-    # return array of graphs
+    blank_groups = create_timeline_graphs
+    
+    if id == :all
+      selected_groups = Group.find(@selected_groups)
+    else
+      selected_group = Group.find(id)
+      selected_groups = selected_group.to_a
+    end
+    
+    # data = aggregate_data(selected_groups)
+    set_groups(blank_groups, selected_groups)
+    graph_groups = generate_graphs(blank_groups)
+    graph_groups
+  end
+  
+  def create_timeline_graphs
+    []
   end
   
   # will return an array of arrays for the mid-page graphs each inner-array will be a column
   def detail_graphs(id)
     blank_groups = nil
-    data = nil
+    
     if id == :all
       selected_groups = Group.find(@selected_groups)
-      data = aggregate_data(selected_groups)
       blank_groups = all_group_detail_graphs
     else
-      selected_group = Group.find(id)
-      selected_groups = selected_group.to_a
-      data = aggregate_data(selected_groups)
+      selected_groups = Group.find(id).to_a
       blank_groups = individual_group_detail_graphs
     end
-    graph_groups = add_names(blank_groups, selected_groups)
-    graph_groups = generate_detail_graphs(blank_groups, data)
+    
+    data = aggregate_data(selected_groups)
+    set_data(blank_groups, data)
+    set_groups(blank_groups, selected_groups)
+    graph_groups = generate_graphs(blank_groups)
     graph_groups
   end
   
@@ -54,7 +67,7 @@ class GraphsController < ApplicationController
     [group_g,ip_g]
   end
   
-  def add_names(blank_graphs, groups)
+  def set_groups(blank_graphs, groups)
     group_names = groups.map {|g| g.name}
     blank_graphs.each do |graphs|
       graphs.each do |graph|
@@ -63,16 +76,18 @@ class GraphsController < ApplicationController
     end
     blank_graphs
   end
-    
-  # graph_groups is an array of arrays of our shell graphs
-  def generate_detail_graphs(graph_groups, data)    
+  
+  def set_data(graph_groups, data)
     # populate graphs with data
     graph_groups.each do |graphs|
       graphs.each do |graph|
         graph.data = data
       end
     end
+  end
     
+  # graph_groups is an array of arrays of our shell graphs
+  def generate_graphs(graph_groups)        
     # call each hook for each graph
     GRAPH_HOOKS.each do |hook|
       graph_groups.each do |graphs|
@@ -91,7 +106,7 @@ class GraphsController < ApplicationController
       data[group.name][:all_size] = 0
       data[group.name][:all_num] = 0
       streams = Stream.relevant_streams(@time_range, group, @global_rule)
-      puts "STREAM SIZE: "+streams.size.to_s
+      
       streams.each do |stream|
         stream.windows.each do |window|
           data[group.name][:ip_incoming_size][stream.ip_incoming] += window.size_packets_incoming
