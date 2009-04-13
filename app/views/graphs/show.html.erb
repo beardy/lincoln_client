@@ -1,7 +1,10 @@
 <%= render :partial => 'header' %>
 <%= render :partial => 'layouts/controls' %>
-
-
+<h1><%= @group.name %></h1>
+<div class="column span-13 first last">
+  <h2>Network Traffic Timeline</h2>
+  <%= render :partial => 'graphs', :locals => {:graphs => @timeline_graphs, :div_class => "ycodaslider"} %>
+</div>
 
 <div class="clearbox"></div>
 
