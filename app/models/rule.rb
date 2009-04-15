@@ -16,6 +16,34 @@ class Rule < ActiveRecord::Base
     self.raw_ip_incoming_end ||= self.raw_ip_incoming_start
     self.raw_ip_outgoing_end ||= self.raw_ip_outgoing_start
   end
+
+  def contains?(a_stream)
+    val1 =
+      if((raw_ip_incoming_start) and (raw_ip_incoming_end))
+          ((raw_ip_incoming_start)..(raw_ip_incoming_end)).include?(a_stream.raw_ip_incoming)
+      else false
+      end
+    val2 =
+      if((raw_ip_outgoing_start) and (raw_ip_outgoing_end))
+          ((raw_ip_outgoing_start)..(raw_ip_outgoing_end)).include?(a_stream.raw_ip_outgoing)
+      else false
+      end
+    val3 =
+      if((port_incoming_start) and (port_incoming_end))
+          ((port_incoming_start)..(port_incoming_end)).include?(a_stream.port_incoming)
+      else false
+      end
+    val4 =
+      if((port_outgoing_start) and (port_outgoing_end))
+          ((port_outgoing_start)..(port_outgoing_end)).include?(a_stream.port_outgoing)
+      else false
+      end
+    if(not_flag)
+      !( val1 or val2 or val3 or val4 )
+    else
+      val1 or val2 or val3 or val4
+    end
+  end 
   
   def to_sql
     sql_statement = ""
