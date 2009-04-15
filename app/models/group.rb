@@ -6,6 +6,10 @@ class Group < ActiveRecord::Base
   def to_s
     self.name
   end
+
+  def contains?(a_stream)
+      rules.inject(false) { |result, rule| result or rule.contains?(a_stream) }
+  end 
   
   def to_sql
     not_sql = ""

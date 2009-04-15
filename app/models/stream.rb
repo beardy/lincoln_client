@@ -17,6 +17,21 @@ class Stream < ActiveRecord::Base
     end
     scope
   end
+
+  def groups(included_groups)
+      included_groups.select { |group| group.contains?(self) }
+  end
+
+  def color(included_groups)
+      group_list = (groups(included_groups))
+    if (group_list.length == 0)
+      '000000' # The color for no group association
+    elsif (group_list.length == 1)
+      group_list[0].color
+    else
+      'A68064' # The color for multiple group associations
+    end
+  end 
   
   def port_incoming_name
     port_names_hash ||= Stream.get_names
