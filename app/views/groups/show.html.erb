@@ -1,96 +1,23 @@
-<% content_for :head do  %>
-<%= javascript_include_tag 'ycodaslider-3.0.pack' %>
-<%= javascript_include_tag 'ColorPicker/colorpicker' %>
-<%= stylesheet_link_tag 'ColorPicker/colorpicker' %>
-<%= stylesheet_link_tag 'ColorPicker/layout' %>
-<script type="text/javascript">
-  jQuery(document).ready(function()
-  {
-    jQuery(window).ycodacss('/stylesheets/ycodaslider-3.0.css'); 
-    jQuery(window).bind("load", function() { 
-        jQuery(".ycodaslider").ycodaslider(); 
-    });  });
-
-  
-</script>
-<% end %>
-
+<%= render :partial => 'header' %>
 <%= render :partial => 'layouts/controls' %>
-
-
-  <div class="colorShower" style="float:left">
-    <div></div>
-  </div>
-
-<script type="text/javascript">
-  jQuery('.colorShower div').css('backgroundColor', '#' + '<%= @group.color %>' );
-</script>
-
-
 <h1><%= @group.name %></h1>
 
-
-<!-- First large graph goes in its own column -->
-<!-- This keeps it over to the left - out of the way of the  -->
-<!-- date picker -->
-
 <div class="column span-13 first last">
-
   <h2>Network Traffic Timeline</h2>
-  <div class="ycodaslider">
-	<div class="yslider-panelwrapper" title="Data Size">
-    <%= @graph_timeline_by_data_size %>
-	</div>
-	<div class="yslider-panelwrapper" title="Normalized Data Size">
-    <%= @graph_timeline_by_data_size_normal %>
-	</div>
-	<div class="yslider-panelwrapper" title="Packet Count">
-    <%= @graph_timeline_by_packet_count %>
-	</div>
-	<div class="yslider-panelwrapper" title="Normalized Packet Count">
-    <%= @graph_timeline_by_packet_count_normal %>
-	</div>
-  </div><!-- .ycodaslider -->
-  
-  <div id="switch-control"></div>
-  
+  <%= render :partial => 'graphs', :locals => {:graphs => @timeline_graphs, :div_class => "ycodaslider"} if @timeline_graphs %>
 </div>
 
-<!-- This is just a hack to make sure everything sits as it should   -->
-<!-- We can replace with something cleaner later -->
 <div class="clearbox"></div>
 
-<!-- Here is where a series of graphs can go  -->
 <h2>Network Traffic Details</h2>
-<div class="column span-6 first" style="width: 315px">
-
-  <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Daily Traffic">
-      <%= @graph_top_daily_by_data_size %>
-	</div>
-  </div><!-- .ycodaslider -->
-  
+<div class="column span-8 first">
+  <%= render :partial => 'graphs', :locals => {:graphs => @daily_graphs, :div_class => "ycodaslider-small"} %>
 </div>
-<div class="column span-6" style="width: 315px">
-
-  <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Top Incoming Ports">
-      <%= @graph_top_inc_port_by_data_size %>
-	</div>
-	<div class="yslider-panelwrapper" title="Top Outgoing Ports">
-      <%= @graph_top_out_port_by_data_size %>
-	</div>
-  </div><!-- .ycodaslider -->
-
+<div class="column span-8">
+  <%= render :partial => 'graphs', :locals => {:graphs => @port_graphs , :div_class => "ycodaslider-small"} %>
 </div>
-<div class="column span-6 last" style="width: 315px">
-
-  <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Top IP Addresses">
-      <%= @graph_top_ip_by_data_size %>
-	</div>
-  </div><!-- .ycodaslider -->
-
+<div class="column span-8 last">
+  <%= render :partial => 'graphs', :locals => {:graphs => @ip_graphs, :div_class => "ycodaslider-small"} %>
 </div>
 
 <div class="clearbox"></div>

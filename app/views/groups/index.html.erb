@@ -1,14 +1,4 @@
-<% content_for :head do  %>
-<%= javascript_include_tag 'ycodaslider-3.0.pack' %>
-<script type="text/javascript">
-  jQuery(document).ready(function()
-  {
-    jQuery(window).ycodacss('/stylesheets/ycodaslider-3.0.css'); 
-    jQuery(window).bind("load", function() { 
-        jQuery(".ycodaslider").ycodaslider(); 
-    });  });
-</script>
-<% end %>
+<%= render :partial => 'header' %>
 
 <!-- This passes in the groups control as we don't want it in the show page -->
 <% render :layout => 'layouts/controls' do %>
@@ -18,8 +8,10 @@
     <ul>
       <%- unless !@groups || @groups.empty? -%>
         <%- @groups.each do |group| -%>
-          <li><%= check_box_tag group.id, group.id, @selected_groups.include?(group.id), :onclick => "update_selected_groups(#{group.id});" %> 
-              <%= link_to group.name, group_url(group) %></li>
+          <li><%= check_box_tag group.id, group.id, @selected_groups.include?(group.id), 
+                  :onclick => "update_selected_groups(#{group.id});" %> 
+              <%= link_to group.name, group_url(group) %>
+          </li>
         <%- end -%>
       <%- else -%>
         <li>None</li>
@@ -29,51 +21,21 @@
 <% end %>
 
 <h2>Network Traffic Timeline</h2>
-<div class="ycodaslider ycodaslider-big column span-14 first last">
-  <div class="yslider-panelwrapper" title="Data Size">
-    <%= @graph_all_timeline_by_data_size %>
-  </div>
-  <div class="yslider-panelwrapper" title="Normalized Data Size">
-    <%= @graph_all_timeline_by_data_size_normal %>
-  </div>
-  <div class="yslider-panelwrapper" title="Packet Count">
-    <%= @graph_all_timeline_by_packet_count %>
-  </div>
-  <div class="yslider-panelwrapper" title="Normalized Packet Count">
-    <%= @graph_all_timeline_by_packet_count_normal %>
-  </div>
+<div class="column span-13 first last">
+  <%= render :partial => 'graphs', :locals => {:graphs => @timeline_graphs, :div_class => "ycodaslider"} %>
 </div>
 
 <div class="clearbox"></div>
 
-<!-- Here is where a series of graphs can go  -->
 <h2>Network Traffic Details</h2>
-<div class="column span-6 first" style="width: 315px">
-
-  <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Group Distributions">
-      <%= @graph_all_by_data_size %>
-	</div>
-  </div><!-- .ycodaslider -->
-  
+<div class="column span-8 first">
+  <%= render :partial => 'graphs', :locals => {:graphs => @daily_graphs, :div_class => "ycodaslider-small"} %>
 </div>
-<div class="column span-6" style="width: 315px">
-
-  <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Daily Traffic">
-      <%= @graph_all_top_daily_by_data_size %>
-	</div>
-  </div><!-- .ycodaslider -->
-
+<div class="column span-8">
+  <%= render :partial => 'graphs', :locals => {:graphs => @group_graphs , :div_class => "ycodaslider-small"} %>
 </div>
-<div class="column span-6 last" style="width: 315px">
-
-  <div class="ycodaslider ycodaslider-small">
-	<div class="yslider-panelwrapper" title="Top IP Addresses">
-      <%= @graph_all_top_ip_by_data_size %>
-	</div>
-  </div><!-- .ycodaslider -->
-
+<div class="column span-8 last">
+  <%= render :partial => 'graphs', :locals => {:graphs => @ip_graphs, :div_class => "ycodaslider-small"} %>
 </div>
 
 <div class="clearbox"></div>
