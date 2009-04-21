@@ -47,6 +47,27 @@ a.closed {
   margin-bottom:-1px;
 }
 
+#spinner img{
+  margin:auto;
+}
+
+th.sortup a {
+  background-image: url(/images/arrow_up.png);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 100% 50%;
+  padding-right: 18px;
+}
+
+th.sortdown a {
+  background-image: url(/images/arrow_down.png);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 100% 50%;
+  padding-right: 18px;
+}
 
 .controls {
   float: right;

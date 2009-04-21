@@ -34,7 +34,7 @@ class GroupsController < ApplicationController
       format.html # index.html.erb
       format.js { # AJAX pagination
         render :update do |page|
-          page.replace_html 'raw_traffic', :partial => 'streams/streams'
+          page.replace_html 'raw_traffic', :partial => 'streams/streams', :locals => {:streams => @streams}
       end
       }
       format.xml  { render :xml => @groups }
@@ -78,10 +78,44 @@ class GroupsController < ApplicationController
       format.xml  { render :xml => @group }
       format.js { # AJAX pagination
         render :update do |page|
-          page.replace_html 'raw_traffic', :partial => 'streams/streams'
+          page.replace_html 'raw_traffic', :partial => 'streams/streams', :locals => {:streams => @streams}
       end
       }
     end
+  end
+  
+  
+  def order_streams    
+    sort = case params['sort']
+      when "start_time"  then "windows.start_time ASC"
+      when "start_time_reverse"  then "windows.start_time DESC"
+      when "end_time" then "windows.end_time ASC"
+      when "end_time_reverse" then "windows.end_time DESC"
+      when "ip_incoming" then "streams.raw_ip_incoming ASC"
+      when "ip_incoming_reverse" then "streams.raw_ip_incoming DESC"
+      when "port_incoming" then "streams.port_incoming ASC"
+      when "port_incoming_reverse" then "streams.port_incoming DESC"
+      when "ip_outgoing" then "streams.raw_ip_outgoing ASC"
+      when "ip_outgoing_reverse" then "streams.raw_ip_outgoing DESC"
+      when "port_outgoing" then "streams.port_outgoing ASC"
+      when "port_outgoing_reverse" then "streams.port_outgoing DESC"
+    end
+    
+    groups = [@global_rule]    
+    if params[:id]
+      groups << Group.find(params[:id])
+    end
+
+    @streams = Stream.relevant_streams(@time_range,*groups).paginate :page => params[:page], :order => sort
+
+    if request.post?
+      render :partial => "streams/streams", :locals => {:streams => @streams}
+    else
+      render :update do |page|
+        page.replace_html 'raw_traffic', :partial => 'streams/streams', :locals => {:streams => @streams}
+      end
+    end
+
   end
   
   def generate_graph_data(groups, graphs)
