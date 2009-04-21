@@ -1,7 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :groups
-  map.resources :graphs
-  map.resources :rules
+  map.resources :groups, :collection => { :order_streams => :get }
   map.namespace :admin do |admin|
     admin.resources :groups
 	  admin.resources :rules
