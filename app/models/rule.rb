@@ -39,9 +39,9 @@ class Rule < ActiveRecord::Base
       else false
       end
     if(not_flag)
-      !( val1 or val2 or val3 or val4 )
+      !( val1 and val2 and val3 and val4 )
     else
-      val1 or val2 or val3 or val4
+      (val1 and val2 and val3 and val4)
     end
   end 
   

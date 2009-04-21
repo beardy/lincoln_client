@@ -2,7 +2,7 @@ require 'ip_conversion'
 
 class Stream < ActiveRecord::Base
   include IPConvert
-  has_many :windows, :order => 'start_time'
+  has_many :windows
   
   named_scope :starting_between, lambda {|start,stop| {:conditions => ["windows.start_time between ? and ?", start, stop],
                                                        :include => :windows} }
@@ -31,21 +31,46 @@ class Stream < ActiveRecord::Base
     else
       'A68064' # The color for multiple group associations
     end
-  end 
+  end
   
   def port_incoming_name
-    port_names_hash ||= Stream.get_names
-    name = port_names_hash[self.port_incoming] ||= self.port_incoming
-    name
+    port_name(self.port_incoming)
   end
   
   def port_outgoing_name
-    port_names_hash ||= Stream.get_names
-    name = port_names_hash[self.port_outgoing] ||= self.port_outgoing
+    port_name(self.port_outgoing)
+  end
+  
+  def port_name(number)
+    @port_names_hash ||= Stream.get_port_names
+    name = @port_names_hash[number] ||= number
     name    
   end
   
-  def self.get_names    
+  def ip_incoming_name
+    host_name(self.ip_incoming)
+  end
+  
+  def ip_outgoing_name
+    host_name(self.ip_outgoing)
+  end
+  
+  def host_name(ip)
+    @host_names_hash ||= Stream.get_host_names
+    name = @host_names_hash[ip] ||= ip
+    name
+  end
+  
+  def self.get_host_names
+    unless @host_names_hash
+      @host_names ||= HastName.find(:all)
+      @host_names_hash = {}
+      @host_names.inject(@host_names_hash) {|hash, host| hash[host.ip_address] = host.name; hash}
+    end
+    @host_names_hash
+  end
+  
+  def self.get_port_names    
     unless @port_names_hash
       @port_names ||= PortName.find(:all)
       @port_names_hash = {}
@@ -53,7 +78,7 @@ class Stream < ActiveRecord::Base
     end
     @port_names_hash
   end
-
+  
   def ip_incoming
     ip(raw_ip_incoming)
   end
