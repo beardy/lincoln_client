@@ -1,4 +1,4 @@
-<div id="spinner" style:"">
+<div id="spinner" style="display:none;">
   <%= image_tag 'spinner.gif' %>
 </div>
 <table id="streams-table">
@@ -58,6 +58,5 @@
       </td></tr>
   <%- end -%>
 </table>
-
+<div id="small-spinner" style="display:none;"><%= image_tag 'small-spinner.gif' %></div>
 <%= will_paginate streams, :params => {:action => :order_streams, :sort => params[:sort], :id => params[:id]} %>
-

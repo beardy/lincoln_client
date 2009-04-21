@@ -47,8 +47,15 @@ a.closed {
   margin-bottom:-1px;
 }
 
-#spinner img{
-  margin:auto;
+#spinner {
+  padding-left: 280px;
+  margin-top:-50px;
+  margin-bottom:18px;
+}
+
+#small-spinner {
+  margin-top:-20px;
+  margin-bottom:4px;  
 }
 
 th.sortup a {

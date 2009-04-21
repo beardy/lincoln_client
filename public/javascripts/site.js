@@ -69,16 +69,17 @@ document.observe("dom:loaded", function() {
 
   if (container) {
     var img = new Image
-    img.src = '/images/small_spinner.gif'
+    img.src = '/images/spinner.gif'
 
     function createSpinner() {
-      new Element('img', { src: img.src, 'class': 'spinner' })
+      new Element('img', { src: img.src, 'class': 'small-spinner' })
     }
 
     container.observe('click', function(e) {
       var el = e.element()
       if (el.match('.pagination a')) {
-        el.up('.pagination').insert(createSpinner())
+        // el.up('.pagination').insert(createSpinner())
+        jQuery('#small-spinner').toggle()
         new Ajax.Request(el.href, { method: 'get' })
         e.stop()
       }
