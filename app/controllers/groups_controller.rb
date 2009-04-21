@@ -26,6 +26,19 @@ class GroupsController < ApplicationController
 
     # initialize all graph data
     generate_graph_data(selected_groups, @timeline_graphs + @daily_graphs + @group_graphs + @ip_graphs)
+	
+	# initialize raw data
+    @streams = Stream.relevant_streams(@time_range, @global_rule).paginate :page => params[:page], :order => 'windows.start_time ASC'
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.js { # AJAX pagination
+        render :update do |page|
+          page.replace_html 'raw_traffic', :partial => 'streams/streams'
+      end
+      }
+      format.xml  { render :xml => @groups }
+    end
   end
   
   def show
@@ -56,6 +69,19 @@ class GroupsController < ApplicationController
 
     # initialize all graph data
     generate_graph_data(selected_groups, @timeline_graphs + @daily_graphs + @port_graphs + @ip_graphs)
+	
+	# initialize raw data
+	@streams = Stream.relevant_streams(@time_range, @global_rule, @group).paginate :page => params[:page], :order => 'windows.start_time ASC'
+	
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @group }
+      format.js { # AJAX pagination
+        render :update do |page|
+          page.replace_html 'raw_traffic', :partial => 'streams/streams'
+      end
+      }
+    end
   end
   
   def generate_graph_data(groups, graphs)
@@ -65,8 +91,8 @@ class GroupsController < ApplicationController
     # for each group, aggregate data for each graph
     groups.to_a.each do |group|
       # retreive all streams for this group
-      @streams = Stream.relevant_streams(@time_range, group, @global_rule)
-      @streams.each do |stream|
+      streams = Stream.relevant_streams(@time_range, group, @global_rule)
+      streams.each do |stream|
         stream.windows.each do |window|
           # perform graph-specific data aggregation
           graphs.map { |graph| graph.process(group, window) } 
