@@ -91,7 +91,7 @@ module BeardGraph
 		  v.value = [x, y]
 		  v.tooltip = data_time.strftime("%a %b %d %I:00%p")
 		  v.tooltip += sprintf("<br>%6.6f #{label}", data_value)
-		  v.dot_size = ((data_value - value_min) / value_range) * @dot_size_range + @dot_size_min
+		  v.dot_size = ((data_value - value_min) / (value_range * 1.0)).round * @dot_size_range + @dot_size_min
 		end
 	  end
     end
@@ -106,9 +106,9 @@ module BeardGraph
 	  @data.y_labels[20] = " 8:00PM"
 	  @data.y_labels[24] = "12:00AM"
 	  
-	  @data.x_labels = Array.new(@days * 24, "")
-	  5.times do |i|
-		hour_index = i * (@days / 4).ceil * 24
+	  @data.x_labels = Array.new(@days * 24 + 1, "")
+	  [@days + 1, 4].min.times do |i|
+		hour_index = i * (@days / 4.0).ceil * 24
 		@data.x_labels[hour_index] = (@start_day + hour_index.hour).strftime("%b %d")
 	  end
 	  

@@ -7,23 +7,23 @@ class ScatterGraphBuilder < GraphBuilder
   
   def configure
     x = XAxis.new
+	# initialize x-axis scale
+    x.set_range(0, @days * 24, (@days / 4.0).ceil * 24)
 	# intialize x-axis labels
 	if not @data.x_labels.nil?
 	  x_labels = XAxisLabels.new
 	  x_labels.labels = @data.x_labels.map { |label| XAxisLabel.new(label, '#000000', 8, ""); }
 	  x.set_labels(x_labels)
 	end
-	# initialize x-axis scale
-    x.set_range(0, @days * 24, (@days / 4).ceil * 24)
 	@graph.x_axis = x
 
 	y = YAxis.new
+	# initialize y-axis scale
+    y.set_range(0, 24, 4)
 	# initialize y-axis labels
 	if not @data.y_labels.nil?
 	  y.set_labels(@data.y_labels)
 	end
-	# initialize y-axis scale
-    y.set_range(0, 24, 4)
     @graph.y_axis = y
   end
 
