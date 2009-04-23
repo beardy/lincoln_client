@@ -15,6 +15,15 @@ class ApplicationController < ActionController::Base
     @selected_groups = session[:selected_groups] ||= @groups.collect {|g| g.id}
   end
   
+  def toggle_selected_group
+    group_id = params[:group_id].to_i
+    present = @selected_groups.delete(group_id)
+    if(!present)
+      @selected_groups << group_id
+    end
+    render :layout => false
+  end
+  
 
   def get_time_range
     @time_range = session[:time_range] ||= TimeRange.new
