@@ -17,10 +17,10 @@ module BeardGraph
 	  @all_data["Outgoing"] = Hash.new(0)
     end
     
-    def process(group, window)
+    def process(group, stream, window)
 	  # aggregate data values
-	  @all_data["Incoming"][window.stream.ip_incoming] += window.size_packets_incoming
-	  @all_data["Outgoing"][window.stream.ip_outgoing] += window.size_packets_outgoing
+	  @all_data["Incoming"][stream.ip_incoming] += window.size_packets_incoming
+	  @all_data["Outgoing"][stream.ip_outgoing] += window.size_packets_outgoing
     end
     
     def postprocess(groups)
@@ -31,7 +31,11 @@ module BeardGraph
           max = @all_data[group.name].max{|a,b| a[1] <=> b[1]}
           unless max.nil? or max.last == 0
             @data.elements[group.name].values[i].value = max.last
-            @data.elements[group.name].values[i].tooltip = "#{max.first}"
+			if Stream.host_name(max.first) == max.first
+			  @data.elements[group.name].values[i].tooltip = "#{max.first}"
+			else
+			  @data.elements[group.name].values[i].tooltip = "#{Stream.host_name(max.first)} (#{max.first})"
+			end
             @all_data[group.name][max.first] = 0
           end
         end

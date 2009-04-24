@@ -4,7 +4,7 @@ module BeardGraph
   #
   class TimelineGraphGroupDetailsPacketCount < TimelineGraphGroupDetails
     
-    def process(group, window)
+    def process(group, stream, window)
       # aggregate data values
       @time_range.each_increment_with_ratio(window.start_time, window.end_time) do |increment_index, increment_ratio|
         @data.elements["Incoming"].values[increment_index].value += window.num_packets_incoming * increment_ratio

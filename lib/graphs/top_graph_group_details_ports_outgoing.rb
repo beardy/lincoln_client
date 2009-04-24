@@ -4,9 +4,9 @@ module BeardGraph
   #
   class TopGraphGroupDetailsPortsOutgoing < TopGraphGroupDetailsPorts
     
-    def process(group, window)
+    def process(group, stream, window)
 	  # aggregate data values
-	  @all_data[window.stream.port_outgoing] += window.size_packets_outgoing
+	  @all_data[stream.port_outgoing] += window.size_packets_outgoing
     end
     
   end

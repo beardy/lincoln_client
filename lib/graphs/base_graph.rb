@@ -21,7 +21,7 @@ module BeardGraph
     end
   
     # Should be overridden in subclass if data aggregation is necessary
-    def process(group, window)
+    def process(group, stream, window)
     end
   
     # Should overwrite in subclass if postprocessing is necessary

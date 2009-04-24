@@ -33,37 +33,37 @@ class Stream < ActiveRecord::Base
     end
   end
   
-  def port_incoming_name
-    port_name(self.port_incoming)
-  end
-  
-  def port_outgoing_name
-    port_name(self.port_outgoing)
-  end
-  
-  def port_name(number)
-    @port_names_hash ||= Stream.get_port_names
-    name = @port_names_hash[number] ||= number
-    name    
-  end
-  
   def ip_incoming_name
-    host_name(self.ip_incoming)
+    Stream.host_name(self.ip_incoming)
   end
   
   def ip_outgoing_name
-    host_name(self.ip_outgoing)
+    Stream.host_name(self.ip_outgoing)
   end
   
-  def host_name(ip)
+  def port_incoming_name
+    Stream.port_name(self.port_incoming)
+  end
+  
+  def port_outgoing_name
+    Stream.port_name(self.port_outgoing)
+  end
+  
+  def self.host_name(ip)
     @host_names_hash ||= Stream.get_host_names
     name = @host_names_hash[ip] ||= ip
     name
   end
   
+  def self.port_name(number)
+    @port_names_hash ||= Stream.get_port_names
+    name = @port_names_hash[number] ||= number
+    name    
+  end
+  
   def self.get_host_names
     unless @host_names_hash
-      @host_names ||= HastName.find(:all)
+      @host_names ||= HostName.find(:all)
       @host_names_hash = {}
       @host_names.inject(@host_names_hash) {|hash, host| hash[host.ip_address] = host.name; hash}
     end

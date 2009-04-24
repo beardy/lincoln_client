@@ -36,13 +36,12 @@
         <td><%= stream.start_time.to_s(:short) %></td>
         <td><%= stream.end_time.to_s(:short) %></td>
         <td><%= stream.duration.round %></td>
-        <td><%= stream.ip_incoming %></td>
-        <td><%= stream.port_incoming_name %></td>
-        <td><%= stream.ip_outgoing %></td>
-        <td><%= stream.port_outgoing_name %></td>
+        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333;" title="<%= stream.ip_incoming %>"><%= stream.ip_incoming_name %></a></td>
+        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333;" title="<%= stream.port_incoming %>"><%= stream.port_incoming_name %></a></td>
+        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333;" title="<%= stream.ip_outgoing %>"><%= stream.ip_outgoing_name %></a></td>
+        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333" title="<%= stream.port_outgoing %>"><%= stream.port_outgoing_name %></a></td>
         <td><%= stream.total_packet_size %></td>
         <td><%= stream.total_number_packets %>
-
       </tr>
       <tr><td colspan="10">
          <div id="<%= "windows" + stream.id.to_s  %>" style="display:none">

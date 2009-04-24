@@ -129,7 +129,7 @@ class GroupsController < ApplicationController
       streams.each do |stream|
         stream.windows.each do |window|
           # perform graph-specific data aggregation
-          graphs.map { |graph| graph.process(group, window) } 
+          graphs.map { |graph| graph.process(group, stream, window) } 
         end
       end
     end

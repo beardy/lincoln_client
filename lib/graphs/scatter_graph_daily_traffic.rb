@@ -40,7 +40,7 @@ module BeardGraph
       @end_day_hour = @time_range.end_time.hour
     end
 	
-    def process(group, window)
+    def process(group, stream, window)
       # find hour indexes
       start_hour_index = ((Time.parse(window.start_time.strftime("%a %b %d %H:00:00 %Z %Y")) - @start_hour) / 1.hour).round
       end_hour_index = ((Time.parse(window.end_time.strftime("%a %b %d %H:00:00 %Z %Y")) - @start_hour) / 1.hour).round
@@ -77,9 +77,8 @@ module BeardGraph
 		value_max = @data.elements["All"].values.max{ |a,b| a.value <=> b.value}.value
 		value_min =  @data.elements["All"].values.min{ |a,b| a.value <=> b.value}.value
 		value_range = value_max - value_min
-		value_range = (value_range == 0) ? 1 : 0
-		
-		#unless value_range == 0
+		value_range = (value_range == 0) ? 1.0 : value_range
+		  
 		# initialize true graph data values
 		@data.each_value do |v|
 		  # temp values
@@ -93,12 +92,8 @@ module BeardGraph
 		  v.value = [x, y]
 		  v.tooltip = data_time.strftime("%a %b %d %I:00%p")
 		  v.tooltip += sprintf("<br>%6.6f #{label}", data_value)
-		  puts data_value
-		  puts value_min
-		  puts value_range
-		  v.dot_size = ((data_value - value_min) / (value_range * 1.0)).round * @dot_size_range + @dot_size_min
+		  v.dot_size = (((data_value - value_min) / (value_range * 1.0)) * @dot_size_range + @dot_size_min).round
 		end
-	#end
 	  end
     end
     

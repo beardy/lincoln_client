@@ -31,8 +31,12 @@ module BeardGraph
 		  # find max (by value)
 		  max = @all_data.max{|a,b| a[1] <=> b[1]}
 		  unless max.nil? or max.last == 0
-			@data.elements["All"].values << GraphValue.new(max.last, "#{max.first}")
-			@data.elements["All"].values[i].label = "#{max.first} (#{max.last * 100 / all_sum}%)"
+			if Stream.port_name(max.first) == max.first
+			  @data.elements["All"].values << GraphValue.new(max.last, "#{max.first}")
+			else
+			  @data.elements["All"].values << GraphValue.new(max.last, "#{Stream.port_name(max.first)} (#{max.first})")
+			end
+			@data.elements["All"].values[i].label = "#{Stream.port_name(max.first)} (#{max.last * 100 / all_sum}%)"
 			@all_data[max.first] = 0
 		  end
 		end

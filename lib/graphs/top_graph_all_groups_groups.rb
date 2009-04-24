@@ -16,7 +16,7 @@ module BeardGraph
       @all_data = Hash.new(0)
     end
     
-    def process(group, window)
+    def process(group, stream, window)
       # aggregate data values
       @all_data[group.name] += window.size_packets_all
     end
