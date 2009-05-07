@@ -96,7 +96,7 @@ module BeardGraph
 		end
 	  end
     end
-    
+	
     def generate_graph
 	  @data.y_labels = Array.new(25, "")
 	  @data.y_labels[0] = "12:00AM"
@@ -107,9 +107,12 @@ module BeardGraph
 	  @data.y_labels[20] = " 8:00PM"
 	  @data.y_labels[24] = "12:00AM"
 	  
-	  @data.x_labels = Array.new(@days * 24 + 1, "")
-	  [@days + 1, 4].min.times do |i|
-		hour_index = i * (@days / 4.0).ceil * 24
+	  num_labels = (@days / (@days / 4.0).ceil).floor + 1
+	  day_interval = (@days / (num_labels * 1.0)).ceil
+	  
+	  @data.x_labels = Array.new(((num_labels - 1) * day_interval * 24) + 1, "")
+	  num_labels.times do |i|
+		hour_index = i * day_interval * 24
 		@data.x_labels[hour_index] = (@start_day + hour_index.hour).strftime("%b %d")
 	  end
 	  

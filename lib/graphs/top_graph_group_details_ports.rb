@@ -36,7 +36,7 @@ module BeardGraph
 			else
 			  @data.elements["All"].values << GraphValue.new(max.last, "#{Stream.port_name(max.first)} (#{max.first})")
 			end
-			@data.elements["All"].values[i].label = "#{Stream.port_name(max.first)} (#{max.last * 100 / all_sum}%)"
+			@data.elements["All"].values[i].label = "#{Stream.port_name(max.first)}\n(#{max.last * 100 / all_sum}%)"
 			@all_data[max.first] = 0
 		  end
 		end
@@ -44,7 +44,7 @@ module BeardGraph
 		# sum other data
 		other_sum = @all_data.inject(0){ |sum, x| sum + x[1] }
 		@data.elements["All"].values << GraphValue.new(other_sum, "Other")
-		@data.elements["All"].values.last.label = "Other (#{other_sum * 100 / all_sum}%)"
+		@data.elements["All"].values.last.label = "Other\n(#{other_sum * 100 / all_sum}%)"
 	  end
 	  
       # update graph data
