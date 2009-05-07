@@ -40,6 +40,8 @@ end
 namespace :import do
   task :all => ['db:reset',:test,:groups,:rules]
   
+  task :final => ['db:reset', :test, :port_names]
+  
   task :test => :environment do
     input_file = 'data.txt'
     full_input_file = get_data_path(input_file)
