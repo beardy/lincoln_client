@@ -27,7 +27,7 @@
     <th>Total # Packets</th>
   </tr>
   <%- streams.each do |stream| -%>
-      <tr bgcolor="#<%= stream.color(@groups) %>">
+      <tr bgcolor="<%= cycle("#ffffff", "#dedede") %>">
         <td><%= link_to_function(image_tag("arrow_down.png"), nil) do |page|
                 mydiv = 'windows' + stream.id.to_s
                 page.visual_effect(:toggle_blind, mydiv)
@@ -36,10 +36,10 @@
         <td><%= stream.start_time.to_s(:short) %></td>
         <td><%= stream.end_time.to_s(:short) %></td>
         <td><%= stream.duration.round %></td>
-        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333;" title="<%= stream.ip_incoming %>"><%= stream.ip_incoming_name %></a></td>
-        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333;" title="<%= stream.port_incoming %>"><%= stream.port_incoming_name %></a></td>
-        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333;" title="<%= stream.ip_outgoing %>"><%= stream.ip_outgoing_name %></a></td>
-        <td><a style="text-decoration:none; border-bottom:1px dashed #555; color: #333" title="<%= stream.port_outgoing %>"><%= stream.port_outgoing_name %></a></td>
+        <td><acronym title="<%= stream.ip_incoming %>"><%= stream.ip_incoming_name %></acronym></td>
+        <td><acronym title="<%= stream.port_incoming %>"><%= stream.port_incoming_name %></acronym></td>
+        <td><acronym title="<%= stream.ip_outgoing %>"><%= stream.ip_outgoing_name %></acronym></td>
+        <td><acronym title="<%= stream.port_outgoing %>"><%= stream.port_outgoing_name %></acronym></td>
         <td><%= stream.total_packet_size %></td>
         <td><%= stream.total_number_packets %>
       </tr>
